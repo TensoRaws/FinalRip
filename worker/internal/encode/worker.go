@@ -3,8 +3,10 @@ package encode
 import (
 	"context"
 	"encoding/json"
-	"github.com/hibiken/asynq"
 	"log"
+
+	"github.com/TensoRaws/FinalRip/module/queue"
+	"github.com/hibiken/asynq"
 )
 
 // 与电子邮件相关任务的有效负载。
@@ -14,16 +16,11 @@ type EmailTaskPayload struct {
 }
 
 func Start() {
-	srv := asynq.NewServer(
-		asynq.RedisClientOpt{Addr: "localhost:6379"},
-		asynq.Config{Concurrency: 10},
-	)
-
 	mux := asynq.NewServeMux()
 	mux.HandleFunc("email:welcome", sendWelcomeEmail)
 	mux.HandleFunc("email:reminder", sendReminderEmail)
 
-	if err := srv.Run(mux); err != nil {
+	if err := queue.Qs.Run(mux); err != nil {
 		log.Fatal(err)
 	}
 }

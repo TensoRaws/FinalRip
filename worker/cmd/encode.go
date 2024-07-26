@@ -1,11 +1,11 @@
 package cmd
 
 import (
-	"github.com/TensoRaws/FinalRip/module/cache"
 	"github.com/TensoRaws/FinalRip/module/config"
 	"github.com/TensoRaws/FinalRip/module/db"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/oss"
+	"github.com/TensoRaws/FinalRip/module/queue"
 	"github.com/TensoRaws/FinalRip/worker/internal/encode"
 	"github.com/urfave/cli/v2"
 )
@@ -22,7 +22,7 @@ func runEncodeWorker(ctx *cli.Context) error {
 	log.Init()
 	db.Init()
 	oss.Init()
-	cache.Init()
+	queue.Init()
 	encode.Start()
 	return nil
 }
