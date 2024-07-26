@@ -1,0 +1,64 @@
+name: CI-test
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - LICENSE
+  pull_request:
+    paths-ignore:
+      - "**.md"
+      - LICENSE
+  workflow_dispatch:
+
+jobs:
+  unit-test:
+    strategy:
+      matrix:
+        os-version: ["ubuntu-latest"]
+
+    runs-on: ${{ matrix.os-version }}
+
+    services:
+      db:
+        image: mysql:8.4.1
+        ports:
+          - "5432:3306"
+        env:
+          MYSQL_ROOT_PASSWORD: 123456
+          MYSQL_DATABASE: nuxbt
+          TZ: Asia/Shanghai
+
+      redis:
+        image: redis:7.2.5
+        ports:
+          - "6379:6379"
+        options: >- # wait until redis has started
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+      oss:
+        image: bitnami/minio:2024.7.13
+        ports:
+          - "9000:9000"
+          - "9001:9001"
+        env:
+          MINIO_ACCESS_KEY: ChYm7ufIwNAOzq6PQPCA
+          MINIO_SECRET_KEY: udicP52IwRbmo2hf6lFvjUS7NP5BhlAdsGNIuDE5
+          MINIO_DEFAULT_BUCKETS: nuxbt:public
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.22"
+
+      - name: Test
+        run: |
+          make test
