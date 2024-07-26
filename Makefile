@@ -8,9 +8,13 @@ TAGS ?=
 tidy: ## go mod tidy
 	${GO} mod tidy
 
-.PHONY: build
-build: ## build binary file
-	${GO} build -o finalrip .
+.PHONY: server
+server: ## build binary file
+	${GO} build -o server ./server
+
+.PHONY: worker
+worker: ## build binary file
+	${GO} build -o worker ./worker
 
 .PHONY: test
 test: tidy ## go test
