@@ -25,4 +25,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: lychee0/FinalRip:latest
+          tags: lychee0/finalrip:latest
