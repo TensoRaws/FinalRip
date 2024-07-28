@@ -1,0 +1,142 @@
+package process
+
+import (
+	"github.com/TensoRaws/FinalRip/common/task"
+	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/queue"
+	"github.com/TensoRaws/FinalRip/module/resp"
+	"github.com/bytedance/sonic"
+	"github.com/gin-gonic/gin"
+	"github.com/hibiken/asynq"
+	"sync"
+	"time"
+)
+
+// 等待任务完成
+var wg sync.WaitGroup
+
+type StartRequest struct {
+	EncodeParam string `form:"encode_param" binding:"required"`
+	Script      string `form:"script" binding:"required"`
+	VideoKey    string `form:"video_key" binding:"required"`
+}
+
+// Start 开始压制 (POST /start)
+func Start(c *gin.Context) {
+	// 绑定参数
+	var req StartRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		resp.AbortWithMsg(c, err.Error())
+		return
+	}
+
+	payload, err := sonic.Marshal(task.CutTaskPayload{
+		VideoKey: req.VideoKey,
+	})
+	if err != nil {
+		log.Logger.Error("Failed to marshal payload: " + err.Error())
+		resp.AbortWithMsg(c, "Failed to marshal payload")
+		return
+	}
+
+	// 视频切片，上传到 OSS
+	cut := asynq.NewTask(task.VIDEO_CUT, payload)
+
+	info, err := queue.Qc.Enqueue(cut)
+	if err != nil {
+		log.Logger.Error("Failed to enqueue task: " + err.Error())
+		resp.AbortWithMsg(c, "Failed to enqueue task")
+		return
+	}
+
+	resp.AbortWithMsg(c, "Successfully enqueued task")
+	// 等待任务完成
+
+	for {
+		// 检查任务是否已完成
+		if info.State == asynq.TaskStateCompleted {
+			break
+		}
+
+		time.Sleep(1 * time.Second)
+	}
+
+	// 获取视频 clip keys
+	// clipKeys, err := GetVideoClipKeys(req.VideoKey)
+	// 开始压制任务
+	for _, clipKey := range []string{"clip1", "clip2"} {
+		payload, err := sonic.Marshal(task.EncodeTaskPayload{
+			EncodeParam: req.EncodeParam,
+			Script:      req.Script,
+			ClipKey:     clipKey,
+		})
+		if err != nil {
+			log.Logger.Error("Failed to marshal payload: " + err.Error())
+			return
+		}
+
+		encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
+
+		info, err := queue.Qc.Enqueue(encode)
+		if err != nil {
+			log.Logger.Error("Failed to enqueue task: " + err.Error())
+			return
+		}
+
+		log.Logger.Info("Successfully enqueued task: " + clipKey)
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			// 等待任务完成
+			for {
+				if info.State == asynq.TaskStateCompleted {
+					break
+				}
+
+				time.Sleep(1 * time.Second)
+			}
+		}()
+	}
+
+	// 等待所有任务完成
+	wg.Wait()
+	log.Logger.Info("All Encode tasks completed!")
+
+	// 开始合并任务
+	// 获取压制后的视频 keys
+	// encodeKeys, err := GetEncodeClipKeys(req.VideoKey)
+	payload, err = sonic.Marshal(task.MergeTaskPayload{
+		VideoKey: req.VideoKey,
+		// ClipKeys: encodeKeys,
+	})
+	if err != nil {
+		log.Logger.Error("Failed to marshal payload: " + err.Error())
+		return
+	}
+
+	merge := asynq.NewTask(task.VIDEO_MERGE, payload)
+
+	info, err = queue.Qc.Enqueue(merge)
+	if err != nil {
+		log.Logger.Error("Failed to enqueue task: " + err.Error())
+		return
+	}
+
+	log.Logger.Info("Successfully enqueued task: merge")
+
+	// 等待任务完成
+	for {
+		if info.State == asynq.TaskStateCompleted {
+			break
+		}
+
+		time.Sleep(1 * time.Second)
+	}
+
+	log.Logger.Info("Merge task completed!")
+
+	// 打印结果
+	// result, err := GetMergeResult(req.VideoKey)
+	log.Logger.Info("All tasks completed! Result: " + "result")
+}

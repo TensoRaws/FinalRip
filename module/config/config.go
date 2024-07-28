@@ -32,7 +32,7 @@ func initialize() {
 	config.SetConfigType("yml")
 
 	config.AutomaticEnv()
-	config.SetEnvPrefix("finalrip")
+	config.SetEnvPrefix("FINALRIP")
 	replacer := strings.NewReplacer(".", "_")
 	config.SetEnvKeyReplacer(replacer)
 
