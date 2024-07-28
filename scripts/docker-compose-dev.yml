@@ -7,6 +7,18 @@ networks:
     driver: bridge
 
 services:
+  mongodb:
+    image: mongo:8.0.0-rc13-jammy
+    container_name: finalrip-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=finalrip
+    networks:
+      - backend
+
   redis:
     image: redis:7.2.5
     container_name: finalrip-redis

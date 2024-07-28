@@ -10,9 +10,9 @@ log:
     - file
 
 db:
-  type: mysql # mysql, postgres
+  type: mongodb
   host: 127.0.0.1
-  port: 5432
+  port: 27017
   username: root
   password: 123456
   database: finalrip
