@@ -14,9 +14,6 @@ import (
 	"time"
 )
 
-// 等待任务完成
-var wg sync.WaitGroup
-
 type StartRequest struct {
 	EncodeParam string `form:"encode_param" binding:"required"`
 	Script      string `form:"script" binding:"required"`
@@ -71,6 +68,9 @@ func Start(c *gin.Context) {
 		log.Logger.Error("Failed to get video clips: " + err.Error())
 		return
 	}
+
+	// 等待任务完成
+	var wg sync.WaitGroup
 	// 开始压制任务
 	for _, clip := range clips {
 		payload, err := sonic.Marshal(task.EncodeTaskPayload{
