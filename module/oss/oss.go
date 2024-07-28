@@ -42,7 +42,20 @@ func initialize() {
 	}
 }
 
-// Put saves the content read from r to the oss key.
+// PutByPath uploads the content from a file to the oss key.
+func PutByPath(key string, path string) error {
+	info, err := oss.FPutObject(context.Background(), config.OSSConfig.Bucket, key, path,
+		minio.PutObjectOptions{
+			ContentType: "application/octet-stream",
+		})
+	if err != nil {
+		return err
+	}
+	log.Logger.Infof("Uploaded %s of size: %v Successfully.", key, info.Size)
+	return nil
+}
+
+// Put uploads the content from r to the oss key.
 func Put(key string, reader io.Reader, objectSize int64) error {
 	info, err := oss.PutObject(context.Background(), config.OSSConfig.Bucket, key, reader, objectSize,
 		minio.PutObjectOptions{ContentType: "application/octet-stream"})
@@ -51,9 +64,19 @@ func Put(key string, reader io.Reader, objectSize int64) error {
 	return err
 }
 
-// PutBytes saves the byte array to the oss key.
+// PutBytes uploads the byte array content to the oss key.
 func PutBytes(key string, data []byte) error {
 	return Put(key, bytes.NewReader(data), int64(len(data)))
+}
+
+// GetByPath downloads and saves the object as a file in the local filesystem by key.
+func GetByPath(key string, path string) error {
+	err = oss.FGetObject(context.Background(), config.OSSConfig.Bucket, key, path, minio.GetObjectOptions{})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Get gets the file pointed to by key.
