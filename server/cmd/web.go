@@ -31,7 +31,7 @@ func runWeb(ctx *cli.Context) error {
 	log.Init()
 	db.Init()
 	oss.Init()
-	queue.Init()
+	queue.InitServer()
 	router.Init()
 	return nil
 }
