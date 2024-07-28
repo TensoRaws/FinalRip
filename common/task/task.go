@@ -1,5 +1,7 @@
 package task
 
+import "github.com/TensoRaws/FinalRip/common/db"
+
 const (
 	VIDEO_CUT    = "video:cut"
 	VIDEO_ENCODE = "video:encode"
@@ -13,9 +15,9 @@ type CutTaskPayload struct {
 
 // EncodeTaskPayload is a struct that represents the payload for encode task.
 type EncodeTaskPayload struct {
-	EncodeParam string `json:"encode_param"`
-	Script      string `json:"script"`
-	ClipKey     string `json:"clip_key"`
+	EncodeParam string           `json:"encode_param"`
+	Script      string           `json:"script"`
+	Clip        db.VideoClipInfo `json:"clip"`
 }
 
 // MergeTaskPayload is a struct that represents the payload for merge task.

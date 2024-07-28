@@ -1,10 +1,12 @@
 package process
 
 import (
+	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/queue"
 	"github.com/TensoRaws/FinalRip/module/resp"
+	"github.com/TensoRaws/FinalRip/module/util"
 	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
 	"github.com/hibiken/asynq"
@@ -61,14 +63,20 @@ func Start(c *gin.Context) {
 		time.Sleep(1 * time.Second)
 	}
 
-	// 获取视频 clip keys
-	// clipKeys, err := GetVideoClipKeys(req.VideoKey)
+	log.Logger.Info("Cut task completed!")
+
+	// 获取视频 clips
+	clips, err := db.GetVideoClips(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to get video clips: " + err.Error())
+		return
+	}
 	// 开始压制任务
-	for _, clipKey := range []string{"clip1", "clip2"} {
+	for _, clip := range clips {
 		payload, err := sonic.Marshal(task.EncodeTaskPayload{
 			EncodeParam: req.EncodeParam,
 			Script:      req.Script,
-			ClipKey:     clipKey,
+			Clip:        clip,
 		})
 		if err != nil {
 			log.Logger.Error("Failed to marshal payload: " + err.Error())
@@ -83,7 +91,7 @@ func Start(c *gin.Context) {
 			return
 		}
 
-		log.Logger.Info("Successfully enqueued task: " + clipKey)
+		log.Logger.Info("Successfully enqueued task: " + util.StructToString(clip))
 
 		wg.Add(1)
 		go func() {
