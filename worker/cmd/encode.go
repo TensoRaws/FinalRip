@@ -5,12 +5,11 @@ import (
 	"github.com/TensoRaws/FinalRip/module/db"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/oss"
-	"github.com/TensoRaws/FinalRip/module/queue"
 	"github.com/TensoRaws/FinalRip/worker/internal/encode"
 	"github.com/urfave/cli/v2"
 )
 
-var CmdEnocdeWorker = &cli.Command{
+var EncodeWorker = &cli.Command{
 	Name:        "encode",
 	Usage:       "Start FinalRip Enocde Worker",
 	Description: "Start FinalRip Enocde Worker",
@@ -22,7 +21,7 @@ func runEncodeWorker(ctx *cli.Context) error {
 	log.Init()
 	db.Init()
 	oss.Init()
-	queue.Init()
+	//queue.Init()
 	encode.Start()
 	return nil
 }

@@ -10,7 +10,8 @@ func NewApp() *cli.App {
 
 	// 子命令集
 	subCmdWithConfig := []*cli.Command{
-		CmdEnocdeWorker,
+		CutWorker,
+		EncodeWorker,
 	}
 
 	app.Commands = append(app.Commands, subCmdWithConfig...)

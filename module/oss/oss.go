@@ -69,8 +69,8 @@ func PutBytes(key string, data []byte) error {
 	return Put(key, bytes.NewReader(data), int64(len(data)))
 }
 
-// GetByPath downloads and saves the object as a file in the local filesystem by key.
-func GetByPath(key string, path string) error {
+// GetWithPath downloads and saves the object as a file in the local filesystem by key.
+func GetWithPath(key string, path string) error {
 	err = oss.FGetObject(context.Background(), config.OSSConfig.Bucket, key, path, minio.GetObjectOptions{})
 	if err != nil {
 		return err

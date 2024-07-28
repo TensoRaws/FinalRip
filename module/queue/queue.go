@@ -19,17 +19,26 @@ const (
 	MERGE_QUEUE  = "merge_queue"
 )
 
-func Init() {
+func InitServer() {
 	once.Do(func() {
 		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
 
-		// API server
 		Qc = asynq.NewClient(asynq.RedisClientOpt{Addr: redisAddr, DB: 0})
+	})
+}
 
-		// Worker
+func InitCutWorker() {
+	once.Do(func() {
+		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
+
 		Qs = asynq.NewServer(
 			asynq.RedisClientOpt{Addr: redisAddr, DB: 0},
-			asynq.Config{Concurrency: 1},
+			asynq.Config{
+				Concurrency: 1,
+				Queues: map[string]int{
+					CUT_QUEUE: 1,
+				},
+			},
 		)
 	})
 }

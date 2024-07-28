@@ -118,3 +118,12 @@ $RECYCLE.BIN/
 
 # Air
 tmp
+
+# ffmpeg
+*.mkv
+*.mp4
+*.avi
+*.mov
+*.flv
+*.wmv
+*.mpg
