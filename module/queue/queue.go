@@ -13,6 +13,12 @@ var (
 	Qs   *asynq.Server
 )
 
+const (
+	CUT_QUEUE    = "cut_queue"
+	ENCODE_QUEUE = "encode_queue"
+	MERGE_QUEUE  = "merge_queue"
+)
+
 func Init() {
 	once.Do(func() {
 		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)

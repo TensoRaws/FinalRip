@@ -46,7 +46,7 @@ func HandleStart(req StartRequest) {
 	// 视频切片，上传到 OSS
 	cut := asynq.NewTask(task.VIDEO_CUT, payload)
 
-	info, err := queue.Qc.Enqueue(cut)
+	info, err := queue.Qc.Enqueue(cut, asynq.Queue(queue.CUT_QUEUE))
 	if err != nil {
 		log.Logger.Error("Failed to enqueue task: " + err.Error())
 		return
@@ -87,7 +87,7 @@ func HandleStart(req StartRequest) {
 
 		encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
-		info, err := queue.Qc.Enqueue(encode)
+		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE))
 		if err != nil {
 			log.Logger.Error("Failed to enqueue task: " + err.Error())
 			return
@@ -129,7 +129,7 @@ func HandleStart(req StartRequest) {
 
 	merge := asynq.NewTask(task.VIDEO_MERGE, payload)
 
-	info, err = queue.Qc.Enqueue(merge)
+	info, err = queue.Qc.Enqueue(merge, asynq.Queue(queue.MERGE_QUEUE))
 	if err != nil {
 		log.Logger.Error("Failed to enqueue task: " + err.Error())
 		return
