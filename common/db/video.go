@@ -69,19 +69,24 @@ func UpdateVideoEncodeClip(videoKey string, index int, encodeKey string) error {
 	return nil
 }
 
-// GetVideoProgress 获取视频处理进度
-func GetVideoProgress(videoKey string) (float64, error) {
+// GetVideoProgress 获取视频处理进度和每个切片的状态
+func GetVideoProgress(videoKey string) (float64, []bool, error) {
 	infos, err := GetVideoClips(videoKey)
 	if err != nil {
-		return 0, err
+		return 0, nil, err
 	}
 
 	var progress float64
+	var status []bool
 	for _, info := range infos {
 		if info.EncodeKey != "" {
 			progress += 1
+			status = append(status, true)
+		} else {
+			status = append(status, false)
 		}
+
 	}
 
-	return progress / float64(len(infos)), nil
+	return progress / float64(len(infos)), status, nil
 }

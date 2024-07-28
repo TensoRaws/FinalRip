@@ -22,6 +22,5 @@ type EncodeTaskPayload struct {
 
 // MergeTaskPayload is a struct that represents the payload for merge task.
 type MergeTaskPayload struct {
-	VideoKey string   `json:"video_key"`
-	ClipKeys []string `json:"clip_keys"`
+	Clips []db.VideoClipInfo `json:"clips"`
 }

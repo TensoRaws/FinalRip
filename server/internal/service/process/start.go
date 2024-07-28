@@ -94,7 +94,7 @@ func Start(c *gin.Context) {
 		log.Logger.Info("Successfully enqueued task: " + util.StructToString(clip))
 
 		wg.Add(1)
-		go func() {
+		go func(i *asynq.TaskInfo) {
 			defer wg.Done()
 			// 等待任务完成
 			for {
@@ -104,7 +104,7 @@ func Start(c *gin.Context) {
 
 				time.Sleep(1 * time.Second)
 			}
-		}()
+		}(info)
 	}
 
 	// 等待所有任务完成
@@ -112,11 +112,13 @@ func Start(c *gin.Context) {
 	log.Logger.Info("All Encode tasks completed!")
 
 	// 开始合并任务
-	// 获取压制后的视频 keys
-	// encodeKeys, err := GetEncodeClipKeys(req.VideoKey)
+	clips, err = db.GetVideoClips(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to get video clips: " + err.Error())
+		return
+	}
 	payload, err = sonic.Marshal(task.MergeTaskPayload{
-		VideoKey: req.VideoKey,
-		// ClipKeys: encodeKeys,
+		Clips: clips,
 	})
 	if err != nil {
 		log.Logger.Error("Failed to marshal payload: " + err.Error())
@@ -143,8 +145,4 @@ func Start(c *gin.Context) {
 	}
 
 	log.Logger.Info("Merge task completed!")
-
-	// 打印结果
-	// result, err := GetMergeResult(req.VideoKey)
-	log.Logger.Info("All tasks completed! Result: " + "result")
 }
