@@ -2,6 +2,7 @@ package cut
 
 import (
 	"context"
+	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/ffmpeg"
 	"github.com/TensoRaws/FinalRip/module/log"
@@ -60,15 +61,28 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 	// 上传切片
 	var wg sync.WaitGroup
+	total := len(outputs)
 	for i, output := range outputs {
 		wg.Add(1)
-		go func(index string, file string) {
+
+		go func(index int, file string) {
 			defer wg.Done()
-			err := oss.PutByPath(p.VideoKey+"-clip-"+index+path.Ext(p.VideoKey), file)
+			key := p.VideoKey + "-clip-" + strconv.FormatInt(int64(index), 10) + path.Ext(p.VideoKey)
+			err := oss.PutByPath(key, file)
 			if err != nil {
 				log.Logger.Errorf("Failed to upload video %s: %v", index, file)
 			}
-		}(strconv.FormatInt(int64(i), 10), output)
+
+			err = db.InsertVideo(db.VideoClipInfo{
+				Key:     p.VideoKey,
+				Index:   index,
+				Total:   total,
+				ClipKey: key,
+			})
+			if err != nil {
+				log.Logger.Errorf("Failed to insert video %s: %v", key, err)
+			}
+		}(i, output)
 	}
 	wg.Wait()
 
