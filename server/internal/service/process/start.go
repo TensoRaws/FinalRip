@@ -24,17 +24,22 @@ type StartRequest struct {
 func Start(c *gin.Context) {
 	// 绑定参数
 	var req StartRequest
-	if err := c.ShouldBindQuery(&req); err != nil {
+	if err := c.ShouldBind(&req); err != nil {
 		resp.AbortWithMsg(c, err.Error())
 		return
 	}
 
+	resp.OK(c)
+	go HandleStart(req)
+}
+
+// HandleStart 处理开始压制请求
+func HandleStart(req StartRequest) {
 	payload, err := sonic.Marshal(task.CutTaskPayload{
 		VideoKey: req.VideoKey,
 	})
 	if err != nil {
 		log.Logger.Error("Failed to marshal payload: " + err.Error())
-		resp.AbortWithMsg(c, "Failed to marshal payload")
 		return
 	}
 
@@ -44,13 +49,10 @@ func Start(c *gin.Context) {
 	info, err := queue.Qc.Enqueue(cut)
 	if err != nil {
 		log.Logger.Error("Failed to enqueue task: " + err.Error())
-		resp.AbortWithMsg(c, "Failed to enqueue task")
 		return
 	}
 
-	resp.AbortWithMsg(c, "Successfully enqueued task")
 	// 等待任务完成
-
 	for {
 		// 检查任务是否已完成
 		if info.State == asynq.TaskStateCompleted {

@@ -20,7 +20,10 @@ func NewAPI() *gin.Engine {
 
 	api := r.Group("/api/v1/")
 	{
-		api.GET("/start", process.Start)
+		processGroup := api.Group("process/")
+		{
+			processGroup.POST("start", process.Start)
+		}
 	}
 
 	return r
