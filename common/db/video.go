@@ -7,6 +7,13 @@ import (
 	"sort"
 )
 
+// CheckVideoExist 检查视频记录是否存在
+func CheckVideoExist(info VideoClipInfo) bool {
+	coll := db.DB.Collection(VIDEO_COLLECTION)
+	count, _ := coll.CountDocuments(context.TODO(), info)
+	return count > 0
+}
+
 // InsertVideo 插入视频信息
 func InsertVideo(info VideoClipInfo) error {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
@@ -46,6 +53,17 @@ func GetVideoClips(videoKey string) ([]VideoClipInfo, error) {
 	})
 
 	return infos, nil
+}
+
+// UpdateVideo 更新视频信息
+func UpdateVideo(filter VideoClipInfo, update VideoClipInfo) error {
+	coll := db.DB.Collection(VIDEO_COLLECTION)
+
+	_, err := coll.UpdateOne(context.TODO(), filter, update)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // UpdateVideoEncodeClip 更新 Encode 后视频切片信息

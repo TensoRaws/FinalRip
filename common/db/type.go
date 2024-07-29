@@ -5,9 +5,9 @@ const (
 )
 
 type VideoClipInfo struct {
-	Key       string `bson:"key"`
-	Index     int    `bson:"index"`
-	Total     int    `bson:"total"`
-	ClipKey   string `bson:"clip_key"`
-	EncodeKey string `bson:"encode_key"`
+	Key       string `bson:"key,omitempty"`
+	Index     int    `bson:"index,omitempty"`
+	Total     int    `bson:"total,omitempty"`
+	ClipKey   string `bson:"clip_key,omitempty"`
+	EncodeKey string `bson:"encode_key,omitempty"`
 }
