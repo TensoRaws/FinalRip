@@ -8,6 +8,7 @@ import (
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/oss"
 	"github.com/TensoRaws/FinalRip/module/queue"
+	"github.com/TensoRaws/FinalRip/module/util"
 	"github.com/bytedance/sonic"
 	"github.com/hibiken/asynq"
 	"os"
@@ -34,9 +35,12 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 	log.Logger.Infof("Processing task CUT with payload %v", p.VideoKey)
 
-	// file format: {time}._temp.{video_format}
-	tempPath := strconv.FormatInt(time.Now().Unix(), 10) + "_temp"
+	tempPath := "_temp"
 	tempVideo := tempPath + path.Ext(p.VideoKey)
+
+	// 清理临时文件
+	_ = util.ClaerTempFile(tempPath, tempVideo)
+
 	_ = os.Mkdir(tempPath, os.ModePerm)
 
 	err := oss.GetWithPath(p.VideoKey, tempVideo)
@@ -123,10 +127,10 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	wg.Wait()
 
 	// 清理临时文件
-	err = os.Remove(tempVideo)
-	err = os.RemoveAll(tempPath)
+	err = util.ClaerTempFile(tempPath, tempVideo)
 	if err != nil {
-		log.Logger.Errorf("Failed to remove temp file %s: %v", tempPath+path.Ext(p.VideoKey), err)
+		log.Logger.Errorf("Failed to clear temp file %s, %s: %v", tempPath, tempVideo, err)
+		return err
 	}
 
 	return nil
