@@ -75,7 +75,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		go func(index int, file string) {
 			defer wg.Done()
 
-			key := p.VideoKey + "-clip-" + strconv.FormatInt(int64(index), 10) + path.Ext(p.VideoKey)
+			key := p.VideoKey + "-clip-" + strconv.FormatInt(int64(index), 10) + ".mkv"
 
 			// 重试情况
 			if p.Retry {

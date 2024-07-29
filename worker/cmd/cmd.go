@@ -12,6 +12,7 @@ func NewApp() *cli.App {
 	subCmdWithConfig := []*cli.Command{
 		CutWorker,
 		EncodeWorker,
+		MergeWorker,
 	}
 
 	app.Commands = append(app.Commands, subCmdWithConfig...)

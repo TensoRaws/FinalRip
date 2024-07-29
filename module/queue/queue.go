@@ -61,3 +61,19 @@ func InitEncodeWorker() {
 		)
 	})
 }
+
+func InitMergeWorker() {
+	once.Do(func() {
+		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
+
+		Qs = asynq.NewServer(
+			asynq.RedisClientOpt{Addr: redisAddr, DB: 0},
+			asynq.Config{
+				Concurrency: 1,
+				Queues: map[string]int{
+					MERGE_QUEUE: 1,
+				},
+			},
+		)
+	})
+}
