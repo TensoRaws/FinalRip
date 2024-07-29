@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/TensoRaws/FinalRip/module/db"
+	"go.mongodb.org/mongo-driver/bson"
 	"sort"
 )
 
@@ -59,7 +60,9 @@ func GetVideoClips(videoKey string) ([]VideoClipInfo, error) {
 func UpdateVideo(filter VideoClipInfo, update VideoClipInfo) error {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
 
-	_, err := coll.UpdateOne(context.TODO(), filter, update)
+	up := bson.D{{"$set", update}}
+
+	_, err := coll.UpdateOne(context.TODO(), filter, up)
 	if err != nil {
 		return err
 	}
@@ -75,9 +78,9 @@ func UpdateVideoEncodeClip(videoKey string, index int, encodeKey string) error {
 		Index: index,
 	}
 
-	update := VideoClipInfo{
+	update := bson.D{{"$set", VideoClipInfo{
 		EncodeKey: encodeKey,
-	}
+	}}}
 
 	_, err := coll.UpdateOne(context.TODO(), filter, update)
 	if err != nil {

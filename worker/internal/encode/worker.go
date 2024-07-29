@@ -33,7 +33,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	if err := sonic.Unmarshal(t.Payload(), &p); err != nil {
 		return err
 	}
-	log.Logger.Infof("Processing task CUT with payload %v", util.StructToString(p.Clip))
+	log.Logger.Infof("Processing task ENCODE with payload %v", util.StructToString(p.Clip))
 
 	tempSourceVideo := "source.mkv"
 	tempEncodedVideo := "encoded.mkv"
@@ -56,6 +56,13 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 			break
 		}
 		time.Sleep(1 * time.Second)
+	}
+
+	// 设置临时视频的环境变量
+	err = os.Setenv("FINALRIP_SOURCE", tempSourceVideo)
+	if err != nil {
+		log.Logger.Errorf("Failed to set env FINALRIP_SOURCE: %v", err)
+		return err
 	}
 
 	// 压制视频
