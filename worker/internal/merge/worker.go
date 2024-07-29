@@ -32,7 +32,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	if err := sonic.Unmarshal(t.Payload(), &p); err != nil {
 		return err
 	}
-	log.Logger.Infof("Processing task Merge with payload %v", p.Clips)
+	log.Logger.Infof("Processing task Merge with payload %v", p.Clips[0].Key)
 
 	tempFolder := "temp_clips"
 	tempOriginFile := "temp_source.mkv"
@@ -76,9 +76,9 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 			dlPath := tempFolder + "/" + strconv.Itoa(clip.Index) + ".mkv"
 
-			err := oss.GetWithPath(clip.Key, dlPath)
+			err := oss.GetWithPath(clip.EncodeKey, dlPath)
 			if err != nil {
-				log.Logger.Errorf("Failed to download video %s: %v", clip.Key, err)
+				log.Logger.Errorf("Failed to download video clip %s: %v", clip.EncodeKey, err)
 				return
 			}
 
@@ -96,7 +96,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	wg.Wait()
 
 	// 合并视频
-	inputFiles := make([]string, 0, len(p.Clips))
+	inputFiles := make([]string, len(p.Clips), len(p.Clips))
 	for _, clip := range p.Clips {
 		inputFiles[clip.Index] = tempFolder + "/" + strconv.Itoa(clip.Index) + ".mkv"
 	}
