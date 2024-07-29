@@ -70,12 +70,12 @@ func UpdateVideo(filter VideoClipInfo, update VideoClipInfo) error {
 }
 
 // UpdateVideoEncodeClip 更新 Encode 后视频切片信息
-func UpdateVideoEncodeClip(videoKey string, index int, encodeKey string) error {
+func UpdateVideoEncodeClip(videoKey string, clipKey string, encodeKey string) error {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
 
 	filter := VideoClipInfo{
-		Key:   videoKey,
-		Index: index,
+		Key:     videoKey,
+		ClipKey: clipKey,
 	}
 
 	update := bson.D{{"$set", VideoClipInfo{

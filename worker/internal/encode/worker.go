@@ -93,7 +93,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		return err
 	}
 
-	err = db.UpdateVideoEncodeClip(p.Clip.Key, p.Clip.Index, key)
+	err = db.UpdateVideoEncodeClip(p.Clip.Key, p.Clip.ClipKey, key)
 	if err != nil {
 		log.Logger.Errorf("Failed to upload encode video %s: %s", key, err)
 		return err
