@@ -105,8 +105,14 @@ func HandleStart(req StartRequest) {
 			defer wg.Done()
 			// 等待任务完成
 			for {
-				if info.State == asynq.TaskStateCompleted {
-					break
+				_, err := queue.Isp.GetTaskInfo(queue.ENCODE_QUEUE, info.ID)
+				if err != nil {
+					if errors.Is(err, asynq.ErrTaskNotFound) {
+						break
+					} else {
+						log.Logger.Error("Unexpected error: " + err.Error())
+						break
+					}
 				}
 
 				time.Sleep(1 * time.Second)
@@ -144,8 +150,14 @@ func HandleStart(req StartRequest) {
 
 	// 等待任务完成
 	for {
-		if info.State == asynq.TaskStateCompleted {
-			break
+		_, err := queue.Isp.GetTaskInfo(queue.MERGE_QUEUE, info.ID)
+		if err != nil {
+			if errors.Is(err, asynq.ErrTaskNotFound) {
+				break
+			} else {
+				log.Logger.Error("Unexpected error: " + err.Error())
+				return
+			}
 		}
 
 		time.Sleep(1 * time.Second)
