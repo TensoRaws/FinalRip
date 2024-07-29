@@ -1,6 +1,7 @@
 package process
 
 import (
+	"errors"
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/log"
@@ -54,9 +55,14 @@ func HandleStart(req StartRequest) {
 
 	// 等待任务完成
 	for {
-		// 检查任务是否已完成
-		if info.State == asynq.TaskStateCompleted {
-			break
+		_, err := queue.Isp.GetTaskInfo(queue.CUT_QUEUE, info.ID)
+		if err != nil {
+			if errors.Is(err, asynq.ErrTaskNotFound) {
+				break
+			} else {
+				log.Logger.Error("Unexpected error: " + err.Error())
+				return
+			}
 		}
 
 		time.Sleep(1 * time.Second)
@@ -71,7 +77,6 @@ func HandleStart(req StartRequest) {
 		return
 	}
 
-	// 等待任务完成
 	var wg sync.WaitGroup
 	// 开始压制任务
 	for _, clip := range clips {

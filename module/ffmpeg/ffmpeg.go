@@ -44,10 +44,11 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 	} else {
 		cmd = exec.Command("sh", scriptPath)
 	}
-	err = cmd.Run()
+	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Logger.Info(err.Error())
 	}
+	log.Logger.Info(string(out))
 
 	// 删除脚本文件
 	err = os.Remove(scriptPath)

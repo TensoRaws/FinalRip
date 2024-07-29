@@ -11,6 +11,7 @@ var (
 	once sync.Once
 	Qc   *asynq.Client
 	Qs   *asynq.Server
+	Isp  *asynq.Inspector
 )
 
 const (
@@ -24,6 +25,8 @@ func InitServer() {
 		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
 
 		Qc = asynq.NewClient(asynq.RedisClientOpt{Addr: redisAddr, DB: 0})
+
+		Isp = asynq.NewInspector(asynq.RedisClientOpt{Addr: redisAddr, DB: 0})
 	})
 }
 
