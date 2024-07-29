@@ -19,7 +19,7 @@ type FileInfo struct {
 
 // CutVideo 使用 ffmpeg 进行视频切割，每段视频时长为 60s
 func CutVideo(inputPath string, outputFolder string) ([]string, error) {
-	commandStr := fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -c copy -map 0 -segment_list \"%s/out.list\" \"%s/%%%%003d.mkv\"", inputPath, outputFolder, outputFolder) // nolint: lll
+	commandStr := fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -c copy -map 0:v -segment_list \"%s/out.list\" \"%s/%%%%003d.mkv\"", inputPath, outputFolder, outputFolder) // nolint: lll
 	// 根据操作系统创建脚本文件
 	var scriptPath string
 	switch runtime.GOOS {
