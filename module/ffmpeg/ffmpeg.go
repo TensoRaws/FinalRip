@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"fmt"
 	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/util"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -30,6 +31,12 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 		commandStr = fmt.Sprintf("#!/bin/bash%s%s", "\n", commandStr)
 	}
 
+	// 清理临时文件
+	defer func(p ...string) {
+		log.Logger.Infof("Clear temp file %v", p)
+		_ = util.ClaerTempFile(p...)
+	}(scriptPath)
+
 	// 写入脚本文件
 	err := os.WriteFile(scriptPath, []byte(commandStr), 0755)
 	if err != nil {
@@ -49,9 +56,6 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 		log.Logger.Info(err.Error())
 	}
 	log.Logger.Info(string(out))
-
-	// 删除脚本文件
-	err = os.Remove(scriptPath)
 
 	var outputFiles []FileInfo
 	// 遍历输出文件列表，读取文件夹下的所有文件

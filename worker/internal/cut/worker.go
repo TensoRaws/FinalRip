@@ -39,7 +39,10 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	tempVideo := tempPath + path.Ext(p.VideoKey)
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(tempPath, tempVideo)
+	defer func(p ...string) {
+		log.Logger.Infof("Clear temp file %v", p)
+		_ = util.ClaerTempFile(p...)
+	}(tempPath, tempVideo)
 
 	_ = os.Mkdir(tempPath, os.ModePerm)
 
@@ -125,13 +128,6 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		}(i, output)
 	}
 	wg.Wait()
-
-	// 清理临时文件
-	err = util.ClaerTempFile(tempPath, tempVideo)
-	if err != nil {
-		log.Logger.Errorf("Failed to clear temp file %s, %s: %v", tempPath, tempVideo, err)
-		return err
-	}
 
 	return nil
 }

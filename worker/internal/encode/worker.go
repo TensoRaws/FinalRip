@@ -39,7 +39,10 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	tempEncodedVideo := "encoded.mkv"
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(tempSourceVideo, tempEncodedVideo)
+	defer func(p ...string) {
+		log.Logger.Infof("Clear temp file %v", p)
+		_ = util.ClaerTempFile(p...)
+	}(tempSourceVideo, tempEncodedVideo)
 
 	err := oss.GetWithPath(p.Clip.ClipKey, tempSourceVideo)
 	if err != nil {
@@ -59,6 +62,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	log.Logger.Infof("Start to encode video %s", util.StructToString(p.Clip))
 	err = ffmpeg.EncodeVideo(p.Script, p.EncodeParam)
 	if err != nil {
+		log.Logger.Errorf("Failed to encode video %s: %s", util.StructToString(p.Clip), err)
 		return err
 	}
 

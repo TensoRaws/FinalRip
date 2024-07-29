@@ -32,7 +32,10 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 	log.Logger.Info("commandStr: " + commandStr)
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(encodeScriptPath, scriptPath)
+	defer func(p ...string) {
+		log.Logger.Infof("Clear temp file %v", p)
+		_ = util.ClaerTempFile(p...)
+	}(encodeScriptPath, scriptPath)
 
 	// 写入压制 py
 	err := os.WriteFile(encodeScriptPath, []byte(encodeScript), 0755)
@@ -90,13 +93,6 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 		return err
 	}
 	wg.Wait()
-
-	// 清理临时文件
-	err = util.ClaerTempFile(encodeScriptPath, scriptPath)
-	if err != nil {
-		log.Logger.Error("clear temp file failed: " + err.Error())
-		return err
-	}
 
 	return nil
 }
