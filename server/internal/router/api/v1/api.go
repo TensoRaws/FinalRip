@@ -22,7 +22,10 @@ func NewAPI() *gin.Engine {
 	{
 		processGroup := api.Group("process/")
 		{
+			// 开始压制
 			processGroup.POST("start", process.Start)
+			// 查看进度
+			processGroup.GET("progress", process.Progress)
 		}
 	}
 
