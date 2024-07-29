@@ -10,6 +10,7 @@ services:
   mongodb:
     image: mongo:8.0.0-rc13-jammy
     container_name: finalrip-mongodb
+    restart: always
     ports:
       - "27017:27017"
     environment:

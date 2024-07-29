@@ -2,43 +2,91 @@ package encode
 
 import (
 	"context"
-	"encoding/json"
-	"log"
+	"github.com/TensoRaws/FinalRip/common/db"
+	"github.com/TensoRaws/FinalRip/common/task"
+	"github.com/TensoRaws/FinalRip/module/ffmpeg"
+	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/oss"
+	"github.com/TensoRaws/FinalRip/module/util"
+	"github.com/bytedance/sonic"
+	"os"
+	"path"
+	"strconv"
+	"time"
 
 	"github.com/TensoRaws/FinalRip/module/queue"
 	"github.com/hibiken/asynq"
 )
 
-// 与电子邮件相关任务的有效负载。
-type EmailTaskPayload struct {
-	// 电子邮件接收者的ID。
-	UserID int
-}
-
+// Start starts the worker
 func Start() {
 	mux := asynq.NewServeMux()
-	mux.HandleFunc("email:welcome", sendWelcomeEmail)
-	mux.HandleFunc("email:reminder", sendReminderEmail)
+	mux.HandleFunc(task.VIDEO_ENCODE, Handler)
 
 	if err := queue.Qs.Run(mux); err != nil {
-		log.Fatal(err)
+		log.Logger.Fatalf("could not start worker: %v", err)
 	}
 }
 
-func sendWelcomeEmail(ctx context.Context, t *asynq.Task) error {
-	var p EmailTaskPayload
-	if err := json.Unmarshal(t.Payload(), &p); err != nil {
+func Handler(ctx context.Context, t *asynq.Task) error {
+	var p task.EncodeTaskPayload
+	if err := sonic.Unmarshal(t.Payload(), &p); err != nil {
 		return err
 	}
-	log.Printf(" [*] 给用户 %d 发送欢迎邮件", p.UserID)
-	return nil
-}
+	log.Logger.Infof("Processing task CUT with payload %v", util.StructToString(p.Clip))
 
-func sendReminderEmail(ctx context.Context, t *asynq.Task) error {
-	var p EmailTaskPayload
-	if err := json.Unmarshal(t.Payload(), &p); err != nil {
+	tempSourceVideo := "source.mkv"
+	tempEncodedVideo := "encoded.mkv"
+
+	// 清理临时文件
+	_ = util.ClaerTempFile(tempSourceVideo, tempEncodedVideo)
+
+	err := oss.GetWithPath(p.Clip.ClipKey, tempSourceVideo)
+	if err != nil {
+		log.Logger.Errorf("Failed to download video %s: %v", util.StructToString(p.Clip), err)
 		return err
 	}
-	log.Printf(" [*] 给用户 %d 发送提醒邮件", p.UserID)
+
+	// 等待下载完成
+	for {
+		if _, err := os.Stat(tempSourceVideo); err == nil {
+			break
+		}
+		time.Sleep(1 * time.Second)
+	}
+
+	// 压制视频
+	log.Logger.Infof("Start to encode video %s", util.StructToString(p.Clip))
+	err = ffmpeg.EncodeVideo(p.Script, p.EncodeParam)
+	if err != nil {
+		return err
+	}
+
+	// 上传压制后的视频
+	key := p.Clip.Key + "-clip-encoded-" + strconv.FormatInt(int64(p.Clip.Index), 10) + path.Ext(p.Clip.Key)
+
+	if db.CheckVideoExist(db.VideoClipInfo{
+		Key:       p.Clip.Key,
+		ClipKey:   p.Clip.ClipKey,
+		Index:     p.Clip.Index,
+		Total:     p.Clip.Total,
+		EncodeKey: key,
+	}) && !p.Retry {
+		log.Logger.Infof("Encode Video Clip %s already exists", key)
+		return nil
+	}
+
+	err = oss.PutByPath(key, tempEncodedVideo)
+	if err != nil {
+		log.Logger.Errorf("Failed to upload encode video %s: %s", key, err)
+		return err
+	}
+
+	err = db.UpdateVideoEncodeClip(p.Clip.Key, p.Clip.Index, key)
+	if err != nil {
+		log.Logger.Errorf("Failed to upload encode video %s: %s", key, err)
+		return err
+	}
+
 	return nil
 }

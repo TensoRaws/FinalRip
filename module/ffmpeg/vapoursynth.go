@@ -38,11 +38,13 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 	err := os.WriteFile(encodeScriptPath, []byte(encodeScript), 0755)
 	if err != nil {
 		log.Logger.Error("write vapoursynth script file failed: " + err.Error())
+		return err
 	}
 	// 写入脚本文件
 	err = os.WriteFile(scriptPath, []byte(commandStr), 0755)
 	if err != nil {
 		log.Logger.Error("write script file failed: " + err.Error())
+		return err
 	}
 	// 执行脚本
 	var cmd *exec.Cmd
