@@ -3,6 +3,7 @@ package v1
 import (
 	"net/http"
 
+	"github.com/TensoRaws/FinalRip/server/internal/middleware/cros"
 	"github.com/TensoRaws/FinalRip/server/internal/middleware/logger"
 	"github.com/TensoRaws/FinalRip/server/internal/service/process"
 	"github.com/gin-gonic/gin"
@@ -10,6 +11,7 @@ import (
 
 func NewAPI() *gin.Engine {
 	r := gin.New()
+	r.Use(cros.Cors())                            // 跨域中间件
 	r.Use(logger.DefaultLogger(), gin.Recovery()) // 日志中间件
 
 	r.GET("/", func(c *gin.Context) {

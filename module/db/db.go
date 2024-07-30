@@ -24,12 +24,12 @@ func Init() {
 }
 
 func initialize() {
-	// 初始化数据库
 	credential := options.Credential{
 		Username: config.DBConfig.Username,
 		Password: config.DBConfig.Password,
 	}
 	applyURI := "mongodb://" + config.DBConfig.Host + ":" + strconv.Itoa(config.DBConfig.Port)
+	log.Logger.Info("Connecting to MongoDB: " + applyURI)
 	clientOpts := options.Client().ApplyURI(applyURI).SetAuth(credential)
 
 	cilent, err := mongo.Connect(context.TODO(), clientOpts)
