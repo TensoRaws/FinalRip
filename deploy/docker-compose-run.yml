@@ -8,7 +8,7 @@ networks:
 
 services:
   server:
-    image: 167cc8a3b7b862acc61e1b47571b4110da2abbf4a5a55d5c38a71c4b7f4f5f19
+    image: lychee0/finalrip-server:latest
     container_name: finalrip-server
     restart: always
     ports:
@@ -21,7 +21,7 @@ services:
       - backend
 
   worker-cut:
-    image: 4f864996c896bae37bdd636834ee5196946f384694547db284237f09ac604643
+    image: lychee0/finalrip-worker-cut:latest
     container_name: finalrip-worker-cut
     restart: always
     environment:
@@ -32,7 +32,7 @@ services:
       - backend
 
   worker-encode:
-    image: e58f0b4340770f5a0c9b63392b60636c840a7a38893eee116f835c571b195ed5
+    image: lychee0/finalrip-worker-encode:latest
     container_name: finalrip-worker-encode
     restart: always
     environment:
@@ -43,7 +43,7 @@ services:
       - backend
 
   worker-merge:
-    image: 0b9e920e3bae03673f27092ad1184677ea0e60c6ef96c60f01c8eaee9598ca06
+    image: lychee0/finalrip-worker-merge:latest
     container_name: finalrip-worker-merge
     restart: always
     environment:
