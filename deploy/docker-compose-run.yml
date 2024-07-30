@@ -8,7 +8,7 @@ networks:
 
 services:
   server:
-    image: 4d461664eced3093fa26f42ee7b48d5b8d11d9ab5a963088b162f520455b5959
+    image: 167cc8a3b7b862acc61e1b47571b4110da2abbf4a5a55d5c38a71c4b7f4f5f19
     container_name: finalrip-server
     restart: always
     ports:
@@ -16,6 +16,17 @@ services:
     environment:
       - FINALRIP_DB_HOST=mongodb
       - FINALRIP_REDIS_HOST=redis
-      - FINALRIP_OSS_ENDPOINT=oss:9000
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    networks:
+      - backend
+
+  worker-cut:
+    image: 4f864996c896bae37bdd636834ee5196946f384694547db284237f09ac604643
+    container_name: finalrip-worker-cut
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
     networks:
       - backend
