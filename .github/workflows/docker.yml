@@ -27,10 +27,21 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
+        if: matrix.dockerfile == 'worker-encode'
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./deploy/Dockerfile-${{ matrix.dockerfile }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          push: true
+          tags: lychee0/finalrip-${{ matrix.dockerfile }}:latest
+
+      - name: Build and push
+        if: matrix.dockerfile != 'worker-encode'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./deploy/Dockerfile-${{ matrix.dockerfile }}
+          platforms: linux/amd64
           push: true
           tags: lychee0/finalrip-${{ matrix.dockerfile }}:latest
