@@ -58,14 +58,15 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 			log.Logger.Errorf("Failed to download video %s: %v", p.Clips[0].Key, err)
 			return
 		}
-
 		// 等待下载完成
+		log.Logger.Infof("Downloading source video %s", p.Clips[0].Key)
 		for {
 			if _, err := os.Stat(tempOriginFile); err == nil {
 				break
 			}
 			time.Sleep(1 * time.Second)
 		}
+		log.Logger.Infof("Downloaded source video %s", p.Clips[0].Key)
 	}()
 
 	// 下载 Encode 后的视频 Clips
@@ -83,12 +84,14 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 			}
 
 			// 等待下载完成
+			log.Logger.Infof("Downloading encode video clip %s", clip.EncodeKey)
 			for {
 				if _, err := os.Stat(dlPath); err == nil {
 					break
 				}
 				time.Sleep(1 * time.Second)
 			}
+			log.Logger.Infof("Downloaded encode video clip %s", clip.EncodeKey)
 		}(clip)
 	}
 

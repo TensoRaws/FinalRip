@@ -54,12 +54,14 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 等待下载完成
+	log.Logger.Infof("Waiting for video %s to download", p.VideoKey)
 	for {
 		if _, err := os.Stat(tempVideo); err == nil {
 			break
 		}
 		time.Sleep(1 * time.Second)
 	}
+	log.Logger.Infof("Video %s downloaded", p.VideoKey)
 
 	outputs, err := ffmpeg.CutVideo(tempVideo, tempPath)
 	if err != nil {

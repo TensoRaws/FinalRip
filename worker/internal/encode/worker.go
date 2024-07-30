@@ -51,12 +51,14 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 等待下载完成
+	log.Logger.Infof("Wait for downloading video clip %s", p.Clip.ClipKey)
 	for {
 		if _, err := os.Stat(tempSourceVideo); err == nil {
 			break
 		}
 		time.Sleep(1 * time.Second)
 	}
+	log.Logger.Infof("Downloaded video clip %s", p.Clip.ClipKey)
 
 	// 设置临时视频的环境变量
 	err = os.Setenv("FINALRIP_SOURCE", tempSourceVideo)
