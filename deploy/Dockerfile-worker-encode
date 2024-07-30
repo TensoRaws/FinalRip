@@ -11,7 +11,10 @@ RUN go mod download
 
 RUN make worker
 
-FROM xxx AS app
+FROM continuumio/miniconda3:24.5.0-0 AS app
+
+RUN conda install conda-forge::vapoursynth=69 -y
+RUN conda install tongyuantongyu::vapoursynth-bestsource=5 -y
 
 WORKDIR /app
 

@@ -27,7 +27,7 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 		condaInitScript = "@echo off\r\n" + "call \"%USERPROFILE%\\miniconda3\\condabin\\activate.bat\"\r\n"
 	default:
 		scriptPath = "temp_script.sh"
-		condaInitScript = "#!/bin/bash\n" + "source ~/miniconda3/etc/profile.d/conda.sh\n" + "conda activate\n"
+		condaInitScript = "#!/bin/bash\n" + "conda activate\n"
 	}
 	commandStr = condaInitScript + "vspipe -c y4m encode.py - | ffmpeg -i - " + encodeParam + " encoded.mkv"
 	log.Logger.Info("commandStr: " + commandStr)

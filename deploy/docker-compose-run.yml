@@ -31,6 +31,17 @@ services:
     networks:
       - backend
 
+  worker-encode:
+    image: e58f0b4340770f5a0c9b63392b60636c840a7a38893eee116f835c571b195ed5
+    container_name: finalrip-worker-encode
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    networks:
+      - backend
+
   worker-merge:
     image: 0b9e920e3bae03673f27092ad1184677ea0e60c6ef96c60f01c8eaee9598ca06
     container_name: finalrip-worker-merge
