@@ -1,0 +1,35 @@
+server:
+  name: TensoRaws-FinalRip
+  port: 8848
+  mode: prod
+
+log:
+  level: debug
+  mode:
+    - console
+    - file
+
+db:
+  type: mongodb
+  host: 127.0.0.1
+  port: 27017
+  username: root
+  password: 123456
+  database: finalrip
+  ssl: false
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password:
+  poolSize: 1000
+
+oss:
+  type: minio # minio, cos
+  endpoint: 127.0.0.1:9000
+  accessKey: ChYm7ufIwNAOzq6PQPCA
+  secretKey: udicP52IwRbmo2hf6lFvjUS7NP5BhlAdsGNIuDE5
+  region: local
+  bucket: finalrip
+  ssl: false
+  hostnameImmutable: true

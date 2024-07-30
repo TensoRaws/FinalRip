@@ -1,0 +1,33 @@
+linters:
+  enable-all: false
+  fast: false
+  enable:
+    - errcheck
+    - bodyclose
+    - dogsled
+    - dupl
+    - exportloopref
+    - exhaustive
+    - goconst
+    - gocritic
+    - gocyclo
+    #    - goimports
+    - goprintffuncname
+    - gosimple
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - staticcheck
+    - typecheck
+    - unconvert
+    - unparam
+    - whitespace
+  disable:
+    - unused
+
+run:
+  timeout: 3m

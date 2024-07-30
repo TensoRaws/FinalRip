@@ -1,0 +1,60 @@
+version: "3.8"
+
+name: finalrip
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  mongodb:
+    image: mongo:8.0.0-rc13-jammy
+    container_name: finalrip-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=finalrip
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.2.5
+    container_name: finalrip-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - backend
+
+  monitor:
+    image: hibiken/asynqmon:latest
+    container_name: finalrip-asynqmon
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      REDIS_ADDR: redis:6379
+    networks:
+      - backend
+
+  oss:
+    image: bitnami/minio:2024.7.13
+    container_name: finalrip-minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: ChYm7ufIwNAOzq6PQPCA
+      MINIO_SECRET_KEY: udicP52IwRbmo2hf6lFvjUS7NP5BhlAdsGNIuDE5
+      MINIO_DEFAULT_BUCKETS: finalrip:public
+    networks:
+      - backend

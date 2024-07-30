@@ -1,0 +1,54 @@
+version: "3.8"
+
+name: finalrip
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  server:
+    image: lychee0/finalrip-server:latest
+    container_name: finalrip-server
+    restart: always
+    ports:
+      - "8848:8848"
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    networks:
+      - backend
+
+  worker-cut:
+    image: lychee0/finalrip-worker-cut:latest
+    container_name: finalrip-worker-cut
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    networks:
+      - backend
+
+  worker-encode:
+    image: lychee0/finalrip-worker-encode:latest
+    container_name: finalrip-worker-encode
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    networks:
+      - backend
+
+  worker-merge:
+    image: lychee0/finalrip-worker-merge:latest
+    container_name: finalrip-worker-merge
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    networks:
+      - backend
