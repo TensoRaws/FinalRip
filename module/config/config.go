@@ -14,6 +14,8 @@ var (
 	once   sync.Once
 )
 
+const ENV_PREFIX = "FINALRIP"
+
 func Init() {
 	once.Do(func() {
 		initialize()
@@ -30,10 +32,10 @@ func initialize() {
 	config.AddConfigPath("/etc/finalrip/")
 	config.SetConfigType("yml")
 
-	config.AutomaticEnv()
-	config.SetEnvPrefix("FINALRIP")
+	config.SetEnvPrefix(ENV_PREFIX)
 	replacer := strings.NewReplacer(".", "_")
 	config.SetEnvKeyReplacer(replacer)
+	config.AutomaticEnv()
 
 	config.WatchConfig()
 	config.OnConfigChange(func(e fsnotify.Event) {
