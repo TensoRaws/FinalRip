@@ -40,5 +40,6 @@ func GetCompletedEncodeKey(videoKey string) (string, error) {
 	coll := db.DB.Collection(COMPLETED_COLLECTION)
 	var task CompletedTask
 	err := coll.FindOne(context.TODO(), CompletedTask{Key: videoKey}).Decode(&task)
+
 	return task.EncodeKey, err
 }

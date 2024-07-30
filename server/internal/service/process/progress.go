@@ -42,11 +42,17 @@ func Progress(c *gin.Context) {
 		return
 	}
 
-	url, err := oss.GetPresignedURL(encodeKey, encodeKey, 48*time.Hour)
-	if err != nil {
-		log.Logger.Errorf("oss.GetPresignedURL failed, err: %v", err)
-		resp.AbortWithMsg(c, err.Error())
-		return
+	var url string
+	if encodeKey == "" {
+		log.Logger.Warnf("encode task not completed, key: %s", req.VideoKey)
+		url = ""
+	} else {
+		url, err = oss.GetPresignedURL(encodeKey, encodeKey, 48*time.Hour)
+		if err != nil {
+			log.Logger.Errorf("oss.GetPresignedURL failed, err: %v", err)
+			resp.AbortWithMsg(c, err.Error())
+			return
+		}
 	}
 
 	resp.OKWithData(c, &ProgressResponse{

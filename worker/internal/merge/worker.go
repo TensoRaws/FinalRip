@@ -96,7 +96,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	wg.Wait()
 
 	// 合并视频
-	var inputFiles []string
+	inputFiles := make([]string, len(p.Clips))
 	for i := range p.Clips {
 		inputFiles[i] = tempFolder + "/" + strconv.Itoa(i) + ".mkv"
 	}
