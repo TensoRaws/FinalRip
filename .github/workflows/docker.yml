@@ -1,10 +1,17 @@
-name: docker build and push
+name: docker build
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
   docker:
+    strategy:
+      matrix:
+        dockerfile: ["server", "worker-cut", "worker-encode", "worker-merge"]
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,6 +30,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: ./deploy/Dockerfile-${{ matrix.dockerfile }}
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: lychee0/finalrip:latest
+          tags: lychee0/finalrip-${{ matrix.dockerfile }}:latest
