@@ -1,0 +1,21 @@
+version: "3.8"
+
+name: finalrip
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  server:
+    image: 4d461664eced3093fa26f42ee7b48d5b8d11d9ab5a963088b162f520455b5959
+    container_name: finalrip-server
+    restart: always
+    ports:
+      - "8848:8848"
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=oss:9000
+    networks:
+      - backend

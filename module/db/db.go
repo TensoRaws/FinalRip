@@ -2,8 +2,10 @@ package db
 
 import (
 	"context"
+	"strconv"
 	"sync"
 
+	"github.com/TensoRaws/FinalRip/module/config"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -24,10 +26,11 @@ func Init() {
 func initialize() {
 	// 初始化数据库
 	credential := options.Credential{
-		Username: "root",
-		Password: "123456",
+		Username: config.DBConfig.Username,
+		Password: config.DBConfig.Password,
 	}
-	clientOpts := options.Client().ApplyURI("mongodb://localhost:27017").SetAuth(credential)
+	applyURI := "mongodb://" + config.DBConfig.Host + ":" + strconv.Itoa(config.DBConfig.Port)
+	clientOpts := options.Client().ApplyURI(applyURI).SetAuth(credential)
 
 	cilent, err := mongo.Connect(context.TODO(), clientOpts)
 	if err != nil {

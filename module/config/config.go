@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -44,17 +43,12 @@ func initialize() {
 	})
 
 	if err := config.ReadInConfig(); err != nil {
-		var configFileNotFoundError viper.ConfigFileNotFoundError
-		if errors.As(err, &configFileNotFoundError) {
-			// 配置文件未找到错误
-			fmt.Println("config file not found use default config")
-		}
+		fmt.Println(err)
 	}
 
 	// 初始化配置
 	setConfig()
-
-	fmt.Printf("OSS TYPE: %v", config.GetString("oss.type"))
+	fmt.Printf("Config init success")
 }
 
 func Get(key string) interface{} {
