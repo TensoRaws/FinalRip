@@ -2,6 +2,11 @@ package merge
 
 import (
 	"context"
+	"os"
+	"strconv"
+	"sync"
+	"time"
+
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/ffmpeg"
@@ -11,10 +16,6 @@ import (
 	"github.com/TensoRaws/FinalRip/module/util"
 	"github.com/bytedance/sonic"
 	"github.com/hibiken/asynq"
-	"os"
-	"strconv"
-	"sync"
-	"time"
 )
 
 // Start starts the worker
@@ -47,10 +48,9 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	_ = os.Mkdir(tempFolder, os.ModePerm)
 
 	var wg sync.WaitGroup
-
+	wg.Add(1)
 	// 下载原始视频
 	go func() {
-		wg.Add(1)
 		defer wg.Done()
 
 		err := oss.GetWithPath(p.Clips[0].Key, tempOriginFile)
@@ -70,8 +70,8 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 	// 下载 Encode 后的视频 Clips
 	for _, clip := range p.Clips {
+		wg.Add(1)
 		go func(clip db.VideoClipInfo) {
-			wg.Add(1)
 			defer wg.Done()
 
 			dlPath := tempFolder + "/" + strconv.Itoa(clip.Index) + ".mkv"
@@ -96,9 +96,9 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	wg.Wait()
 
 	// 合并视频
-	inputFiles := make([]string, len(p.Clips), len(p.Clips))
-	for _, clip := range p.Clips {
-		inputFiles[clip.Index] = tempFolder + "/" + strconv.Itoa(clip.Index) + ".mkv"
+	var inputFiles []string
+	for i := range p.Clips {
+		inputFiles[i] = tempFolder + "/" + strconv.Itoa(i) + ".mkv"
 	}
 
 	err := ffmpeg.MergeVideo(tempOriginFile, inputFiles, tempMergedFile)

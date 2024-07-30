@@ -2,6 +2,9 @@ package process
 
 import (
 	"errors"
+	"sync"
+	"time"
+
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/log"
@@ -11,8 +14,6 @@ import (
 	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
 	"github.com/hibiken/asynq"
-	"sync"
-	"time"
 )
 
 type StartRequest struct {
@@ -105,7 +106,7 @@ func HandleStart(req StartRequest) {
 			defer wg.Done()
 			// 等待任务完成
 			for {
-				_, err := queue.Isp.GetTaskInfo(queue.ENCODE_QUEUE, info.ID)
+				_, err := queue.Isp.GetTaskInfo(queue.ENCODE_QUEUE, i.ID)
 				if err != nil {
 					if errors.Is(err, asynq.ErrTaskNotFound) {
 						break

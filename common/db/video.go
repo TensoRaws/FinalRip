@@ -3,9 +3,10 @@ package db
 import (
 	"context"
 	"errors"
+	"sort"
+
 	"github.com/TensoRaws/FinalRip/module/db"
 	"go.mongodb.org/mongo-driver/bson"
-	"sort"
 )
 
 // CheckVideoExist 检查视频记录是否存在
@@ -60,7 +61,7 @@ func GetVideoClips(videoKey string) ([]VideoClipInfo, error) {
 func UpdateVideo(filter VideoClipInfo, update VideoClipInfo) error {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
 
-	up := bson.D{{"$set", update}}
+	up := bson.D{{"$set", update}} //nolint: govet
 
 	_, err := coll.UpdateOne(context.TODO(), filter, up)
 	if err != nil {
@@ -78,7 +79,7 @@ func UpdateVideoEncodeClip(videoKey string, clipKey string, encodeKey string) er
 		ClipKey: clipKey,
 	}
 
-	update := bson.D{{"$set", VideoClipInfo{
+	update := bson.D{{"$set", VideoClipInfo{ //nolint: govet
 		EncodeKey: encodeKey,
 	}}}
 
@@ -104,7 +105,6 @@ func GetVideoProgress(videoKey string) ([]bool, error) {
 		} else {
 			status = append(status, false)
 		}
-
 	}
 
 	return status, nil

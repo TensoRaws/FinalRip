@@ -55,7 +55,6 @@ func initialize() {
 	setConfig()
 
 	fmt.Printf("OSS TYPE: %v", config.GetString("oss.type"))
-	fmt.Printf(" OSS PREFIX: %v\n", OSS_PREFIX)
 }
 
 func Get(key string) interface{} {

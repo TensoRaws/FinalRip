@@ -2,19 +2,19 @@ package encode
 
 import (
 	"context"
-	"github.com/TensoRaws/FinalRip/common/db"
-	"github.com/TensoRaws/FinalRip/common/task"
-	"github.com/TensoRaws/FinalRip/module/ffmpeg"
-	"github.com/TensoRaws/FinalRip/module/log"
-	"github.com/TensoRaws/FinalRip/module/oss"
-	"github.com/TensoRaws/FinalRip/module/util"
-	"github.com/bytedance/sonic"
 	"os"
 	"path"
 	"strconv"
 	"time"
 
+	"github.com/TensoRaws/FinalRip/common/db"
+	"github.com/TensoRaws/FinalRip/common/task"
+	"github.com/TensoRaws/FinalRip/module/ffmpeg"
+	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/oss"
 	"github.com/TensoRaws/FinalRip/module/queue"
+	"github.com/TensoRaws/FinalRip/module/util"
+	"github.com/bytedance/sonic"
 	"github.com/hibiken/asynq"
 )
 

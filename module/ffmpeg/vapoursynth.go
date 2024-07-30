@@ -3,13 +3,14 @@ package ffmpeg
 import (
 	"bufio"
 	"fmt"
-	"github.com/TensoRaws/FinalRip/module/log"
-	"github.com/TensoRaws/FinalRip/module/util"
 	"io"
 	"os"
 	"os/exec"
 	"runtime"
 	"sync"
+
+	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/util"
 )
 
 // EncodeVideo 压制视频，压制后的视频文件名为 encoded.mkv，压制参数由 encodeParam 指定，压制视频从环境变量 FINALRIP_SOURCE 读取
@@ -21,7 +22,7 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 	var scriptPath string
 	var condaInitScript string
 	switch runtime.GOOS {
-	case "windows":
+	case OS_WINDOWS:
 		scriptPath = "temp_script.bat"
 		condaInitScript = "@echo off\r\n" + "call \"%USERPROFILE%\\miniconda3\\condabin\\activate.bat\"\r\n"
 	default:
@@ -51,7 +52,7 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 	}
 	// 执行脚本
 	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == OS_WINDOWS {
 		cmd = exec.Command("cmd", "/c", scriptPath)
 	} else {
 		cmd = exec.Command("sh", scriptPath)

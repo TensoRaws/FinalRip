@@ -10,7 +10,6 @@ var (
 	DBConfig     DB
 	RedisConfig  Redis
 	OSSConfig    OSS
-	OSS_PREFIX   string
 )
 
 func setConfig() {
@@ -38,6 +37,4 @@ func setConfig() {
 	if err != nil {
 		log.Fatalf("unable to decode into oss struct, %v", err)
 	}
-
-	OSS_PREFIX = GenerateOSSPrefix()
 }

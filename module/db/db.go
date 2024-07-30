@@ -2,17 +2,17 @@ package db
 
 import (
 	"context"
+	"sync"
+
 	"github.com/TensoRaws/FinalRip/module/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"sync"
 )
 
 var (
 	DB   *mongo.Database
 	once sync.Once
-	err  error
 )
 
 func Init() {
@@ -37,7 +37,7 @@ func initialize() {
 
 	// Send a ping to confirm a successful connection
 	var result bson.M
-	if err = cilent.Database("finalrip").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil {
+	if err = cilent.Database("finalrip").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil { //nolint
 		log.Logger.Error("Failed to connect to MongoDB: " + err.Error())
 		panic(err)
 	}

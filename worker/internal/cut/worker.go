@@ -2,6 +2,12 @@ package cut
 
 import (
 	"context"
+	"os"
+	"path"
+	"strconv"
+	"sync"
+	"time"
+
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/ffmpeg"
@@ -11,11 +17,6 @@ import (
 	"github.com/TensoRaws/FinalRip/module/util"
 	"github.com/bytedance/sonic"
 	"github.com/hibiken/asynq"
-	"os"
-	"path"
-	"strconv"
-	"sync"
-	"time"
 )
 
 // Start starts the worker

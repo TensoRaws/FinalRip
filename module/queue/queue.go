@@ -1,10 +1,11 @@
 package queue
 
 import (
-	"github.com/TensoRaws/FinalRip/module/config"
-	"github.com/hibiken/asynq"
 	"strconv"
 	"sync"
+
+	"github.com/TensoRaws/FinalRip/module/config"
+	"github.com/hibiken/asynq"
 )
 
 var (

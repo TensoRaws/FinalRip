@@ -2,14 +2,15 @@ package ffmpeg
 
 import (
 	"fmt"
-	"github.com/TensoRaws/FinalRip/module/log"
-	"github.com/TensoRaws/FinalRip/module/util"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sort"
 	"strconv"
+
+	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/util"
 )
 
 type FileInfo struct {
@@ -19,11 +20,11 @@ type FileInfo struct {
 
 // CutVideo 使用 ffmpeg 进行视频切割，每段视频时长为 60s
 func CutVideo(inputPath string, outputFolder string) ([]string, error) {
-	commandStr := fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -c copy -map 0:v:0 -segment_list \"%s/out.list\" \"%s/%%%%003d.mkv\"", inputPath, outputFolder, outputFolder) // nolint: lll
+	commandStr := fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -c copy -map 0:v:0 -segment_list \"%s/out.list\" \"%s/%%%%003d.mkv\"", inputPath, outputFolder, outputFolder) //nolint: lll
 	// 根据操作系统创建脚本文件
 	var scriptPath string
 	switch runtime.GOOS {
-	case "windows":
+	case OS_WINDOWS:
 		scriptPath = "temp_script.bat"
 		commandStr = fmt.Sprintf("@echo off%s%s", "\r\n", commandStr)
 	default:
@@ -46,7 +47,7 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 
 	// 执行脚本
 	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
+	if runtime.GOOS == OS_WINDOWS {
 		cmd = exec.Command("cmd", "/c", scriptPath)
 	} else {
 		cmd = exec.Command("sh", scriptPath)
@@ -76,6 +77,10 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 		}
 		return nil
 	})
+	if err != nil {
+		log.Logger.Errorf("Failed to walk output folder: %v", err)
+		return nil, err
+	}
 
 	sort.Slice(outputFiles, func(i, j int) bool {
 		return outputFiles[i].Index < outputFiles[j].Index
