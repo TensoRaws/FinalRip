@@ -35,8 +35,8 @@ func UpdateUncompletedTask(videoKey string, encodeKey string) error {
 	return nil
 }
 
-// GetCompletedEncode gets a completed encode video from the database
-func GetCompletedEncode(videoKey string) (string, error) {
+// GetCompletedEncodeKey gets a completed encode video from the database
+func GetCompletedEncodeKey(videoKey string) (string, error) {
 	coll := db.DB.Collection(COMPLETED_COLLECTION)
 	var task CompletedTask
 	err := coll.FindOne(context.TODO(), CompletedTask{Key: videoKey}).Decode(&task)

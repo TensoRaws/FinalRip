@@ -1,7 +1,11 @@
 package process
 
 import (
+	"time"
+
 	"github.com/TensoRaws/FinalRip/common/db"
+	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/oss"
 	"github.com/TensoRaws/FinalRip/module/resp"
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +15,8 @@ type ProgressRequest struct {
 }
 
 type ProgressResponse struct {
-	Progress []bool `json:"progress"`
+	Progress  []bool `json:"progress"`
+	EncodeUrl string `json:"encode_url"`
 }
 
 // Progress 查看进度 (GET /progress)
@@ -25,11 +30,27 @@ func Progress(c *gin.Context) {
 
 	progress, err := db.GetVideoProgress(req.VideoKey)
 	if err != nil {
+		log.Logger.Errorf("db.GetVideoProgress failed, err: %v", err)
+		resp.AbortWithMsg(c, err.Error())
+		return
+	}
+
+	encodeKey, err := db.GetCompletedEncodeKey(req.VideoKey)
+	if err != nil {
+		log.Logger.Errorf("db.GetCompletedEncodeKey failed, err: %v", err)
+		resp.AbortWithMsg(c, err.Error())
+		return
+	}
+
+	url, err := oss.GetPresignedURL(encodeKey, encodeKey, 48*time.Hour)
+	if err != nil {
+		log.Logger.Errorf("oss.GetPresignedURL failed, err: %v", err)
 		resp.AbortWithMsg(c, err.Error())
 		return
 	}
 
 	resp.OKWithData(c, &ProgressResponse{
-		Progress: progress,
+		Progress:  progress,
+		EncodeUrl: url,
 	})
 }

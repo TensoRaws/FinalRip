@@ -31,6 +31,13 @@ func Start(c *gin.Context) {
 		return
 	}
 
+	err := db.InsertUncompletedTask(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to insert uncompleted task: " + err.Error())
+		resp.AbortWithMsg(c, err.Error())
+		return
+	}
+
 	resp.OK(c)
 	go HandleStart(req)
 }
