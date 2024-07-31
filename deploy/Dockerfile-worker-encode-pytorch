@@ -36,10 +36,9 @@ RUN pip install opencv-python==4.10.0.82
 
 # install CUDA
 RUN conda install conda-forge::cudatoolkit=11.8.0 -y
-RUN conda install conda-forge::cudnn=8.9.7.* -y
 
 # install PyTorch
-RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 # install AI packages
 RUN pip install vsrealesrgan
