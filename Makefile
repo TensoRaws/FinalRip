@@ -25,3 +25,7 @@ lint:
 	golangci-lint run
 	pre-commit install # pip install pre-commit
 	pre-commit run --all-files
+
+.PHONY: pytorch
+pytorch:
+	docker buildx build -f .\deploy\Dockerfile-worker-encode-pytorch .
