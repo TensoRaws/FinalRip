@@ -1,6 +1,9 @@
 name: docker build
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -31,7 +34,7 @@ jobs:
           file: ./deploy/Dockerfile-${{ matrix.dockerfile }}
           platforms: linux/amd64
           push: true
-          tags: lychee0/finalrip-${{ matrix.dockerfile }}:latest
+          tags: lychee0/finalrip-${{ matrix.dockerfile }}:dev
 
       - name: Build and push
         if: matrix.dockerfile != 'worker-encode'
@@ -41,4 +44,4 @@ jobs:
           file: ./deploy/Dockerfile-${{ matrix.dockerfile }}
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: lychee0/finalrip-${{ matrix.dockerfile }}:latest
+          tags: lychee0/finalrip-${{ matrix.dockerfile }}:dev
