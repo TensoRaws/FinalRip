@@ -26,6 +26,20 @@ lint:
 	pre-commit install # pip install pre-commit
 	pre-commit run --all-files
 
-.PHONY: pytorch
-pytorch:
-	docker buildx build -f .\deploy\Dockerfile-worker-encode-pytorch .
+.PHONY: pt
+pt:
+	docker buildx build -f .\deploy\Dockerfile-worker-encode-pytorch -t lychee0/finalrip-worker-encode-pytorch .
+
+.PHONY: pt-dev
+pt-dev:
+	docker buildx build -f .\deploy\Dockerfile-worker-encode-pytorch -t lychee0/finalrip-worker-encode-pytorch .
+	docker tag lychee0/finalrip-worker-encode-pytorch lychee0/finalrip-worker-encode-pytorch:dev
+	docker login
+	docker push lychee0/finalrip-worker-encode-pytorch:dev
+
+.PHONY: pt-release
+pt-release:
+	docker buildx build -f .\deploy\Dockerfile-worker-encode-pytorch -t lychee0/finalrip-worker-encode-pytorch .
+	docker tag lychee0/finalrip-worker-encode-pytorch lychee0/finalrip-worker-encode-pytorch:release
+	docker login
+	docker push lychee0/finalrip-worker-encode-pytorch:release
