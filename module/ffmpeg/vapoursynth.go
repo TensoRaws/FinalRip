@@ -29,7 +29,7 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 		scriptPath = "temp_script.sh"
 		condaInitScript = "#!/bin/bash\n" + "conda activate\n"
 	}
-	commandStr = condaInitScript + "vspipe -c y4m encode.py - | ffmpeg -i - " + encodeParam + " encoded.mkv"
+	commandStr = condaInitScript + "vspipe -c y4m encode.py - | " + encodeParam + " encoded.mkv"
 	log.Logger.Info("commandStr: " + commandStr)
 
 	// 清理临时文件
