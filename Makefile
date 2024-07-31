@@ -40,6 +40,6 @@ pt-dev:
 .PHONY: pt-release
 pt-release:
 	docker buildx build -f .\deploy\Dockerfile-worker-encode-pytorch -t lychee0/finalrip-worker-encode-pytorch .
-	docker tag lychee0/finalrip-worker-encode-pytorch lychee0/finalrip-worker-encode-pytorch:release
+	docker tag lychee0/finalrip-worker-encode-pytorch lychee0/finalrip-worker-encode-pytorch:latest
 	docker login
-	docker push lychee0/finalrip-worker-encode-pytorch:release
+	docker push lychee0/finalrip-worker-encode-pytorch:latest
