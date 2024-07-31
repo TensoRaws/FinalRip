@@ -22,13 +22,16 @@ RUN conda install tongyuantongyu::vapoursynth-bestsource=5 -y
 RUN conda install tongyuantongyu::vapoursynth-fmtconv=30 -y
 
 # install python packages
-RUN conda install conda-forge::numpy=1.26.4 -y
-RUN conda install conda-forge::py-opencv=4.10.0 -y
+RUN pip install numpy==1.26.4
+RUN pip install opencv-python==4.10.0.82
 
 # install vapoursynth python plugins
 RUN conda install tongyuantongyu::vapoursynth-mvsfunc=10.10 -y
 RUN conda install tongyuantongyu::vapoursynth-vsutil=0.8.0 -y
 
+RUN apt update && apt install -y libgl1-mesa-glx
+
+# worker app
 WORKDIR /app
 
 COPY --from=builder /build/worker/worker /app/
