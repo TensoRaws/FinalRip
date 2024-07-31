@@ -33,12 +33,21 @@ services:
 
   worker-encode:
     image: lychee0/finalrip-worker-encode:latest
+    #    image: lychee0/finalrip-worker-encode-pytorch:latest
     container_name: finalrip-worker-encode
     restart: always
     environment:
       - FINALRIP_DB_HOST=mongodb
       - FINALRIP_REDIS_HOST=redis
       - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    #    deploy:
+    #      resources:
+    #        reservations:
+    #          devices:
+    #            - driver: nvidia
+    #              device_ids:
+    #                - "0"
+    #              capabilities: [gpu]
     networks:
       - backend
 
