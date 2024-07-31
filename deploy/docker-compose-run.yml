@@ -33,7 +33,7 @@ services:
 
   worker-encode:
     image: lychee0/finalrip-worker-encode:latest
-    #    image: lychee0/finalrip-worker-encode-pytorch:latest
+    #    image: lychee0/finalrip-worker-encode-pytorch:dev
     container_name: finalrip-worker-encode
     restart: always
     environment:

@@ -1,0 +1,18 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/go:1.17
+
+    resource_class: small
+
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run: |
+          echo $DOCKERHUB_PASSWORD | docker login -u lychee0 --password-stdin
+          make pt-dev
