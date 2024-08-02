@@ -25,8 +25,9 @@ func Init() {
 
 func initialize() {
 	credential := options.Credential{
-		Username: config.DBConfig.Username,
-		Password: config.DBConfig.Password,
+		Username:   config.DBConfig.Username,
+		Password:   config.DBConfig.Password,
+		AuthSource: "admin",
 	}
 	applyURI := "mongodb://" + config.DBConfig.Host + ":" + strconv.Itoa(config.DBConfig.Port)
 	log.Logger.Info("Connecting to MongoDB: " + applyURI)
