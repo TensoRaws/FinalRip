@@ -21,22 +21,27 @@ const (
 	MERGE_QUEUE  = "merge_queue"
 )
 
+func getRedisClientOpt() asynq.RedisClientOpt {
+	return asynq.RedisClientOpt{
+		Addr:     config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port),
+		Password: config.RedisConfig.Password,
+		PoolSize: config.RedisConfig.PoolSize,
+		DB:       0,
+	}
+}
+
 func InitServer() {
 	once.Do(func() {
-		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
+		Qc = asynq.NewClient(getRedisClientOpt())
 
-		Qc = asynq.NewClient(asynq.RedisClientOpt{Addr: redisAddr, DB: 0})
-
-		Isp = asynq.NewInspector(asynq.RedisClientOpt{Addr: redisAddr, DB: 0})
+		Isp = asynq.NewInspector(getRedisClientOpt())
 	})
 }
 
 func InitCutWorker() {
 	once.Do(func() {
-		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
-
 		Qs = asynq.NewServer(
-			asynq.RedisClientOpt{Addr: redisAddr, DB: 0},
+			getRedisClientOpt(),
 			asynq.Config{
 				Concurrency: 1,
 				Queues: map[string]int{
@@ -49,10 +54,8 @@ func InitCutWorker() {
 
 func InitEncodeWorker() {
 	once.Do(func() {
-		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
-
 		Qs = asynq.NewServer(
-			asynq.RedisClientOpt{Addr: redisAddr, DB: 0},
+			getRedisClientOpt(),
 			asynq.Config{
 				Concurrency: 1,
 				Queues: map[string]int{
@@ -65,10 +68,8 @@ func InitEncodeWorker() {
 
 func InitMergeWorker() {
 	once.Do(func() {
-		redisAddr := config.RedisConfig.Host + ":" + strconv.Itoa(config.RedisConfig.Port)
-
 		Qs = asynq.NewServer(
-			asynq.RedisClientOpt{Addr: redisAddr, DB: 0},
+			getRedisClientOpt(),
 			asynq.Config{
 				Concurrency: 1,
 				Queues: map[string]int{
