@@ -40,10 +40,10 @@ func initialize() {
 
 	// Send a ping to confirm a successful connection
 	var result bson.M
-	if err = client.Database("finalrip").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil { //nolint
+	if err = client.Database(config.DBConfig.Database).RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil { //nolint
 		log.Logger.Error("Failed to connect to MongoDB: " + err.Error())
 		panic(err)
 	}
 
-	DB = client.Database("finalrip")
+	DB = client.Database(config.DBConfig.Database)
 }
