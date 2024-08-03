@@ -11,7 +11,7 @@ RUN go mod download
 
 RUN make worker
 
-FROM lychee0/vs-pytorch AS app
+FROM lychee0/vs-pytorch:dev AS app
 
 # worker app
 WORKDIR /app
