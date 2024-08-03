@@ -34,9 +34,6 @@ RUN pip install git+https://github.com/HomeOfVapourSynthEvolution/havsfunc.git
 RUN pip install numpy==1.26.4
 RUN pip install opencv-python==4.10.0.82
 
-# install CUDA
-RUN conda install conda-forge::cudatoolkit=11.8.0 -y
-
 # install PyTorch
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 

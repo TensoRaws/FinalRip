@@ -32,7 +32,7 @@ func initialize() {
 	log.Logger.Info("Connecting to MongoDB: " + applyURI)
 	clientOpts := options.Client().ApplyURI(applyURI).SetAuth(credential)
 
-	cilent, err := mongo.Connect(context.TODO(), clientOpts)
+	client, err := mongo.Connect(context.TODO(), clientOpts)
 	if err != nil {
 		log.Logger.Error("Failed to connect to MongoDB: " + err.Error())
 		panic(err)
@@ -40,10 +40,10 @@ func initialize() {
 
 	// Send a ping to confirm a successful connection
 	var result bson.M
-	if err = cilent.Database("finalrip").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil { //nolint
+	if err = client.Database(config.DBConfig.Database).RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil { //nolint
 		log.Logger.Error("Failed to connect to MongoDB: " + err.Error())
 		panic(err)
 	}
 
-	DB = cilent.Database("finalrip")
+	DB = client.Database(config.DBConfig.Database)
 }
