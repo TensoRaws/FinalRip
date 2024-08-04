@@ -41,10 +41,17 @@ func initialize() {
 		config.AddConfigPath("./")
 		config.AddConfigPath("$HOME/.finalrip/")
 		config.AddConfigPath("/etc/finalrip/")
+
 		if err := config.ReadInConfig(); err != nil {
 			fmt.Println(err)
 		}
+
 		config.WatchConfig()
+		config.OnConfigChange(func(e fsnotify.Event) {
+			// 配置文件发生变更之后，重新初始化配置
+			setConfig()
+			fmt.Println("Config file changed:", e.Name)
+		})
 	} else {
 		// 从 consul 读取配置
 		host := os.Getenv(FINALRIP_REMOTE_CONFIG_HOST)
@@ -74,12 +81,6 @@ func initialize() {
 	replacer := strings.NewReplacer(".", "_")
 	config.SetEnvKeyReplacer(replacer)
 	config.AutomaticEnv()
-
-	config.OnConfigChange(func(e fsnotify.Event) {
-		// 配置文件发生变更之后，重新初始化配置
-		setConfig()
-		fmt.Println("Config file changed:", e.Name)
-	})
 
 	// 初始化配置
 	setConfig()
