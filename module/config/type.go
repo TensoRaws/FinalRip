@@ -1,9 +1,10 @@
 package config
 
 type Server struct {
-	Name string `yaml:"name"`
-	Port int    `yaml:"port"`
-	Mode string `yaml:"mode"`
+	Token string `yaml:"token"`
+	Name  string `yaml:"name"`
+	Port  int    `yaml:"port"`
+	Mode  string `yaml:"mode"`
 }
 
 type Log struct {

@@ -10,6 +10,7 @@ var (
 
 func setConfig() {
 	// server
+	ServerConfig.Token = config.GetString("server.token")
 	ServerConfig.Name = config.GetString("server.name")
 	ServerConfig.Port = config.GetInt("server.port")
 	ServerConfig.Mode = config.GetString("server.mode")

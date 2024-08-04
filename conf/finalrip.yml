@@ -1,4 +1,5 @@
 server:
+  token: 114514
   name: TensoRaws-FinalRip
   port: 8848
   mode: prod
