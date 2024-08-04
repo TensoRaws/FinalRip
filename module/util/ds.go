@@ -44,3 +44,20 @@ func CheckStringInSlice(item string, slice []string) bool {
 	}
 	return false
 }
+
+// DeepCopyMap 深拷贝 map[string]any 类型的字典
+func DeepCopyMap(original map[string]any) (map[string]any, error) {
+	// 序列化原始 map
+	originalStr, err := sonic.Marshal(original)
+	if err != nil {
+		return nil, err
+	}
+	// 创建一个新的 map 用于存放拷贝结果
+	copied := make(map[string]any)
+	// 反序列化到新 map
+	err = sonic.Unmarshal(originalStr, &copied)
+	if err != nil {
+		return nil, err
+	}
+	return copied, nil
+}
