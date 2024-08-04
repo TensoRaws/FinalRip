@@ -14,6 +14,8 @@ services:
     ports:
       - "8848:8848"
     environment:
+      - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
+      # override the remote config by env
       - FINALRIP_DB_HOST=mongodb
       - FINALRIP_REDIS_HOST=redis
       - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
@@ -25,9 +27,7 @@ services:
     container_name: finalrip-worker-cut
     restart: always
     environment:
-      - FINALRIP_DB_HOST=mongodb
-      - FINALRIP_REDIS_HOST=redis
-      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+      - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
     networks:
       - backend
 
@@ -37,9 +37,7 @@ services:
     container_name: finalrip-worker-encode
     restart: always
     environment:
-      - FINALRIP_DB_HOST=mongodb
-      - FINALRIP_REDIS_HOST=redis
-      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+      - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
     #    deploy:
     #      resources:
     #        reservations:
@@ -56,8 +54,6 @@ services:
     container_name: finalrip-worker-merge
     restart: always
     environment:
-      - FINALRIP_DB_HOST=mongodb
-      - FINALRIP_REDIS_HOST=redis
-      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+      - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
     networks:
       - backend
