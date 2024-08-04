@@ -14,6 +14,8 @@ type VideoClipInfo struct {
 }
 
 type CompletedTask struct {
-	Key       string `bson:"key,omitempty"`
-	EncodeKey string `bson:"encode_key,omitempty"`
+	Key         string `bson:"key,omitempty"`
+	EncodeKey   string `bson:"encode_key,omitempty"`
+	EncodeParam string `bson:"encode_param,omitempty"`
+	Script      string `bson:"script,omitempty"`
 }
