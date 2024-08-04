@@ -41,7 +41,7 @@ func GetVideoClips(videoKey string) ([]VideoClipInfo, error) {
 		return nil, err
 	}
 
-	var infos []VideoClipInfo
+	infos := make([]VideoClipInfo, 0)
 	if err = cursor.All(context.TODO(), &infos); err != nil {
 		return nil, err
 	}
