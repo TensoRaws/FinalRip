@@ -36,7 +36,9 @@ func initialize() {
 	config.SetConfigType("yml")
 	config.SetConfigName("finalrip")
 
-	if os.Getenv(FINALRIP_REMOTE_CONFIG_HOST) == "" {
+	host := os.Getenv(FINALRIP_REMOTE_CONFIG_HOST)
+
+	if host == "" {
 		config.AddConfigPath("./conf/")
 		config.AddConfigPath("./")
 		config.AddConfigPath("$HOME/.finalrip/")
@@ -54,7 +56,6 @@ func initialize() {
 		})
 	} else {
 		// 从 consul 读取配置
-		host := os.Getenv(FINALRIP_REMOTE_CONFIG_HOST)
 		key := os.Getenv(FINALRIP_REMOTE_CONFIG_KEY)
 		if key == "" {
 			fmt.Println("remote key is empty, default to finalrip.yml")
