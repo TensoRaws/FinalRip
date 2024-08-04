@@ -8,10 +8,12 @@ import (
 )
 
 // InsertUncompletedTask inserts a new uncompleted task into the database
-func InsertUncompletedTask(videoKey string) error {
+func InsertUncompletedTask(videoKey string, encodeParam string, script string) error {
 	coll := db.DB.Collection(COMPLETED_COLLECTION)
 	_, err := coll.InsertOne(context.TODO(), CompletedTask{
-		Key: videoKey,
+		Key:         videoKey,
+		EncodeParam: encodeParam,
+		Script:      script,
 	})
 	return err
 }
@@ -35,11 +37,11 @@ func UpdateUncompletedTask(videoKey string, encodeKey string) error {
 	return nil
 }
 
-// GetCompletedEncodeKey gets a completed encode video from the database
-func GetCompletedEncodeKey(videoKey string) (string, error) {
+// GetCompletedTask gets a completed Task from the database
+func GetCompletedTask(videoKey string) (CompletedTask, error) {
 	coll := db.DB.Collection(COMPLETED_COLLECTION)
 	var task CompletedTask
 	err := coll.FindOne(context.TODO(), CompletedTask{Key: videoKey}).Decode(&task)
 
-	return task.EncodeKey, err
+	return task, err
 }

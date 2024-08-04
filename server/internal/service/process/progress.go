@@ -15,8 +15,11 @@ type ProgressRequest struct {
 }
 
 type ProgressResponse struct {
-	Progress  []bool `json:"progress"`
-	EncodeUrl string `json:"encode_url"`
+	EncodeKey   string `json:"encode_key"`
+	EncodeParam string `json:"encode_param"`
+	EncodeURL   string `json:"encode_url"`
+	Progress    []bool `json:"progress"`
+	Script      string `json:"script"`
 }
 
 // Progress 查看进度 (GET /progress)
@@ -35,7 +38,7 @@ func Progress(c *gin.Context) {
 		return
 	}
 
-	encodeKey, err := db.GetCompletedEncodeKey(req.VideoKey)
+	task, err := db.GetCompletedTask(req.VideoKey)
 	if err != nil {
 		log.Logger.Errorf("db.GetCompletedEncodeKey failed, err: %v", err)
 		resp.AbortWithMsg(c, err.Error())
@@ -43,11 +46,11 @@ func Progress(c *gin.Context) {
 	}
 
 	var url string
-	if encodeKey == "" {
+	if task.EncodeKey == "" {
 		log.Logger.Warnf("encode task not completed, key: %s", req.VideoKey)
 		url = ""
 	} else {
-		url, err = oss.GetPresignedURL(encodeKey, encodeKey, 48*time.Hour)
+		url, err = oss.GetPresignedURL(task.EncodeKey, task.EncodeKey, 48*time.Hour)
 		if err != nil {
 			log.Logger.Errorf("oss.GetPresignedURL failed, err: %v", err)
 			resp.AbortWithMsg(c, err.Error())
@@ -56,7 +59,10 @@ func Progress(c *gin.Context) {
 	}
 
 	resp.OKWithData(c, &ProgressResponse{
-		Progress:  progress,
-		EncodeUrl: url,
+		EncodeKey:   task.EncodeKey,
+		EncodeParam: task.EncodeParam,
+		EncodeURL:   url,
+		Progress:    progress,
+		Script:      task.Script,
 	})
 }
