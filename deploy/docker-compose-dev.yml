@@ -36,7 +36,7 @@ services:
     networks:
       - backend
 
-  monitor:
+  asynqmon:
     image: hibiken/asynqmon:latest
     container_name: finalrip-asynqmon
     restart: always
@@ -65,6 +65,7 @@ services:
   consul:
     image: consul:1.15
     container_name: finalrip-consul
+    restart: always
     ports:
       - "8500:8500"
     command:
