@@ -15,6 +15,8 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 	listPath := "temp_list.txt"
 	tempVideoOutputPath := "temp_video_output.mkv"
 
+	// 清理临时文件
+	_ = util.ClaerTempFile(listPath, tempVideoOutputPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)

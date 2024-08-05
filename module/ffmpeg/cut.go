@@ -35,6 +35,7 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 	}
 
 	// 清理临时文件
+	_ = util.ClaerTempFile(scriptPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)

@@ -40,6 +40,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	tempVideo := tempPath + path.Ext(p.VideoKey)
 
 	// 清理临时文件
+	_ = util.ClaerTempFile(tempPath, tempVideo)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)
