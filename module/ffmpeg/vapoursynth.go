@@ -33,6 +33,7 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 	log.Logger.Info("commandStr: " + commandStr)
 
 	// 清理临时文件
+	_ = util.ClaerTempFile(encodeScriptPath, scriptPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)
