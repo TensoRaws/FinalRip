@@ -37,7 +37,7 @@ services:
     container_name: finalrip-worker-encode
     restart: always
     environment:
-      - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
+      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
     #    deploy:
     #      resources:
     #        reservations:
