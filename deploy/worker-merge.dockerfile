@@ -15,6 +15,8 @@ FROM debian:bookworm AS app
 
 WORKDIR /app
 
+ENV FINALRIP_EASYTIER_HOST 10.126.126.1:8500
+
 COPY --from=mwader/static-ffmpeg:7.0.1 /ffmpeg /usr/local/bin/
 COPY --from=mwader/static-ffmpeg:7.0.1 /ffprobe /usr/local/bin/
 

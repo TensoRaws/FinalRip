@@ -23,6 +23,7 @@ const (
 	ENV_PREFIX                  = "FINALRIP"
 	FINALRIP_REMOTE_CONFIG_HOST = "FINALRIP_REMOTE_CONFIG_HOST"
 	FINALRIP_REMOTE_CONFIG_KEY  = "FINALRIP_REMOTE_CONFIG_KEY"
+	FINALRIP_EASYTIER_HOST      = "FINALRIP_EASYTIER_HOST"
 )
 
 func Init() {
@@ -55,6 +56,10 @@ func initialize() {
 			fmt.Println("Config file changed:", e.Name)
 		})
 	} else {
+		if host == "EASYTIER" || host == "easytier" {
+			host = os.Getenv(FINALRIP_EASYTIER_HOST)
+		}
+
 		// 从 consul 读取配置
 		key := os.Getenv(FINALRIP_REMOTE_CONFIG_KEY)
 		if key == "" {
