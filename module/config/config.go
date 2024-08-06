@@ -57,7 +57,7 @@ func initialize() {
 		})
 	} else {
 		if host == "EASYTIER" || host == "easytier" {
-			host = os.Getenv(FINALRIP_EASYTIER_HOST)
+			host = os.Getenv(FINALRIP_EASYTIER_HOST) + ":8500"
 		}
 
 		// 从 consul 读取配置
@@ -78,7 +78,7 @@ func initialize() {
 		go func() {
 			for {
 				updateRemoteConfigOnChange()
-				time.Sleep(5 * time.Second)
+				time.Sleep(30 * time.Second)
 			}
 		}()
 	}
