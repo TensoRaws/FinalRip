@@ -2,7 +2,6 @@ package merge
 
 import (
 	"context"
-	"math"
 	"os"
 	"strconv"
 	"sync"
@@ -110,19 +109,6 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	if err != nil {
 		log.Logger.Errorf("Failed to merge video: %v", err)
 		return err
-	}
-
-	// 校验视频时长
-	sourceDuration, err := ffmpeg.GetVideoDuration(tempOriginFile)
-	if err != nil {
-		log.Logger.Warnf("Failed to get source video duration: %v", err)
-	}
-	mergedDuration, err := ffmpeg.GetVideoDuration(tempMergedFile)
-	if err != nil {
-		log.Logger.Warnf("Failed to get merged video duration: %v", err)
-	}
-	if math.Abs(sourceDuration-mergedDuration) > 1 {
-		log.Logger.Warnf("Merged video duration is not equal to source video duration: %v", err)
 	}
 
 	mergedKey := p.Clips[0].Key + "-Encoded" + ".mkv"

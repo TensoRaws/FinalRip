@@ -2,7 +2,6 @@ package encode
 
 import (
 	"context"
-	"math"
 	"os"
 	"path"
 	"strconv"
@@ -67,19 +66,6 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	if err != nil {
 		log.Logger.Errorf("Failed to set env FINALRIP_SOURCE: %v", err)
 		return err
-	}
-
-	// 校验视频时长
-	durationSource, err := ffmpeg.GetVideoDuration(tempSourceVideo)
-	if err != nil {
-		log.Logger.Warnf("Failed to get source video clip duration: %v", err)
-	}
-	durationEncode, err := ffmpeg.GetVideoDuration(tempEncodedVideo)
-	if err != nil {
-		log.Logger.Warnf("Failed to get encode video clip duration: %v", err)
-	}
-	if math.Abs(durationSource-durationEncode) > 1 {
-		log.Logger.Warnf("Video clip duration not match: %v, %v", durationSource, durationEncode)
 	}
 
 	// 压制视频
