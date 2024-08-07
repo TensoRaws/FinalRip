@@ -15,7 +15,7 @@ FROM alpine:3.20 AS app
 
 WORKDIR /app
 
-ENV FINALRIP_EASYTIER_HOST 10.126.126.1
+ENV FINALRIP_EASYTIER_HOST 10.126.126.251
 
 COPY --from=builder /build/server/server /app/
 COPY --from=builder /build/conf/finalrip.yml /app/conf/

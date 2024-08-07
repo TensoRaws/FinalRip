@@ -4,17 +4,16 @@ import (
 	"log"
 	"os"
 
+	"github.com/TensoRaws/FinalRip/common/version"
 	"github.com/TensoRaws/FinalRip/server/cmd"
 )
-
-const version = "v0.0.1"
 
 func main() {
 	app := cmd.NewApp()
 	app.Name = "FinalRip"
 	app.Usage = "FinalRip Aip Sever"
 	app.Description = "a distributed video processing tool"
-	app.Version = version
+	app.Version = version.FINALRUP_VERSION
 
 	err := app.Run(os.Args)
 	if err != nil {

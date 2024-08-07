@@ -16,7 +16,7 @@ FROM lychee0/vs-pytorch:dev AS app
 # worker app
 WORKDIR /app
 
-ENV FINALRIP_EASYTIER_HOST 10.126.126.1
+ENV FINALRIP_EASYTIER_HOST 10.126.126.251
 
 COPY --from=builder /build/worker/worker /app/
 COPY --from=builder /build/conf/finalrip.yml /app/conf/
