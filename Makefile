@@ -26,6 +26,13 @@ lint:
 	pre-commit install # pip install pre-commit
 	pre-commit run --all-files
 
+.PHONY: all
+all:
+	docker buildx build -f ./deploy/worker-cut.dockerfile -t lychee0/finalrip-worker-cut .
+	docker buildx build -f ./deploy/worker-encode.dockerfile -t lychee0/finalrip-worker-encode .
+	docker buildx build -f ./deploy/worker-merge.dockerfile -t lychee0/finalrip-worker-merge .
+	docker buildx build -f ./deploy/server.dockerfile -t lychee0/finalrip-server .
+
 .PHONY: pt
 pt:
 	docker buildx build -f ./deploy/worker-encode-pytorch.dockerfile -t lychee0/finalrip-worker-encode-pytorch .
