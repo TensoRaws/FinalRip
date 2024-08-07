@@ -74,6 +74,7 @@ func initialize() {
 		err = config.ReadRemoteConfig()
 		if err != nil {
 			fmt.Println("failed to read remote config: " + err.Error())
+			panic(err)
 		}
 		go func() {
 			for {
