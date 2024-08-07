@@ -28,6 +28,9 @@ services:
     restart: always
     environment:
       - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
     networks:
       - backend
 
@@ -37,5 +40,8 @@ services:
     restart: always
     environment:
       - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
     networks:
       - backend
