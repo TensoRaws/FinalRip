@@ -1,0 +1,36 @@
+version: "3.8"
+
+name: finalrip
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  worker-encode:
+    image: lychee0/finalrip-worker-encode:latest
+    #    image: lychee0/finalrip-worker-encode-pytorch:dev
+    container_name: finalrip-worker-encode
+    restart: always
+    environment:
+      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
+    #    deploy:
+    #      resources:
+    #        reservations:
+    #          devices:
+    #            - driver: nvidia
+    #              device_ids:
+    #                - "0"
+    #              capabilities: [gpu]
+    networks:
+      - backend
+
+  easytier:
+    image: easytier/easytier:latest
+    container_name: easytier
+    restart: always
+    environment:
+      - TZ=Asia/Shanghai
+    privileged: true
+    network_mode: host
+    command: -d --network-name finalrip --network-secret finalrip -e tcp://easytier.public.kkrainbow.top:11010
