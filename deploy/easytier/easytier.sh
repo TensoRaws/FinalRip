@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # download easytier-core
+rm -rf easytier-linux-x86_64-v1.2.0.zip easytier-linux-x86_64
 wget -c https://github.com/EasyTier/EasyTier/releases/download/v1.2.0/easytier-linux-x86_64-v1.2.0.zip
 unzip easytier-linux-x86_64-v1.2.0.zip
 mv ./easytier-linux-x86_64/easytier-core /usr/local/bin/
-rm -rf easytier-linux-x86_64-v1.2.0.zip easytier-linux-x86_64
 
 # get command line arguments from env variables
 EASYTIER_COMMAND="${EASYTIER_COMMAND:-d --network-name finalrip --network-secret finalrip -e tcp://easytier.public.kkrainbow.top:11010}"
