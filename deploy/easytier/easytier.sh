@@ -1,10 +1,13 @@
 #!/bin/bash
 
+ARCH=$(uname -m)
+echo "device architecture: $ARCH"
+
 # download easytier-core
-rm -rf easytier-linux-x86_64-v1.2.0.zip easytier-linux-x86_64
-wget -c https://github.com/EasyTier/EasyTier/releases/download/v1.2.0/easytier-linux-x86_64-v1.2.0.zip
-unzip easytier-linux-x86_64-v1.2.0.zip
-mv ./easytier-linux-x86_64/easytier-core /usr/local/bin/
+rm -rf easytier-linux-"$ARCH"-v1.2.0.zip easytier-linux-"$ARCH"
+wget -c https://github.com/EasyTier/EasyTier/releases/download/v1.2.0/easytier-linux-"$ARCH"-v1.2.0.zip
+unzip easytier-linux-"$ARCH"-v1.2.0.zip
+mv ./easytier-linux-"$ARCH"/easytier-core /usr/local/bin/
 
 # get command line arguments from env variables
 # env: EASYTIER_COMMAND
