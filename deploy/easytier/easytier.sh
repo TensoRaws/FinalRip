@@ -7,7 +7,7 @@ unzip easytier-linux-x86_64-v1.2.0.zip
 mv ./easytier-linux-x86_64/easytier-core /usr/local/bin/
 
 # get command line arguments from env variables
-EASYTIER_COMMAND="${EASYTIER_COMMAND:-d --network-name finalrip --network-secret finalrip -e tcp://easytier.public.kkrainbow.top:11010}"
+# env: EASYTIER_COMMAND
 
 SERVICE_NAME="easytier"
 EXECUTABLE_PATH="/usr/local/bin/easytier-core"
