@@ -6,7 +6,7 @@ import (
 	"github.com/TensoRaws/FinalRip/server/internal/middleware/auth"
 	"github.com/TensoRaws/FinalRip/server/internal/middleware/cros"
 	"github.com/TensoRaws/FinalRip/server/internal/middleware/logger"
-	"github.com/TensoRaws/FinalRip/server/internal/service/process"
+	"github.com/TensoRaws/FinalRip/server/internal/service/task"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,12 +24,12 @@ func NewAPI() *gin.Engine {
 
 	api := r.Group("/api/v1/")
 	{
-		processGroup := api.Group("process/")
+		processGroup := api.Group("task/")
 		{
 			// 开始压制
-			processGroup.POST("start", process.Start)
+			processGroup.POST("start", task.Start)
 			// 查看进度
-			processGroup.GET("progress", process.Progress)
+			processGroup.GET("progress", task.Progress)
 		}
 	}
 
