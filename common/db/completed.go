@@ -7,6 +7,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+// CheckTaskExist checks if a task exists in the database
+func CheckTaskExist(videoKey string) bool {
+	coll := db.DB.Collection(COMPLETED_COLLECTION)
+	count, _ := coll.CountDocuments(context.TODO(), CompletedTask{Key: videoKey})
+	return count > 0
+}
+
 // InsertUncompletedTask inserts a new uncompleted task into the database
 func InsertUncompletedTask(videoKey string, encodeParam string, script string) error {
 	coll := db.DB.Collection(COMPLETED_COLLECTION)

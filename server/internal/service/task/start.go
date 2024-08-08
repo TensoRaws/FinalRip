@@ -31,6 +31,12 @@ func Start(c *gin.Context) {
 		return
 	}
 
+	// 检查视频是否存在
+	if db.CheckTaskExist(req.VideoKey) {
+		resp.AbortWithMsg(c, "Task already exists, please wait for it to complete or delete it.")
+		return
+	}
+
 	err := db.InsertUncompletedTask(req.VideoKey, req.EncodeParam, req.Script)
 	if err != nil {
 		log.Logger.Error("Failed to insert uncompleted task: " + err.Error())
