@@ -75,8 +75,9 @@ func Clear(c *gin.Context) {
 	// 一定要在删除数据库记录和 OSS 之后再取消任务，否则会导致 Merge 任务无法正常取消，以及 Encode 任务异常下载 OSS
 	// 检查任务是否处理完成
 	if !db.CheckTaskComplete(req.VideoKey) {
-		// 清理任务队列
-		for _, clip := range clips {
+		// 清理任务队列，倒序删除
+		for i := len(clips) - 1; i >= 0; i-- {
+			clip := clips[i]
 			err = queue.Isp.CancelProcessing(clip.TaskID)
 			if err != nil {
 				log.Logger.Errorf("Failed to cancel processing task: %s", err)

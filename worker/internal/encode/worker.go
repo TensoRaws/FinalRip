@@ -2,6 +2,7 @@ package encode
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path"
 	"strconv"
@@ -88,6 +89,15 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}) && !p.Retry {
 		log.Logger.Infof("Encode Video Clip %s already exists", key)
 		return nil
+	}
+
+	// 检查任务是否被取消
+	if !db.CheckVideoExist(db.VideoClipInfo{
+		Key:     p.Clip.Key,
+		ClipKey: p.Clip.ClipKey,
+	}) {
+		log.Logger.Errorf("Encode Video Clip %s has been canceled", key)
+		return errors.New("encode video clip has been canceled")
 	}
 
 	err = oss.PutByPath(key, tempEncodedVideo)
