@@ -8,7 +8,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/TensoRaws/FinalRip/module/util"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	_ "github.com/spf13/viper/remote"
@@ -94,20 +93,14 @@ func initialize() {
 }
 
 func updateRemoteConfigOnChange() {
-	lastCfg, err := util.DeepCopyMap(config.AllSettings())
-	if err != nil {
-		fmt.Println("failed to copy config: " + err.Error())
-	}
+	lastCfg := config.AllSettings()
 
-	err = config.WatchRemoteConfig()
+	err := config.WatchRemoteConfig()
 	if err != nil {
 		fmt.Println("failed to watch remote config: " + err.Error())
 	}
 
-	cfg, err := util.DeepCopyMap(config.AllSettings())
-	if err != nil {
-		fmt.Println("failed to copy config: " + err.Error())
-	}
+	cfg := config.AllSettings()
 
 	if !reflect.DeepEqual(lastCfg, cfg) {
 		// 配置文件发生变更之后，重新初始化配置

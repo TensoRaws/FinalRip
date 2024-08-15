@@ -11,6 +11,7 @@ type VideoClipInfo struct {
 	Total     int    `bson:"total,omitempty"`
 	ClipKey   string `bson:"clip_key,omitempty"`
 	EncodeKey string `bson:"encode_key,omitempty"`
+	TaskID    string `bson:"task_id,omitempty"`
 }
 
 type Task struct {

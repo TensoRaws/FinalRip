@@ -7,21 +7,31 @@ networks:
     driver: bridge
 
 services:
+  #  worker-encode:
+  #    image: lychee0/finalrip-worker-encode:latest
+  #    container_name: finalrip-worker-encode
+  #    restart: always
+  #    environment:
+  #      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
+  #    networks:
+  #      - backend
   worker-encode:
-    image: lychee0/finalrip-worker-encode:latest
-    #    image: lychee0/finalrip-worker-encode-pytorch:dev
+    image: lychee0/finalrip-worker-encode-pytorch
     container_name: finalrip-worker-encode
     restart: always
     environment:
-      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
-    #    deploy:
-    #      resources:
-    #        reservations:
-    #          devices:
-    #            - driver: nvidia
-    #              device_ids:
-    #                - "0"
-    #              capabilities: [gpu]
+      - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids:
+                - "0"
+              capabilities: [gpu]
     networks:
       - backend
 #  easytier:

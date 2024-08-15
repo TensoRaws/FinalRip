@@ -71,12 +71,7 @@ func PutBytes(key string, data []byte) error {
 
 // GetWithPath downloads and saves the object as a file in the local filesystem by key.
 func GetWithPath(key string, path string) error {
-	err = oss.FGetObject(context.Background(), config.OSSConfig.Bucket, key, path, minio.GetObjectOptions{})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return oss.FGetObject(context.Background(), config.OSSConfig.Bucket, key, path, minio.GetObjectOptions{})
 }
 
 // Get gets the file pointed to by key.
@@ -103,6 +98,11 @@ func GetBytes(key string) ([]byte, error) {
 		return nil, err
 	}
 	return buf.Bytes(), nil
+}
+
+// Delete deletes the file pointed to by key.
+func Delete(key string) error {
+	return oss.RemoveObject(context.Background(), config.OSSConfig.Bucket, key, minio.RemoveObjectOptions{})
 }
 
 // GetPresignedURL gets the presigned URL for the file pointed to by key.

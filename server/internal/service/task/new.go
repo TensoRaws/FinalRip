@@ -20,7 +20,7 @@ func New(c *gin.Context) {
 		return
 	}
 
-	// 检查视频是否存在
+	// 检查任务是否存在
 	if db.CheckTaskExist(req.VideoKey) {
 		resp.AbortWithMsg(c, "Task already exists, please wait for it to complete or delete it.")
 		return

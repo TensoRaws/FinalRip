@@ -2,6 +2,7 @@ package encode
 
 import (
 	"context"
+	"errors"
 	"os"
 	"path"
 	"strconv"
@@ -90,16 +91,22 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		return nil
 	}
 
+	// 检查任务是否被取消
+	if !db.CheckVideoExist(db.VideoClipInfo{
+		Key:     p.Clip.Key,
+		ClipKey: p.Clip.ClipKey,
+	}) {
+		log.Logger.Errorf("Encode Video Clip %s has been canceled", key)
+		return errors.New("encode video clip has been canceled")
+	}
+
 	err = oss.PutByPath(key, tempEncodedVideo)
 	if err != nil {
 		log.Logger.Errorf("Failed to upload encode video %s: %s", key, err)
 		return err
 	}
 
-	err = db.UpdateVideo(db.VideoClipInfo{Key: p.Clip.Key}, db.VideoClipInfo{
-		ClipKey:   p.Clip.ClipKey,
-		EncodeKey: key,
-	})
+	err = db.UpdateVideo(db.VideoClipInfo{Key: p.Clip.Key, ClipKey: p.Clip.ClipKey}, db.VideoClipInfo{EncodeKey: key})
 	if err != nil {
 		log.Logger.Errorf("Failed to upload encode video %s: %s", key, err)
 		return err

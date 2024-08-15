@@ -122,6 +122,13 @@ func HandleStart(req StartRequest) {
 			return
 		}
 
+		err = db.UpdateVideo(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey},
+			db.VideoClipInfo{TaskID: info.ID})
+		if err != nil {
+			log.Logger.Error("Failed to enqueue task: " + err.Error())
+			return
+		}
+
 		log.Logger.Info("Successfully enqueued task: " + util.StructToString(clip))
 
 		wg.Add(1)
@@ -154,6 +161,13 @@ func HandleStart(req StartRequest) {
 		log.Logger.Error("Failed to get video clips: " + err.Error())
 		return
 	}
+
+	// 如果已经clear，不再合并
+	if len(clips) == 0 {
+		log.Logger.Info("No clips to merge.")
+		return
+	}
+
 	payload, err = sonic.Marshal(task.MergeTaskPayload{
 		Clips: clips,
 	})
