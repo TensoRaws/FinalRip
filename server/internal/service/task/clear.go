@@ -1,6 +1,8 @@
 package task
 
 import (
+	"sync"
+
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/oss"
@@ -55,7 +57,7 @@ func Clear(c *gin.Context) {
 		}
 	}
 
-	ossDelMany(ossDelObjKeys)
+	ossDelMulti(ossDelObjKeys)
 	log.Logger.Infof("Deleted files from OSS: %v", ossDelObjKeys)
 
 	// 清理数据库
@@ -92,11 +94,17 @@ func Clear(c *gin.Context) {
 	resp.OK(c)
 }
 
-func ossDelMany(keys []string) {
+func ossDelMulti(keys []string) {
+	var wg sync.WaitGroup
 	for _, key := range keys {
-		err := oss.Delete(key)
-		if err != nil {
-			log.Logger.Errorf("Failed to delete file from OSS: %s", err)
-		}
+		wg.Add(1)
+		go func(k string) {
+			err := oss.Delete(k)
+			if err != nil {
+				log.Logger.Errorf("Failed to delete file from OSS: %s", err)
+			}
+			wg.Done()
+		}(key)
 	}
+	wg.Wait()
 }
