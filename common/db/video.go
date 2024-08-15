@@ -23,15 +23,6 @@ func InsertVideo(info VideoClipInfo) error {
 	return err
 }
 
-// InsertManyVideo 批量插入视频信息
-func InsertManyVideo(infos []VideoClipInfo) error {
-	coll := db.DB.Collection(VIDEO_COLLECTION)
-	_, err := coll.InsertMany(context.TODO(), []interface{}{
-		infos,
-	})
-	return err
-}
-
 // GetVideoClips 获取所有视频切片信息，按照索引排序
 func GetVideoClips(videoKey string) ([]VideoClipInfo, error) {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
@@ -67,27 +58,6 @@ func UpdateVideo(filter VideoClipInfo, update VideoClipInfo) error {
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-// UpdateVideoEncodeClip 更新 Encode 后视频切片信息
-func UpdateVideoEncodeClip(videoKey string, clipKey string, encodeKey string) error {
-	coll := db.DB.Collection(VIDEO_COLLECTION)
-
-	filter := VideoClipInfo{
-		Key:     videoKey,
-		ClipKey: clipKey,
-	}
-
-	update := bson.D{{"$set", VideoClipInfo{ //nolint: govet
-		EncodeKey: encodeKey,
-	}}}
-
-	_, err := coll.UpdateOne(context.TODO(), filter, update)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 

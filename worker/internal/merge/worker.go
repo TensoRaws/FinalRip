@@ -120,7 +120,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 保存合并后的视频信息
-	err = db.UpdateUncompletedTask(p.Clips[0].Key, mergedKey)
+	err = db.UpdateTask(db.Task{Key: p.Clips[0].Key}, db.Task{EncodeKey: mergedKey})
 	if err != nil {
 		log.Logger.Errorf("Failed to update completed task: %v", err)
 		return err

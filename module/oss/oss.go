@@ -119,3 +119,14 @@ func GetPresignedURL(key string, fileName string, expiration time.Duration) (str
 	}
 	return presignedURL.String(), nil
 }
+
+// GetUploadPresignedURL gets the presigned URL for the file upload, use PUT method in frontend.
+func GetUploadPresignedURL(key string, expiration time.Duration) (string, error) {
+	// Generate presigned put object url
+	presignedURL, err := oss.PresignedPutObject(context.Background(), config.OSSConfig.Bucket, key, expiration)
+	if err != nil {
+		log.Logger.Error("Failed to generate presigned URL: " + key + err.Error())
+		return "", err
+	}
+	return presignedURL.String(), nil
+}

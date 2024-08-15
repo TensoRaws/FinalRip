@@ -28,8 +28,8 @@ redis:
 oss:
   type: minio # minio, cos
   endpoint: 127.0.0.1:9000
-  accessKey: ChYm7ufIwNAOzq6PQPCA
-  secretKey: udicP52IwRbmo2hf6lFvjUS7NP5BhlAdsGNIuDE5
+  accessKey: homo
+  secretKey: homo114514
   region: local
   bucket: finalrip
   ssl: false

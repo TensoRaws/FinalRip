@@ -1,4 +1,4 @@
-package process
+package task
 
 import (
 	"time"
@@ -38,7 +38,7 @@ func Progress(c *gin.Context) {
 		return
 	}
 
-	task, err := db.GetCompletedTask(req.VideoKey)
+	task, err := db.GetTask(req.VideoKey)
 	if err != nil {
 		log.Logger.Errorf("db.GetCompletedEncodeKey failed, err: %v", err)
 		resp.AbortWithMsg(c, err.Error())
