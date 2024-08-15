@@ -28,17 +28,24 @@ func Clear(c *gin.Context) {
 		return
 	}
 
+	clips, err := db.GetVideoClips(req.VideoKey)
+	if err != nil {
+		resp.AbortWithMsg(c, err.Error())
+		return
+	}
+
+	// 检查 Cut 任务是否处理完成
+	if len(clips) == 0 {
+		resp.AbortWithMsg(c, "Please wait for the cut task to complete before clearing the task")
+		return
+	}
+
 	// 清理 OSS
 	ossDelObjKeys := make([]string, 0)
 	task, _ := db.GetTask(req.VideoKey)
 	ossDelObjKeys = append(ossDelObjKeys, task.Key)
 	ossDelObjKeys = append(ossDelObjKeys, task.EncodeKey)
 
-	clips, err := db.GetVideoClips(req.VideoKey)
-	if err != nil {
-		resp.AbortWithMsg(c, err.Error())
-		return
-	}
 	for _, clip := range clips {
 		if clip.ClipKey != "" {
 			ossDelObjKeys = append(ossDelObjKeys, clip.ClipKey)
