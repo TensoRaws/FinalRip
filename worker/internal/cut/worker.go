@@ -81,31 +81,6 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 			key := p.VideoKey + "-clip-" + strconv.FormatInt(int64(index), 10) + ".mkv"
 
-			// 重试情况
-			if p.Retry {
-				err := oss.PutByPath(key, file)
-				if err != nil {
-					log.Logger.Errorf("Failed to upload video %v: %v", index, file)
-				}
-
-				if !db.CheckVideoExist(db.VideoClipInfo{
-					Key:     p.VideoKey,
-					ClipKey: key,
-				}) {
-					err = db.InsertVideo(db.VideoClipInfo{
-						Key:     p.VideoKey,
-						Index:   index,
-						Total:   total,
-						ClipKey: key,
-					})
-					if err != nil {
-						log.Logger.Errorf("Failed to insert video %s: %v", key, err)
-					}
-				}
-
-				return
-			}
-
 			// 正常情况
 			if db.CheckVideoExist(db.VideoClipInfo{
 				Key:     p.VideoKey,

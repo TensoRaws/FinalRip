@@ -11,7 +11,6 @@ const (
 // CutTaskPayload is a struct that represents the payload for cut task.
 type CutTaskPayload struct {
 	VideoKey string `json:"video_key"`
-	Retry    bool   `json:"retry"`
 }
 
 // EncodeTaskPayload is a struct that represents the payload for encode task.

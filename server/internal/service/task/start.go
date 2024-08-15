@@ -122,6 +122,13 @@ func HandleStart(req StartRequest) {
 			return
 		}
 
+		err = db.UpdateVideo(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey},
+			db.VideoClipInfo{TaskID: info.ID})
+		if err != nil {
+			log.Logger.Error("Failed to enqueue task: " + err.Error())
+			return
+		}
+
 		log.Logger.Info("Successfully enqueued task: " + util.StructToString(clip))
 
 		wg.Add(1)

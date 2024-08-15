@@ -4,6 +4,7 @@ import (
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/oss"
+	"github.com/TensoRaws/FinalRip/module/queue"
 	"github.com/TensoRaws/FinalRip/module/resp"
 	"github.com/gin-gonic/gin"
 )
@@ -30,6 +31,17 @@ func Clear(c *gin.Context) {
 	// 检查任务是否处理完成
 	if !db.CheckTaskComplete(req.VideoKey) {
 		// 清理任务队列
+		clips, err := db.GetVideoClips(req.VideoKey)
+		if err != nil {
+			resp.AbortWithMsg(c, "Failed to get video clips: "+err.Error())
+			return
+		}
+		for _, clip := range clips {
+			err := queue.Isp.DeleteTask(queue.ENCODE_QUEUE, clip.TaskID)
+			if err != nil {
+				log.Logger.Errorf("Failed to delete task from encode queue: %s", err)
+			}
+		}
 	}
 
 	// 清理 OSS
@@ -44,8 +56,12 @@ func Clear(c *gin.Context) {
 		return
 	}
 	for _, clip := range clips {
-		ossDelObjKeys = append(ossDelObjKeys, clip.ClipKey)
-		ossDelObjKeys = append(ossDelObjKeys, clip.EncodeKey)
+		if clip.ClipKey != "" {
+			ossDelObjKeys = append(ossDelObjKeys, clip.ClipKey)
+		}
+		if clip.EncodeKey != "" {
+			ossDelObjKeys = append(ossDelObjKeys, clip.EncodeKey)
+		}
 	}
 
 	ossDelMany(ossDelObjKeys)
