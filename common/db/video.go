@@ -99,3 +99,10 @@ func GetVideoProgress(videoKey string) ([]bool, error) {
 
 	return status, nil
 }
+
+// UnsetVideoEncodeKey 清除视频切片的编码键
+func UnsetVideoEncodeKey(info VideoClipInfo) error {
+	coll := db.DB.Collection(VIDEO_COLLECTION)
+	_, err := coll.UpdateOne(context.TODO(), info, bson.D{{"$unset", bson.D{{"encode_key", ""}}}})
+	return err
+}

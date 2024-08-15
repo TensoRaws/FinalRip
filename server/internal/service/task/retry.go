@@ -75,6 +75,14 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) {
 		return
 	}
 
+	// 清除 encode key
+	err = db.UnsetVideoEncodeKey(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey})
+	if err != nil {
+		log.Logger.Error("Failed to unset encode key: " + err.Error())
+		return
+	}
+
+	// 更新 task id
 	err = db.UpdateVideo(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey},
 		db.VideoClipInfo{TaskID: info.ID})
 	if err != nil {
@@ -83,4 +91,77 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) {
 	}
 
 	log.Logger.Info("Successfully Re-enqueued task: " + util.StructToString(clip))
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+
+type RetryMergeRequest struct {
+	VideoKey string `form:"video_key" binding:"required"`
+}
+
+// RetryMerge 重试压制任务 (POST /retry/merge)
+func RetryMerge(c *gin.Context) {
+	// 绑定参数
+	var req RetryMergeRequest
+	if err := c.ShouldBind(&req); err != nil {
+		resp.AbortWithMsg(c, err.Error())
+		return
+	}
+
+	// 检查任务是否存在
+	if !db.CheckTaskExist(req.VideoKey) {
+		resp.AbortWithMsg(c, "Task not found, please upload video first.")
+		return
+	}
+
+	// 检查所有 clip 是否已经完成
+	progress, err := db.GetVideoProgress(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Get video progress failed: " + err.Error())
+		resp.AbortWithMsg(c, "Get video progress failed: "+err.Error())
+		return
+	}
+	for _, status := range progress {
+		if !status {
+			resp.AbortWithMsg(c, "Some clips are not finished yet.")
+			return
+		}
+	}
+
+	resp.OK(c)
+	// 重新创建任务
+	go HandleRetryMerge(req)
+}
+
+func HandleRetryMerge(req RetryMergeRequest) {
+	// 开始合并任务
+	clips, err := db.GetVideoClips(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to get video clips: " + err.Error())
+		return
+	}
+
+	// 如果已经clear，不再合并
+	if len(clips) == 0 {
+		log.Logger.Info("No clips to merge.")
+		return
+	}
+
+	payload, err := sonic.Marshal(task.MergeTaskPayload{
+		Clips: clips,
+	})
+	if err != nil {
+		log.Logger.Error("Failed to marshal payload: " + err.Error())
+		return
+	}
+
+	merge := asynq.NewTask(task.VIDEO_MERGE, payload)
+
+	_, err = queue.Qc.Enqueue(merge, asynq.Queue(queue.MERGE_QUEUE))
+	if err != nil {
+		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
+		return
+	}
+
+	log.Logger.Info("Successfully Re-enqueued task: merge")
 }
