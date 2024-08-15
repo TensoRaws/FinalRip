@@ -1,6 +1,8 @@
 package task
 
 import (
+	"errors"
+
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/log"
@@ -49,13 +51,17 @@ func RetryEncode(c *gin.Context) {
 
 	// 取消先前的任务
 	CancelTask(clip.TaskID)
+	// 重新创建任务
+	err = HandleRetryEncode(req, clip)
+	if err != nil {
+		resp.AbortWithMsg(c, "Failed to retry encode: "+err.Error())
+		return
+	}
 
 	resp.OK(c)
-	// 重新创建任务
-	go HandleRetryEncode(req, clip)
 }
 
-func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) {
+func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) error {
 	payload, err := sonic.Marshal(task.EncodeTaskPayload{
 		EncodeParam: req.EncodeParam,
 		Script:      req.Script,
@@ -64,7 +70,7 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) {
 	})
 	if err != nil {
 		log.Logger.Error("Failed to marshal payload: " + err.Error())
-		return
+		return err
 	}
 
 	encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
@@ -72,14 +78,14 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) {
 	info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE))
 	if err != nil {
 		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
-		return
+		return err
 	}
 
 	// 清除 encode key
 	err = db.UnsetVideoEncodeKey(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey})
 	if err != nil {
 		log.Logger.Error("Failed to unset encode key: " + err.Error())
-		return
+		return err
 	}
 
 	// 更新 task id
@@ -87,10 +93,11 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) {
 		db.VideoClipInfo{TaskID: info.ID})
 	if err != nil {
 		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
-		return
+		return err
 	}
 
 	log.Logger.Info("Successfully Re-enqueued task: " + util.StructToString(clip))
+	return nil
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -128,23 +135,28 @@ func RetryMerge(c *gin.Context) {
 		}
 	}
 
-	resp.OK(c)
 	// 重新创建任务
-	go HandleRetryMerge(req)
+	err = HandleRetryMerge(req)
+	if err != nil {
+		resp.AbortWithMsg(c, "Failed to retry merge: "+err.Error())
+		return
+	}
+
+	resp.OK(c)
 }
 
-func HandleRetryMerge(req RetryMergeRequest) {
+func HandleRetryMerge(req RetryMergeRequest) error {
 	// 开始合并任务
 	clips, err := db.GetVideoClips(req.VideoKey)
 	if err != nil {
 		log.Logger.Error("Failed to get video clips: " + err.Error())
-		return
+		return err
 	}
 
 	// 如果已经clear，不再合并
 	if len(clips) == 0 {
 		log.Logger.Info("No clips to merge.")
-		return
+		return errors.New("no clips to merge")
 	}
 
 	payload, err := sonic.Marshal(task.MergeTaskPayload{
@@ -152,7 +164,7 @@ func HandleRetryMerge(req RetryMergeRequest) {
 	})
 	if err != nil {
 		log.Logger.Error("Failed to marshal payload: " + err.Error())
-		return
+		return err
 	}
 
 	merge := asynq.NewTask(task.VIDEO_MERGE, payload)
@@ -160,8 +172,9 @@ func HandleRetryMerge(req RetryMergeRequest) {
 	_, err = queue.Qc.Enqueue(merge, asynq.Queue(queue.MERGE_QUEUE))
 	if err != nil {
 		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
-		return
+		return err
 	}
 
 	log.Logger.Info("Successfully Re-enqueued task: merge")
+	return nil
 }
