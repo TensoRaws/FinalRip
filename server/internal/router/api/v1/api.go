@@ -24,6 +24,7 @@ func NewAPI() *gin.Engine {
 	{
 		processGroup := api.Group("task/")
 		{
+			processGroup.POST("new", task.New)
 			processGroup.POST("start", task.Start)
 			processGroup.GET("progress", task.Progress)
 			processGroup.GET("oss/presigned", task.OSSPresigned)

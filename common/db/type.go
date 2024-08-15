@@ -1,8 +1,8 @@
 package db
 
 const (
-	VIDEO_COLLECTION     = "video"
-	COMPLETED_COLLECTION = "completed"
+	VIDEO_COLLECTION = "video"
+	TASK_COLLECTION  = "task"
 )
 
 type VideoClipInfo struct {
@@ -13,7 +13,7 @@ type VideoClipInfo struct {
 	EncodeKey string `bson:"encode_key,omitempty"`
 }
 
-type CompletedTask struct {
+type Task struct {
 	Key         string `bson:"key,omitempty"`
 	EncodeKey   string `bson:"encode_key,omitempty"`
 	EncodeParam string `bson:"encode_param,omitempty"`

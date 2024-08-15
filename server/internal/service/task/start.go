@@ -31,15 +31,25 @@ func Start(c *gin.Context) {
 		return
 	}
 
-	// 检查视频是否存在
-	if db.CheckTaskExist(req.VideoKey) {
-		resp.AbortWithMsg(c, "Task already exists, please wait for it to complete or delete it.")
+	// 检查任务是否 new 上传
+	if !db.CheckTaskExist(req.VideoKey) {
+		resp.AbortWithMsg(c, "Task not found, please upload video first.")
 		return
 	}
 
-	err := db.InsertUncompletedTask(req.VideoKey, req.EncodeParam, req.Script)
+	// 检查任务是否已经开始
+	if db.CheckTaskStart(req.VideoKey) {
+		resp.AbortWithMsg(c, "Task already started.")
+		return
+	}
+
+	// 更新任务
+	err := db.UpdateTask(db.Task{Key: req.VideoKey}, db.Task{
+		EncodeParam: req.EncodeParam,
+		Script:      req.Script,
+	})
 	if err != nil {
-		log.Logger.Error("Failed to insert uncompleted task: " + err.Error())
+		log.Logger.Error("Failed to update task: " + err.Error())
 		resp.AbortWithMsg(c, err.Error())
 		return
 	}
