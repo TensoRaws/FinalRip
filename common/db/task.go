@@ -23,6 +23,15 @@ func CheckTaskStart(videoKey string) bool {
 	return task.EncodeParam != ""
 }
 
+// CheckTaskComplete checks if a task has completed
+func CheckTaskComplete(videoKey string) bool {
+	task, err := GetTask(videoKey)
+	if err != nil {
+		return false
+	}
+	return task.EncodeKey != ""
+}
+
 // InsertTask inserts a new uncompleted task into the database
 func InsertTask(videoKey string) error {
 	coll := db.DB.Collection(TASK_COLLECTION)
@@ -52,4 +61,11 @@ func GetTask(videoKey string) (Task, error) {
 	err := coll.FindOne(context.TODO(), Task{Key: videoKey}).Decode(&task)
 
 	return task, err
+}
+
+// DeleteTask deletes a task from the database
+func DeleteTask(videoKey string) error {
+	coll := db.DB.Collection(TASK_COLLECTION)
+	_, err := coll.DeleteOne(context.TODO(), Task{Key: videoKey})
+	return err
 }

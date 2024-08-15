@@ -22,12 +22,13 @@ func NewAPI() *gin.Engine {
 
 	api := r.Group("/api/v1/")
 	{
-		processGroup := api.Group("task/")
+		taskGroup := api.Group("task/")
 		{
-			processGroup.POST("new", task.New)
-			processGroup.POST("start", task.Start)
-			processGroup.GET("progress", task.Progress)
-			processGroup.GET("oss/presigned", task.OSSPresigned)
+			taskGroup.POST("new", task.New)
+			taskGroup.POST("start", task.Start)
+			taskGroup.GET("progress", task.Progress)
+			taskGroup.GET("oss/presigned", task.OSSPresigned)
+			taskGroup.POST("clear", task.Clear)
 		}
 	}
 

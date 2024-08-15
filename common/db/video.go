@@ -61,6 +61,13 @@ func UpdateVideo(filter VideoClipInfo, update VideoClipInfo) error {
 	return nil
 }
 
+// DeleteVideoClips 删除所有视频切片
+func DeleteVideoClips(videoKey string) error {
+	coll := db.DB.Collection(VIDEO_COLLECTION)
+	_, err := coll.DeleteMany(context.TODO(), VideoClipInfo{Key: videoKey})
+	return err
+}
+
 // GetVideoProgress 获取视频处理进度和每个切片的状态
 func GetVideoProgress(videoKey string) ([]bool, error) {
 	infos, err := GetVideoClips(videoKey)
