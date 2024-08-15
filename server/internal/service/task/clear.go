@@ -28,26 +28,6 @@ func Clear(c *gin.Context) {
 		return
 	}
 
-	// 检查任务是否处理完成
-	if !db.CheckTaskComplete(req.VideoKey) {
-		// 清理任务队列
-		clips, err := db.GetVideoClips(req.VideoKey)
-		if err != nil {
-			resp.AbortWithMsg(c, "Failed to get video clips: "+err.Error())
-			return
-		}
-		for _, clip := range clips {
-			err := queue.Isp.DeleteTask(queue.ENCODE_QUEUE, clip.TaskID)
-			if err != nil {
-				log.Logger.Errorf("Failed to delete task from encode queue: %s", err)
-				err = queue.Isp.CancelProcessing(clip.TaskID)
-				if err != nil {
-					log.Logger.Errorf("Failed to cancel processing task: %s", err)
-				}
-			}
-		}
-	}
-
 	// 清理 OSS
 	ossDelObjKeys := make([]string, 0)
 	task, _ := db.GetTask(req.VideoKey)
@@ -84,6 +64,22 @@ func Clear(c *gin.Context) {
 		return
 	}
 	log.Logger.Infof("Deleted task from database: %s", req.VideoKey)
+
+	// 一定要在删除数据库记录和 OSS 之后再取消任务，否则会导致 Merge 任务无法正常取消，以及 Encode 任务异常下载 OSS
+	// 检查任务是否处理完成
+	if !db.CheckTaskComplete(req.VideoKey) {
+		// 清理任务队列
+		for _, clip := range clips {
+			err = queue.Isp.CancelProcessing(clip.TaskID)
+			if err != nil {
+				log.Logger.Errorf("Failed to cancel processing task: %s", err)
+			}
+			err := queue.Isp.DeleteTask(queue.ENCODE_QUEUE, clip.TaskID)
+			if err != nil {
+				log.Logger.Errorf("Failed to delete task from encode queue: %s", err)
+			}
+		}
+	}
 
 	resp.OK(c)
 }
