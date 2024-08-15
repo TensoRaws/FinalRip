@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"os"
-	"path"
-	"strconv"
 	"time"
 
 	"github.com/TensoRaws/FinalRip/common/db"
@@ -78,7 +76,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 上传压制后的视频
-	key := p.Clip.Key + "-clip-encoded-" + strconv.FormatInt(int64(p.Clip.Index), 10) + path.Ext(p.Clip.Key)
+	key := util.GenerateClipEncodedKey(p.Clip.Key, p.Clip.Index)
 
 	if db.CheckVideoExist(db.VideoClipInfo{
 		Key:       p.Clip.Key,
@@ -108,7 +106,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 	err = db.UpdateVideo(db.VideoClipInfo{Key: p.Clip.Key, ClipKey: p.Clip.ClipKey}, db.VideoClipInfo{EncodeKey: key})
 	if err != nil {
-		log.Logger.Errorf("Failed to upload encode video %s: %s", key, err)
+		log.Logger.Errorf("Failed to update video clip %s: %s", key, err)
 		return err
 	}
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"path"
-	"strconv"
 	"sync"
 	"time"
 
@@ -79,7 +78,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		go func(index int, file string) {
 			defer wg.Done()
 
-			key := p.VideoKey + "-clip-" + strconv.FormatInt(int64(index), 10) + ".mkv"
+			key := util.GenerateClipKey(p.VideoKey, index)
 
 			// 正常情况
 			if db.CheckVideoExist(db.VideoClipInfo{

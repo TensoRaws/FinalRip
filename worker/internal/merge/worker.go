@@ -111,7 +111,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		return err
 	}
 
-	mergedKey := p.Clips[0].Key + "-Encoded" + ".mkv"
+	mergedKey := util.GenerateMergedKey(p.Clips[0].Key)
 	// 上传合并后的视频
 	err = oss.PutByPath(mergedKey, tempMergedFile)
 	if err != nil {

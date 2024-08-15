@@ -29,6 +29,7 @@ func NewAPI() *gin.Engine {
 			taskGroup.GET("progress", task.Progress)
 			taskGroup.GET("oss/presigned", task.OSSPresigned)
 			taskGroup.POST("clear", task.Clear)
+			taskGroup.POST("retry/encode", task.RetryEncode)
 		}
 	}
 

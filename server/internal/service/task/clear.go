@@ -63,12 +63,14 @@ func Clear(c *gin.Context) {
 	// 清理数据库
 	err = db.DeleteTask(req.VideoKey)
 	if err != nil {
+		log.Logger.Errorf("Failed to delete task from database: %s", err)
 		resp.AbortWithMsg(c, err.Error())
 		return
 	}
 
 	err = db.DeleteVideoClips(req.VideoKey)
 	if err != nil {
+		log.Logger.Errorf("Failed to delete video clips from database: %s", err)
 		resp.AbortWithMsg(c, err.Error())
 		return
 	}
@@ -80,20 +82,14 @@ func Clear(c *gin.Context) {
 		// 清理任务队列，倒序删除
 		for i := len(clips) - 1; i >= 0; i-- {
 			clip := clips[i]
-			err = queue.Isp.CancelProcessing(clip.TaskID)
-			if err != nil {
-				log.Logger.Errorf("Failed to cancel processing task: %s", err)
-			}
-			err := queue.Isp.DeleteTask(queue.ENCODE_QUEUE, clip.TaskID)
-			if err != nil {
-				log.Logger.Errorf("Failed to delete task from encode queue: %s", err)
-			}
+			CancelTask(clip.TaskID)
 		}
 	}
 
 	resp.OK(c)
 }
 
+// ossDelMulti 批量删除 OSS 对象，使用协程并发删除
 func ossDelMulti(keys []string) {
 	var wg sync.WaitGroup
 	for _, key := range keys {
@@ -107,4 +103,16 @@ func ossDelMulti(keys []string) {
 		}(key)
 	}
 	wg.Wait()
+}
+
+// CancelTask 取消任务队列中的任务
+func CancelTask(taskID string) {
+	err := queue.Isp.CancelProcessing(taskID)
+	if err != nil {
+		log.Logger.Errorf("Failed to cancel processing task: %s", err)
+	}
+	err = queue.Isp.DeleteTask(queue.ENCODE_QUEUE, taskID)
+	if err != nil {
+		log.Logger.Errorf("Failed to delete task from encode queue: %s", err)
+	}
 }

@@ -23,6 +23,19 @@ func InsertVideo(info VideoClipInfo) error {
 	return err
 }
 
+// GetVideoClip 获取视频切片信息
+func GetVideoClip(info VideoClipInfo) (VideoClipInfo, error) {
+	coll := db.DB.Collection(VIDEO_COLLECTION)
+
+	var res VideoClipInfo
+	err := coll.FindOne(context.TODO(), info).Decode(&res)
+	if err != nil {
+		return VideoClipInfo{}, err
+	}
+
+	return res, nil
+}
+
 // GetVideoClips 获取所有视频切片信息，按照索引排序
 func GetVideoClips(videoKey string) ([]VideoClipInfo, error) {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
