@@ -40,6 +40,10 @@ func Clear(c *gin.Context) {
 			err := queue.Isp.DeleteTask(queue.ENCODE_QUEUE, clip.TaskID)
 			if err != nil {
 				log.Logger.Errorf("Failed to delete task from encode queue: %s", err)
+				err = queue.Isp.CancelProcessing(clip.TaskID)
+				if err != nil {
+					log.Logger.Errorf("Failed to cancel processing task: %s", err)
+				}
 			}
 		}
 	}
