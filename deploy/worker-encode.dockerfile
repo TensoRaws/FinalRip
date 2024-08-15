@@ -37,6 +37,8 @@ RUN pip install git+https://github.com/HomeOfVapourSynthEvolution/havsfunc.git
 # worker app
 WORKDIR /app
 
+ENV TZ=Asia/Shanghai
+
 ENV FINALRIP_EASYTIER_HOST 10.126.126.251
 
 COPY --from=builder /build/worker/worker /app/

@@ -11,9 +11,11 @@ RUN go mod download
 
 RUN make server
 
-FROM alpine:3.20 AS app
+FROM debian:bookworm AS app
 
 WORKDIR /app
+
+ENV TZ=Asia/Shanghai
 
 ENV FINALRIP_EASYTIER_HOST 10.126.126.251
 
