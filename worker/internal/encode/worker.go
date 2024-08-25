@@ -75,7 +75,12 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		return err
 	}
 
-	// 上传压制后的视频
+	// 检查文件大小
+	if util.GetFileSize(tempEncodedVideo) < 1024 {
+		log.Logger.Errorf("Failed to encode video %s: file size is too small", util.StructToString(p.Clip))
+		return errors.New("file size is too small")
+	}
+
 	key := util.GenerateClipEncodedKey(p.Clip.Key, p.Clip.Index)
 
 	if db.CheckVideoExist(db.VideoClipInfo{
@@ -98,6 +103,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		return errors.New("encode video clip has been canceled")
 	}
 
+	// 上传压制后的视频
 	err = oss.PutByPath(key, tempEncodedVideo)
 	if err != nil {
 		log.Logger.Errorf("Failed to upload encode video %s: %s", key, err)

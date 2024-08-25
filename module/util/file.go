@@ -24,3 +24,12 @@ func ClaerTempFile(tempPath ...string) error {
 	}
 	return nil
 }
+
+// GetFileSize 获取文件大小
+func GetFileSize(filePath string) int64 {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		return 0
+	}
+	return fileInfo.Size()
+}

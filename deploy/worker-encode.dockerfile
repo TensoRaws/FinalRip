@@ -11,11 +11,19 @@ RUN go mod download
 
 RUN make worker
 
-FROM continuumio/miniconda3:24.5.0-0 AS app
+FROM continuumio/miniconda3:24.1.2-0 AS app
 
 # prepare environment
-RUN conda install python=3.10.* -y
-RUN apt update && apt install -y libgl1-mesa-glx
+RUN apt update -y && apt upgrade -y
+RUN apt install -y \
+    libgl1-mesa-glx \
+    curl \
+    wget \
+    make \
+    libssl-dev \
+    libffi-dev \
+    libopenblas-dev \
+    git
 
 # install vapoursynth
 RUN conda install conda-forge::vapoursynth=69 -y

@@ -47,3 +47,25 @@ func TestByteCountBinary(t *testing.T) {
 		})
 	}
 }
+
+func TestGetFileSize(t *testing.T) {
+	type args struct {
+		filePath string
+	}
+	tests := []struct {
+		name string
+		args args
+		want int64
+	}{
+		{
+			name: "file not exist",
+			args: args{filePath: "not_exist"},
+			want: 0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equalf(t, tt.want, GetFileSize(tt.args.filePath), "GetFileSize(%v)", tt.args.filePath)
+		})
+	}
+}
