@@ -16,7 +16,6 @@ code_clipboard: true
 highlight_theme: darkula
 headingLevel: 2
 generator: "@tarslib/widdershins v4.0.23"
-
 ---
 
 # FinalRip
@@ -25,8 +24,8 @@ Base URLs:
 
 # Authentication
 
-* API Key (apikey-header-token)
-    - Parameter Name: **token**, in: header. 
+- API Key (apikey-header-token)
+  - Parameter Name: **token**, in: header.
 
 # task
 
@@ -60,17 +59,16 @@ script: "import os\r
   clip.set_output()"
 encode_param: ffmpeg -i - -vcodec libx265 -crf 16
 video_key: Roshidere-08.mkv
-
 ```
 
 ### Params
 
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|object| no |none|
-|» script|body|string| yes |vapoursynth script|
-|» encode_param|body|string| yes |encoder param|
-|» video_key|body|string| yes |video oss key|
+| Name           | Location | Type   | Required | Description        |
+| -------------- | -------- | ------ | -------- | ------------------ |
+| body           | body     | object | no       | none               |
+| » script       | body     | string | yes      | vapoursynth script |
+| » encode_param | body     | string | yes      | encoder param      |
+| » video_key    | body     | string | yes      | video oss key      |
 
 > Response Examples
 
@@ -87,19 +85,19 @@ video_key: Roshidere-08.mkv
 
 ### Responses
 
-|HTTP Status Code |Meaning|Description|Data schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
 ### Responses Data Schema
 
 HTTP Status Code **200**
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» success|boolean|true|none||none|
-|» error|object|false|none||none|
-|»» message|string|true|none||none|
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## POST New
 
@@ -111,15 +109,14 @@ new a task after upload oss
 
 ```yaml
 video_key: Roshidere-08.mkv
-
 ```
 
 ### Params
 
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|object| no |none|
-|» video_key|body|string| yes |video oss key|
+| Name        | Location | Type   | Required | Description   |
+| ----------- | -------- | ------ | -------- | ------------- |
+| body        | body     | object | no       | none          |
+| » video_key | body     | string | yes      | video oss key |
 
 > Response Examples
 
@@ -136,19 +133,19 @@ video_key: Roshidere-08.mkv
 
 ### Responses
 
-|HTTP Status Code |Meaning|Description|Data schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
 ### Responses Data Schema
 
 HTTP Status Code **200**
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» success|boolean|true|none||none|
-|» error|object|false|none||none|
-|»» message|string|true|none||none|
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## POST Clear
 
@@ -160,15 +157,14 @@ new a task after upload oss
 
 ```yaml
 video_key: Roshidere-06.mkv
-
 ```
 
 ### Params
 
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|object| no |none|
-|» video_key|body|string| yes |video oss key|
+| Name        | Location | Type   | Required | Description   |
+| ----------- | -------- | ------ | -------- | ------------- |
+| body        | body     | object | no       | none          |
+| » video_key | body     | string | yes      | video oss key |
 
 > Response Examples
 
@@ -185,19 +181,19 @@ video_key: Roshidere-06.mkv
 
 ### Responses
 
-|HTTP Status Code |Meaning|Description|Data schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
 ### Responses Data Schema
 
 HTTP Status Code **200**
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» success|boolean|true|none||none|
-|» error|object|false|none||none|
-|»» message|string|true|none||none|
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## GET Progress
 
@@ -205,9 +201,9 @@ GET /api/v1/task/progress
 
 ### Params
 
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|video_key|query|string| yes |none|
+| Name      | Location | Type   | Required | Description |
+| --------- | -------- | ------ | -------- | ----------- |
+| video_key | query    | string | yes      | none        |
 
 > Response Examples
 
@@ -220,9 +216,7 @@ GET /api/v1/task/progress
     "message": "string"
   },
   "data": {
-    "progress": [
-      true
-    ],
+    "progress": [true],
     "encode_key": "string",
     "encode_url": "string",
     "encode_param": "string",
@@ -233,25 +227,25 @@ GET /api/v1/task/progress
 
 ### Responses
 
-|HTTP Status Code |Meaning|Description|Data schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
 ### Responses Data Schema
 
 HTTP Status Code **200**
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» success|boolean|true|none||none|
-|» error|object|false|none||none|
-|»» message|string|true|none||none|
-|» data|object|false|none||none|
-|»» progress|[boolean]|true|none||none|
-|»» encode_key|string|true|none||压制结果，oss key|
-|»» encode_url|string|true|none||压制结果, url|
-|»» encode_param|string|true|none||压制参数|
-|»» script|string|true|none||压制脚本|
+| Name            | Type      | Required | Restrictions | Title | description       |
+| --------------- | --------- | -------- | ------------ | ----- | ----------------- |
+| » success       | boolean   | true     | none         |       | none              |
+| » error         | object    | false    | none         |       | none              |
+| »» message      | string    | true     | none         |       | none              |
+| » data          | object    | false    | none         |       | none              |
+| »» progress     | [boolean] | true     | none         |       | none              |
+| »» encode_key   | string    | true     | none         |       | 压制结果，oss key |
+| »» encode_url   | string    | true     | none         |       | 压制结果, url     |
+| »» encode_param | string    | true     | none         |       | 压制参数          |
+| »» script       | string    | true     | none         |       | 压制脚本          |
 
 ## GET OSSPresigned
 
@@ -259,9 +253,9 @@ GET /api/v1/task/oss/presigned
 
 ### Params
 
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|video_key|query|string| no |none|
+| Name      | Location | Type   | Required | Description |
+| --------- | -------- | ------ | -------- | ----------- |
+| video_key | query    | string | no       | none        |
 
 > Response Examples
 
@@ -281,21 +275,21 @@ GET /api/v1/task/oss/presigned
 
 ### Responses
 
-|HTTP Status Code |Meaning|Description|Data schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
 ### Responses Data Schema
 
 HTTP Status Code **200**
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» success|boolean|true|none||none|
-|» error|object|false|none||none|
-|»» message|string|true|none||none|
-|» data|object|false|none||none|
-|»» url|string|true|none||upload url|
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
+| » data     | object  | false    | none         |       | none        |
+| »» url     | string  | true     | none         |       | upload url  |
 
 ## POST RetryEncode
 
@@ -314,18 +308,17 @@ script: |
 encode_param: ffmpeg -i - -vcodec libx265 -crf 16
 video_key: Roshidere-06.mkv
 index: 2
-
 ```
 
 ### Params
 
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|object| no |none|
-|» script|body|string| yes |vapoursynth script|
-|» encode_param|body|string| yes |encoder param|
-|» video_key|body|string| yes |video oss key|
-|» index|body|integer| yes |video clip index|
+| Name           | Location | Type    | Required | Description        |
+| -------------- | -------- | ------- | -------- | ------------------ |
+| body           | body     | object  | no       | none               |
+| » script       | body     | string  | yes      | vapoursynth script |
+| » encode_param | body     | string  | yes      | encoder param      |
+| » video_key    | body     | string  | yes      | video oss key      |
+| » index        | body     | integer | yes      | video clip index   |
 
 > Response Examples
 
@@ -342,19 +335,19 @@ index: 2
 
 ### Responses
 
-|HTTP Status Code |Meaning|Description|Data schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
 ### Responses Data Schema
 
 HTTP Status Code **200**
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» success|boolean|true|none||none|
-|» error|object|false|none||none|
-|»» message|string|true|none||none|
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## POST RetryMerge
 
@@ -364,15 +357,14 @@ POST /api/v1/task/retry/merge
 
 ```yaml
 video_key: Roshidere-06.mkv
-
 ```
 
 ### Params
 
-|Name|Location|Type|Required|Description|
-|---|---|---|---|---|
-|body|body|object| no |none|
-|» video_key|body|string| yes |video oss key|
+| Name        | Location | Type   | Required | Description   |
+| ----------- | -------- | ------ | -------- | ------------- |
+| body        | body     | object | no       | none          |
+| » video_key | body     | string | yes      | video oss key |
 
 > Response Examples
 
@@ -389,19 +381,18 @@ video_key: Roshidere-06.mkv
 
 ### Responses
 
-|HTTP Status Code |Meaning|Description|Data schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|none|Inline|
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
 ### Responses Data Schema
 
 HTTP Status Code **200**
 
-|Name|Type|Required|Restrictions|Title|description|
-|---|---|---|---|---|---|
-|» success|boolean|true|none||none|
-|» error|object|false|none||none|
-|»» message|string|true|none||none|
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 # Data Schema
-
