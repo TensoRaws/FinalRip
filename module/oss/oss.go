@@ -79,25 +79,10 @@ func Get(key string) (*minio.Object, error) {
 	return oss.GetObject(context.Background(), config.OSSConfig.Bucket, key, minio.GetObjectOptions{})
 }
 
-// GetBytes gets the file pointed to by key and returns a byte array.
-func GetBytes(key string) ([]byte, error) {
-	obj, err := Get(key)
-	if err != nil {
-		return nil, err
-	}
-	defer func(obj *minio.Object) {
-		err := obj.Close()
-		if err != nil {
-			log.Logger.Error("Failed to close object: " + err.Error())
-		}
-	}(obj)
-
-	buf := new(bytes.Buffer)
-	_, err = buf.ReadFrom(obj)
-	if err != nil {
-		return nil, err
-	}
-	return buf.Bytes(), nil
+// Exist checks if the file pointed to by key exists.
+func Exist(key string) bool {
+	err, _ := Get(key)
+	return err == nil
 }
 
 // Delete deletes the file pointed to by key.
