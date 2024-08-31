@@ -81,7 +81,7 @@ func Get(key string) (*minio.Object, error) {
 
 // Exist checks if the file pointed to by key exists.
 func Exist(key string) bool {
-	err, _ := Get(key)
+	_, err := Get(key)
 	return err == nil
 }
 

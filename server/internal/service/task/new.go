@@ -29,6 +29,7 @@ func New(c *gin.Context) {
 
 	// 检查 OSS 文件是否存在
 	if !oss.Exist(req.VideoKey) {
+		log.Logger.Error("OSS video file does not exist: " + req.VideoKey)
 		resp.AbortWithMsg(c, "OSS video file does not exist.")
 		return
 	}
