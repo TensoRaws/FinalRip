@@ -96,19 +96,11 @@ func GetVideoProgress(videoKey string) ([]VideoProgressITEM, error) {
 
 	status := make([]VideoProgressITEM, 0)
 	for _, info := range infos {
-		if info.EncodeKey != "" {
-			status = append(status, VideoProgressITEM{
-				Completed: true,
-				EncodeKey: info.EncodeKey,
-				Key:       info.ClipKey,
-			})
-		} else {
-			status = append(status, VideoProgressITEM{
-				Completed: false,
-				EncodeKey: info.EncodeKey,
-				Key:       info.ClipKey,
-			})
-		}
+		status = append(status, VideoProgressITEM{
+			Completed: info.EncodeKey != "",
+			EncodeKey: info.EncodeKey,
+			Key:       info.ClipKey,
+		})
 	}
 
 	return status, nil

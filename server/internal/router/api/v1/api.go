@@ -28,6 +28,7 @@ func NewAPI() *gin.Engine {
 			taskGroup.POST("clear", task.Clear)
 			taskGroup.POST("retry/encode", task.RetryEncode)
 			taskGroup.POST("retry/merge", task.RetryMerge)
+			taskGroup.GET("list", task.List)
 		}
 	}
 

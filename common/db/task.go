@@ -69,3 +69,19 @@ func DeleteTask(videoKey string) error {
 	_, err := coll.DeleteOne(context.TODO(), Task{Key: videoKey})
 	return err
 }
+
+// ListTask list all tasks in the database
+func ListTask() ([]Task, error) {
+	coll := db.DB.Collection(TASK_COLLECTION)
+	cursor, err := coll.Find(context.TODO(), bson.D{})
+	if err != nil {
+		return nil, err
+	}
+
+	tasks := make([]Task, 0)
+	if err = cursor.All(context.Background(), &tasks); err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
+}
