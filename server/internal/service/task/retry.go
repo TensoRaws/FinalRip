@@ -129,7 +129,7 @@ func RetryMerge(c *gin.Context) {
 		return
 	}
 	for _, status := range progress {
-		if !status {
+		if !status.Completed {
 			resp.AbortWithMsg(c, "Some clips are not finished yet.")
 			return
 		}

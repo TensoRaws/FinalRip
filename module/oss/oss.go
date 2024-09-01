@@ -81,8 +81,12 @@ func Get(key string) (*minio.Object, error) {
 
 // Exist checks if the file pointed to by key exists.
 func Exist(key string) bool {
-	_, err := Get(key)
-	return err == nil
+	exist, err := oss.StatObject(context.Background(), config.OSSConfig.Bucket, key, minio.StatObjectOptions{})
+	if err != nil {
+		log.Logger.Error("Failed to check if object exists: " + err.Error())
+		return false
+	}
+	return exist.Size > 0
 }
 
 // Delete deletes the file pointed to by key.
