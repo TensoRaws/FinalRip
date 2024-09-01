@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/TensoRaws/FinalRip/common/db"
+	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/oss"
 	"github.com/TensoRaws/FinalRip/module/resp"
@@ -89,7 +90,7 @@ func Progress(c *gin.Context) {
 		}()
 	}
 
-	task, err := db.GetTask(req.VideoKey)
+	t, err := db.GetTask(req.VideoKey)
 	if err != nil {
 		log.Logger.Errorf("db.GetCompletedEncodeKey failed, err: %v", err)
 		resp.AbortWithMsg(c, err.Error())
@@ -102,7 +103,7 @@ func Progress(c *gin.Context) {
 
 	go func() {
 		defer wg.Done()
-		url, err = oss.GetPresignedURL(task.Key, task.Key, 48*time.Hour)
+		url, err = oss.GetPresignedURL(t.Key, t.Key, 48*time.Hour)
 		if err != nil {
 			log.Logger.Errorf("oss.GetPresignedURL failed, err: %v", err)
 			resp.AbortWithMsg(c, err.Error())
@@ -111,11 +112,11 @@ func Progress(c *gin.Context) {
 	}()
 	go func() {
 		defer wg.Done()
-		if task.EncodeKey == "" {
-			log.Logger.Warnf("encode task not completed, key: %s", req.VideoKey)
+		if t.EncodeKey == "" {
+			log.Logger.Warnf("encode t not completed, key: %s", req.VideoKey)
 			encodeUrl = ""
 		} else {
-			encodeUrl, err = oss.GetPresignedURL(task.EncodeKey, task.EncodeKey, 48*time.Hour)
+			encodeUrl, err = oss.GetPresignedURL(t.EncodeKey, t.EncodeKey, 48*time.Hour)
 			if err != nil {
 				log.Logger.Errorf("oss.GetPresignedURL failed, err: %v", err)
 				resp.AbortWithMsg(c, err.Error())
@@ -126,21 +127,21 @@ func Progress(c *gin.Context) {
 
 	wg.Wait()
 
-	status := "completed"
-	if task.EncodeParam == "" {
-		status = "pending"
-	} else if task.EncodeKey == "" {
-		status = "running"
+	status := task.TASK_STATUS_COMPLETED
+	if t.EncodeParam == "" {
+		status = task.TASK_STATUS_PENDING
+	} else if t.EncodeKey == "" {
+		status = task.TASK_STATUS_RUNNING
 	}
 
 	resp.OKWithData(c, &ProgressResponse{
-		Key:         task.Key,
+		Key:         t.Key,
 		URL:         url,
-		EncodeKey:   task.EncodeKey,
-		EncodeParam: task.EncodeParam,
+		EncodeKey:   t.EncodeKey,
+		EncodeParam: t.EncodeParam,
 		EncodeURL:   encodeUrl,
 		Progress:    progress,
-		Script:      task.Script,
+		Script:      t.Script,
 		Status:      status,
 	})
 }
