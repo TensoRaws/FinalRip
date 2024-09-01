@@ -1,5 +1,7 @@
 package db
 
+import "time"
+
 const (
 	VIDEO_COLLECTION = "video"
 	TASK_COLLECTION  = "task"
@@ -15,8 +17,9 @@ type VideoClipInfo struct {
 }
 
 type Task struct {
-	Key         string `bson:"key,omitempty"`
-	EncodeKey   string `bson:"encode_key,omitempty"`
-	EncodeParam string `bson:"encode_param,omitempty"`
-	Script      string `bson:"script,omitempty"`
+	Key         string    `bson:"key,omitempty"`
+	EncodeKey   string    `bson:"encode_key,omitempty"`
+	EncodeParam string    `bson:"encode_param,omitempty"`
+	Script      string    `bson:"script,omitempty"`
+	CreatedAt   time.Time `bson:"created_at,omitempty"`
 }
