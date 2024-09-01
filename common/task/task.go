@@ -8,6 +8,12 @@ const (
 	VIDEO_MERGE  = "video:merge"
 )
 
+const (
+	TASK_STATUS_PENDING   = "pending"
+	TASK_STATUS_RUNNING   = "running"
+	TASK_STATUS_COMPLETED = "completed"
+)
+
 // CutTaskPayload is a struct that represents the payload for cut task.
 type CutTaskPayload struct {
 	VideoKey string `json:"video_key"`
