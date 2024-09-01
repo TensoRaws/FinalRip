@@ -12,7 +12,7 @@ func RequireAuth() gin.HandlerFunc {
 		// 从请求头中获取 token
 		token := c.Request.Header.Get("token")
 
-		if token != "" && token != config.ServerConfig.Token {
+		if token != config.ServerConfig.Token {
 			resp.AbortWithMsg(c, "Token is invalid, please check it")
 			return
 		}

@@ -1,8 +1,7 @@
 package v1
 
 import (
-	"net/http"
-
+	"github.com/TensoRaws/FinalRip/module/resp"
 	"github.com/TensoRaws/FinalRip/server/internal/middleware/auth"
 	"github.com/TensoRaws/FinalRip/server/internal/middleware/cros"
 	"github.com/TensoRaws/FinalRip/server/internal/middleware/logger"
@@ -15,9 +14,7 @@ func NewAPI() *gin.Engine {
 	r.Use(cros.Cors(), logger.DefaultLogger(), gin.Recovery(), auth.RequireAuth())
 
 	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": "FinalRip",
-		})
+		resp.OK(c)
 	})
 
 	api := r.Group("/api/v1/")

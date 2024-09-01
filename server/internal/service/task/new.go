@@ -3,6 +3,7 @@ package task
 import (
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/oss"
 	"github.com/TensoRaws/FinalRip/module/resp"
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,13 @@ func New(c *gin.Context) {
 	// 检查任务是否存在
 	if db.CheckTaskExist(req.VideoKey) {
 		resp.AbortWithMsg(c, "Task already exists, please wait for it to complete or delete it.")
+		return
+	}
+
+	// 检查 OSS 文件是否存在
+	if !oss.Exist(req.VideoKey) {
+		log.Logger.Error("OSS video file does not exist: " + req.VideoKey)
+		resp.AbortWithMsg(c, "OSS video file does not exist.")
 		return
 	}
 
