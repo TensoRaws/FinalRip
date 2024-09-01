@@ -81,19 +81,33 @@ func DeleteVideoClips(videoKey string) error {
 	return err
 }
 
+type VideoProgressITEM struct {
+	Completed bool   `json:"completed"`
+	EncodeKey string `json:"encode_key"`
+	Key       string `json:"key"`
+}
+
 // GetVideoProgress 获取视频处理进度和每个切片的状态
-func GetVideoProgress(videoKey string) ([]bool, error) {
+func GetVideoProgress(videoKey string) ([]VideoProgressITEM, error) {
 	infos, err := GetVideoClips(videoKey)
 	if err != nil {
 		return nil, err
 	}
 
-	var status []bool
+	status := make([]VideoProgressITEM, 0)
 	for _, info := range infos {
 		if info.EncodeKey != "" {
-			status = append(status, true)
+			status = append(status, VideoProgressITEM{
+				Completed: true,
+				EncodeKey: info.EncodeKey,
+				Key:       info.ClipKey,
+			})
 		} else {
-			status = append(status, false)
+			status = append(status, VideoProgressITEM{
+				Completed: false,
+				EncodeKey: info.EncodeKey,
+				Key:       info.ClipKey,
+			})
 		}
 	}
 
