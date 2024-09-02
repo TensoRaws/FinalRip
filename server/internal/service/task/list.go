@@ -21,6 +21,7 @@ type ListRequest struct {
 type ListResponse []ListItem
 
 type ListItem struct {
+	CreateAt    string `json:"create_at"`
 	EncodeKey   string `json:"encode_key"`
 	EncodeParam string `json:"encode_param"`
 	EncodeURL   string `json:"encode_url"`
@@ -59,6 +60,7 @@ func List(c *gin.Context) {
 			(*req.Pending && status == task.TASK_STATUS_PENDING) ||
 			(*req.Running && status == task.TASK_STATUS_RUNNING) {
 			list = append(list, ListItem{
+				CreateAt:    t.CreatedAt.Format("2006-01-02 15:04:05"),
 				EncodeKey:   t.EncodeKey,
 				EncodeParam: t.EncodeParam,
 				EncodeURL:   "",

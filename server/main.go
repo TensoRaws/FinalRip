@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	_ "time/tzdata"
 
 	"github.com/TensoRaws/FinalRip/common/version"
 	"github.com/TensoRaws/FinalRip/server/cmd"

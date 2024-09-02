@@ -2,9 +2,11 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/TensoRaws/FinalRip/module/db"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // CheckTaskExist checks if a task exists in the database
@@ -36,7 +38,8 @@ func CheckTaskComplete(videoKey string) bool {
 func InsertTask(videoKey string) error {
 	coll := db.DB.Collection(TASK_COLLECTION)
 	_, err := coll.InsertOne(context.TODO(), Task{
-		Key: videoKey,
+		Key:       videoKey,
+		CreatedAt: time.Now(),
 	})
 	return err
 }
@@ -73,7 +76,9 @@ func DeleteTask(videoKey string) error {
 // ListTask list all tasks in the database
 func ListTask() ([]Task, error) {
 	coll := db.DB.Collection(TASK_COLLECTION)
-	cursor, err := coll.Find(context.TODO(), bson.D{})
+	cursor, err := coll.Find(context.TODO(), bson.D{},
+		options.Find().SetSort(bson.D{{"created_at", -1}})) //nolint:govet
+
 	if err != nil {
 		return nil, err
 	}
