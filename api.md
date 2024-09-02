@@ -219,8 +219,9 @@ GET /api/v1/task/progress
     "progress": [
       {
         "completed": true,
-        "key": "string",
-        "url": "string",
+        "index": 0,
+        "clip_key": "string",
+        "clip_url": "string",
         "encode_key": "string",
         "encode_url": "string"
       }
@@ -255,8 +256,9 @@ HTTP Status Code **200**
 | » data          | object   | false    | none         |       | none                        |
 | »» progress     | [object] | true     | none         |       | none                        |
 | »»» completed   | boolean  | true     | none         |       | none                        |
-| »»» key         | string   | true     | none         |       | none                        |
-| »»» url         | string   | true     | none         |       | none                        |
+| »»» index       | number   | true     | none         |       | none                        |
+| »»» clip_key    | string   | true     | none         |       | none                        |
+| »»» clip_url    | string   | true     | none         |       | none                        |
 | »»» encode_key  | string   | true     | none         |       | none                        |
 | »»» encode_url  | string   | true     | none         |       | none                        |
 | »» key          | string   | true     | none         |       | none                        |

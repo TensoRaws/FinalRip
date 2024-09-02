@@ -83,8 +83,11 @@ func DeleteVideoClips(videoKey string) error {
 
 type VideoProgressITEM struct {
 	Completed bool   `json:"completed"`
+	Index     int    `json:"index"`
+	ClipKey   string `json:"clip_key"`
+	ClipURL   string `json:"clip_url"`
 	EncodeKey string `json:"encode_key"`
-	Key       string `json:"key"`
+	EncodeURL string `json:"encode_url"`
 }
 
 // GetVideoProgress 获取视频处理进度和每个切片的状态
@@ -98,8 +101,11 @@ func GetVideoProgress(videoKey string) ([]VideoProgressITEM, error) {
 	for _, info := range infos {
 		status = append(status, VideoProgressITEM{
 			Completed: info.EncodeKey != "",
+			Index:     info.Index,
+			ClipKey:   info.ClipKey,
+			ClipURL:   "",
 			EncodeKey: info.EncodeKey,
-			Key:       info.ClipKey,
+			EncodeURL: "",
 		})
 	}
 
