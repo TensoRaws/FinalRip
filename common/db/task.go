@@ -77,7 +77,7 @@ func DeleteTask(videoKey string) error {
 func ListTask() ([]Task, error) {
 	coll := db.DB.Collection(TASK_COLLECTION)
 	cursor, err := coll.Find(context.TODO(), bson.D{},
-		options.Find().SetSort(bson.D{{"created_at", -1}}))
+		options.Find().SetSort(bson.D{{"created_at", -1}})) //nolint:govet
 
 	if err != nil {
 		return nil, err
