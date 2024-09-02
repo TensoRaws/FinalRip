@@ -14,7 +14,8 @@ type OSSPresignedRequest struct {
 }
 
 type OSSPresignedResponse struct {
-	URL string `json:"url"`
+	Exist bool   `json:"exist"`
+	URL   string `json:"url"`
 }
 
 // OSSPresigned 获取 OSS 上传 URL (GET /oss/presigned)
@@ -34,6 +35,7 @@ func OSSPresigned(c *gin.Context) {
 	}
 
 	resp.OKWithData(c, &OSSPresignedResponse{
-		URL: url,
+		Exist: oss.Exist(req.VideoKey),
+		URL:   url,
 	})
 }
