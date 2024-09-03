@@ -90,3 +90,11 @@ func ListTask() ([]Task, error) {
 
 	return tasks, nil
 }
+
+// UnsetTaskEncodeKey 清除任务的 EncodeKey
+func UnsetTaskEncodeKey(videoKey string) error {
+	coll := db.DB.Collection(TASK_COLLECTION)
+	_, err := coll.UpdateOne(context.TODO(), Task{Key: videoKey},
+		bson.D{{"$unset", bson.D{{"encode_key", ""}}}}) //nolint: govet
+	return err
+}

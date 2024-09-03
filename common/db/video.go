@@ -61,8 +61,8 @@ func GetVideoClips(videoKey string) ([]VideoClipInfo, error) {
 	return infos, nil
 }
 
-// UpdateVideo 更新视频信息
-func UpdateVideo(filter VideoClipInfo, update VideoClipInfo) error {
+// UpdateVideoClip 更新视频信息
+func UpdateVideoClip(filter VideoClipInfo, update VideoClipInfo) error {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
 
 	up := bson.D{{"$set", update}} //nolint: govet
@@ -112,8 +112,8 @@ func GetVideoProgress(videoKey string) ([]VideoProgressITEM, error) {
 	return status, nil
 }
 
-// UnsetVideoEncodeKey 清除视频切片的编码键
-func UnsetVideoEncodeKey(info VideoClipInfo) error {
+// UnsetVideoClipEncodeKey 清除视频切片的编码键
+func UnsetVideoClipEncodeKey(info VideoClipInfo) error {
 	coll := db.DB.Collection(VIDEO_COLLECTION)
 	_, err := coll.UpdateOne(context.TODO(), info, bson.D{{"$unset", bson.D{{"encode_key", ""}}}}) //nolint:govet
 	return err
