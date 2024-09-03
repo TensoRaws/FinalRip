@@ -84,3 +84,12 @@ services:
       ]
     networks:
       - backend
+#  easytier:
+#    image: easytier/easytier:latest
+#    container_name: easytier
+#    restart: always
+#    environment:
+#      - TZ=Asia/Shanghai
+#    privileged: true
+#    network_mode: host
+#    command: -i 10.126.126.251 --network-name finalrip --network-secret finalrip -e tcp://easytier.public.kkrainbow.top:11010

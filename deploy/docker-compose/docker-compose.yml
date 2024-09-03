@@ -6,25 +6,24 @@ networks:
   backend:
     driver: bridge
 
+#  services:
+#  worker-encode:
+#    image: lychee0/finalrip-worker-encode:latest
+#    container_name: finalrip-worker-encode
+#    restart: always
+#    environment:
+#      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
+#    networks:
+#      - backend
+
 services:
-  #  worker-encode:
-  #    image: lychee0/finalrip-worker-encode:latest
-  #    container_name: finalrip-worker-encode
-  #    restart: always
-  #    environment:
-  #      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
-  #    networks:
-  #      - backend
   worker-encode:
-    image: lychee0/finalrip-worker-encode-pytorch
-    container_name: finalrip-worker-encode
+    image: lychee0/finalrip-worker-encode-pytorch:dev
     restart: always
     environment:
-      - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
-      - FINALRIP_DB_HOST=mongodb
-      - FINALRIP_REDIS_HOST=redis
-      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
     deploy:
+      replicas: 1
       resources:
         reservations:
           devices:
@@ -42,4 +41,7 @@ services:
 #      - TZ=Asia/Shanghai
 #    privileged: true
 #    network_mode: host
-#    command: -d --network-name finalrip --network-secret finalrip -e tcp://easytier.public.kkrainbow.top:11010
+#    command: -d --network-name finalrip --network-secret finalrip1145141919810 -e tcp://easytier.public.kkrainbow.top:11010
+
+# use script to create network
+# export EASYTIER_COMMAND="-d --network-name finalrip --network-secret finalrip1145141919810 -e tcp://easytier.public.kkrainbow.top:11010" && curl -fsSL "https://raw.githubusercontent.com/TensoRaws/FinalRip/main/deploy/easytier/easytier.sh" | bash
