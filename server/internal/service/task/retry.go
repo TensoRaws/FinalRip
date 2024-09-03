@@ -81,15 +81,22 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) error {
 		return err
 	}
 
-	// 清除 encode key
-	err = db.UnsetVideoEncodeKey(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey})
+	// 清除 clip encode key
+	err = db.UnsetVideoClipEncodeKey(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey})
 	if err != nil {
 		log.Logger.Error("Failed to unset encode key: " + err.Error())
 		return err
 	}
 
+	// 清除 task encode key
+	err = db.UnsetTaskEncodeKey(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to unset task encode key: " + err.Error())
+		return err
+	}
+
 	// 更新 task id
-	err = db.UpdateVideo(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey},
+	err = db.UpdateVideoClip(db.VideoClipInfo{Key: req.VideoKey, ClipKey: clip.ClipKey},
 		db.VideoClipInfo{TaskID: info.ID})
 	if err != nil {
 		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
@@ -172,6 +179,13 @@ func HandleRetryMerge(req RetryMergeRequest) error {
 	_, err = queue.Qc.Enqueue(merge, asynq.Queue(queue.MERGE_QUEUE))
 	if err != nil {
 		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
+		return err
+	}
+
+	// 清除 encode key
+	err = db.UnsetTaskEncodeKey(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to unset task encode key: " + err.Error())
 		return err
 	}
 

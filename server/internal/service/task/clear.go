@@ -36,12 +36,6 @@ func Clear(c *gin.Context) {
 		return
 	}
 
-	// 检查 Cut 任务是否处理完成
-	if len(clips) == 0 {
-		resp.AbortWithMsg(c, "Please wait for the cut task to complete before clearing the task")
-		return
-	}
-
 	// 清理 OSS
 	ossDelObjKeys := make([]string, 0)
 	task, _ := db.GetTask(req.VideoKey)

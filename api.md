@@ -216,11 +216,24 @@ GET /api/v1/task/progress
     "message": "string"
   },
   "data": {
-    "progress": [true],
+    "progress": [
+      {
+        "completed": true,
+        "index": 0,
+        "clip_key": "string",
+        "clip_url": "string",
+        "encode_key": "string",
+        "encode_url": "string"
+      }
+    ],
+    "key": "string",
+    "url": "string",
     "encode_key": "string",
     "encode_url": "string",
     "encode_param": "string",
-    "script": "string"
+    "script": "string",
+    "status": "string",
+    "create_at": "string"
   }
 }
 ```
@@ -235,17 +248,27 @@ GET /api/v1/task/progress
 
 HTTP Status Code **200**
 
-| Name            | Type      | Required | Restrictions | Title | description       |
-| --------------- | --------- | -------- | ------------ | ----- | ----------------- |
-| » success       | boolean   | true     | none         |       | none              |
-| » error         | object    | false    | none         |       | none              |
-| »» message      | string    | true     | none         |       | none              |
-| » data          | object    | false    | none         |       | none              |
-| »» progress     | [boolean] | true     | none         |       | none              |
-| »» encode_key   | string    | true     | none         |       | 压制结果，oss key |
-| »» encode_url   | string    | true     | none         |       | 压制结果, url     |
-| »» encode_param | string    | true     | none         |       | 压制参数          |
-| »» script       | string    | true     | none         |       | 压制脚本          |
+| Name            | Type     | Required | Restrictions | Title | description                 |
+| --------------- | -------- | -------- | ------------ | ----- | --------------------------- |
+| » success       | boolean  | true     | none         |       | none                        |
+| » error         | object   | false    | none         |       | none                        |
+| »» message      | string   | true     | none         |       | none                        |
+| » data          | object   | false    | none         |       | none                        |
+| »» progress     | [object] | true     | none         |       | none                        |
+| »»» completed   | boolean  | true     | none         |       | none                        |
+| »»» index       | number   | true     | none         |       | none                        |
+| »»» clip_key    | string   | true     | none         |       | none                        |
+| »»» clip_url    | string   | true     | none         |       | none                        |
+| »»» encode_key  | string   | true     | none         |       | none                        |
+| »»» encode_url  | string   | true     | none         |       | none                        |
+| »» key          | string   | true     | none         |       | none                        |
+| »» url          | string   | true     | none         |       | none                        |
+| »» encode_key   | string   | true     | none         |       | none                        |
+| »» encode_url   | string   | true     | none         |       | none                        |
+| »» encode_param | string   | true     | none         |       | none                        |
+| »» script       | string   | true     | none         |       | none                        |
+| »» status       | string   | true     | none         |       | pending, running, completed |
+| »» create_at    | string   | true     | none         |       | none                        |
 
 ## GET OSSPresigned
 
@@ -255,7 +278,7 @@ GET /api/v1/task/oss/presigned
 
 | Name      | Location | Type   | Required | Description |
 | --------- | -------- | ------ | -------- | ----------- |
-| video_key | query    | string | no       | none        |
+| video_key | query    | string | yes      | none        |
 
 > Response Examples
 
@@ -268,7 +291,8 @@ GET /api/v1/task/oss/presigned
     "message": "string"
   },
   "data": {
-    "url": "string"
+    "url": "string",
+    "exist": true
   }
 }
 ```
@@ -290,6 +314,7 @@ HTTP Status Code **200**
 | »» message | string  | true     | none         |       | none        |
 | » data     | object  | false    | none         |       | none        |
 | »» url     | string  | true     | none         |       | upload url  |
+| »» exist   | boolean | true     | none         |       | none        |
 
 ## POST RetryEncode
 
@@ -394,5 +419,67 @@ HTTP Status Code **200**
 | » success  | boolean | true     | none         |       | none        |
 | » error    | object  | false    | none         |       | none        |
 | »» message | string  | true     | none         |       | none        |
+
+## GET List
+
+GET /api/v1/task/list
+
+### Params
+
+| Name      | Location | Type    | Required | Description |
+| --------- | -------- | ------- | -------- | ----------- |
+| pending   | query    | boolean | yes      | none        |
+| running   | query    | boolean | yes      | none        |
+| completed | query    | boolean | yes      | none        |
+
+> Response Examples
+
+> 200 Response
+
+```json
+{
+  "success": true,
+  "error": {
+    "message": "string"
+  },
+  "data": [
+    {
+      "key": "string",
+      "url": "string",
+      "encode_key": "string",
+      "encode_url": "string",
+      "encode_param": "string",
+      "script": "string",
+      "status": "string",
+      "create_at": "string"
+    }
+  ]
+}
+```
+
+### Responses
+
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+
+### Responses Data Schema
+
+HTTP Status Code **200**
+
+| Name            | Type     | Required | Restrictions | Title | description                 |
+| --------------- | -------- | -------- | ------------ | ----- | --------------------------- |
+| » success       | boolean  | true     | none         |       | none                        |
+| » error         | object   | false    | none         |       | none                        |
+| »» message      | string   | true     | none         |       | none                        |
+| » data          | [object] | false    | none         |       | none                        |
+| »» key          | string   | true     | none         |       | none                        |
+| »» url          | string   | true     | none         |       | none                        |
+| »» encode_key   | string   | true     | none         |       | none                        |
+| »» encode_url   | string   | true     | none         |       | none                        |
+| »» encode_param | string   | true     | none         |       | none                        |
+| »» script       | string   | true     | none         |       | none                        |
+| »» status       | string   | true     | none         |       | pending, running, completed |
+| »» create_at    | string   | true     | none         |       | none                        |
 
 # Data Schema

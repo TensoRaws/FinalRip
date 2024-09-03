@@ -17,23 +17,15 @@ type ProgressRequest struct {
 }
 
 type ProgressResponse struct {
-	CreateAt    string         `json:"create_at"`
-	EncodeKey   string         `json:"encode_key"`
-	EncodeParam string         `json:"encode_param"`
-	EncodeURL   string         `json:"encode_url"`
-	Key         string         `json:"key"`
-	Progress    []ProgressITEM `json:"progress"`
-	Script      string         `json:"script"`
-	Status      string         `json:"status"`
-	URL         string         `json:"url"`
-}
-
-type ProgressITEM struct {
-	Completed bool   `json:"completed"`
-	EncodeKey string `json:"encode_key"`
-	EncodeURL string `json:"encode_url"`
-	Key       string `json:"key"`
-	URL       string `json:"url"`
+	CreateAt    string                 `json:"create_at"`
+	EncodeKey   string                 `json:"encode_key"`
+	EncodeParam string                 `json:"encode_param"`
+	EncodeURL   string                 `json:"encode_url"`
+	Key         string                 `json:"key"`
+	Progress    []db.VideoProgressITEM `json:"progress"`
+	Script      string                 `json:"script"`
+	Status      string                 `json:"status"`
+	URL         string                 `json:"url"`
 }
 
 // Progress 查看进度 (GET /progress)
@@ -45,22 +37,13 @@ func Progress(c *gin.Context) {
 		return
 	}
 
-	p, err := db.GetVideoProgress(req.VideoKey)
+	progress, err := db.GetVideoProgress(req.VideoKey)
 	if err != nil {
 		log.Logger.Errorf("db.GetVideoProgress failed, err: %v", err)
 		resp.AbortWithMsg(c, err.Error())
 		return
 	}
 
-	// 构造每一个 clip 的信息
-	progress := make([]ProgressITEM, 0)
-	for _, v := range p {
-		progress = append(progress, ProgressITEM{
-			Completed: v.Completed,
-			EncodeKey: v.EncodeKey,
-			Key:       v.Key,
-		})
-	}
 	var wg sync.WaitGroup
 	for i := range progress {
 		wg.Add(1)
@@ -80,13 +63,13 @@ func Progress(c *gin.Context) {
 			}
 			// clip url
 			{
-				url, err := oss.GetPresignedURL(progress[i].Key, progress[i].Key, 48*time.Hour)
+				clipUrl, err := oss.GetPresignedURL(progress[i].ClipKey, progress[i].ClipKey, 48*time.Hour)
 				if err != nil {
 					log.Logger.Errorf("oss.GetPresignedURL failed, err: %v", err)
 					resp.AbortWithMsg(c, err.Error())
 					return
 				}
-				progress[i].URL = url
+				progress[i].ClipURL = clipUrl
 			}
 		}()
 	}
