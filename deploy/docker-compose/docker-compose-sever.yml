@@ -7,6 +7,15 @@ networks:
     driver: bridge
 
 services:
+  dashboard:
+    image: lychee0/finalrip-dashboard:latest
+    container_name: finalrip-dashboard
+    restart: always
+    ports:
+      - "8989:80"
+    networks:
+      - backend
+
   server:
     image: lychee0/finalrip-server:latest
     container_name: finalrip-server
