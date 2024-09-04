@@ -20,10 +20,12 @@ type ProgressResponse struct {
 	CreateAt    string                 `json:"create_at"`
 	EncodeKey   string                 `json:"encode_key"`
 	EncodeParam string                 `json:"encode_param"`
+	EncodeSize  string                 `json:"encode_size"`
 	EncodeURL   string                 `json:"encode_url"`
 	Key         string                 `json:"key"`
 	Progress    []db.VideoProgressITEM `json:"progress"`
 	Script      string                 `json:"script"`
+	Size        string                 `json:"size"`
 	Status      string                 `json:"status"`
 	URL         string                 `json:"url"`
 }
@@ -109,7 +111,30 @@ func Progress(c *gin.Context) {
 		}
 	}()
 
-	wg.Wait()
+	var size string
+	var encodeSize string
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		size, err = oss.Size(t.Key)
+		if err != nil {
+			log.Logger.Errorf("get origin size failed, err: %v", err)
+			resp.AbortWithMsg(c, err.Error())
+			return
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		if t.EncodeKey != "" {
+			encodeSize, err = oss.Size(t.EncodeKey)
+			if err != nil {
+				log.Logger.Errorf("get encode size failed, err: %v", err)
+				resp.AbortWithMsg(c, err.Error())
+				return
+			}
+		}
+	}()
 
 	status := task.TASK_STATUS_COMPLETED
 	if t.EncodeParam == "" {
@@ -118,14 +143,18 @@ func Progress(c *gin.Context) {
 		status = task.TASK_STATUS_RUNNING
 	}
 
+	wg.Wait()
+
 	resp.OKWithData(c, &ProgressResponse{
 		Key:         t.Key,
 		URL:         url,
 		EncodeKey:   t.EncodeKey,
 		EncodeParam: t.EncodeParam,
+		EncodeSize:  encodeSize,
 		EncodeURL:   encodeUrl,
 		Progress:    progress,
 		Script:      t.Script,
+		Size:        size,
 		Status:      status,
 		CreateAt:    t.CreatedAt.Format("2006-01-02 15:04:05"),
 	})
