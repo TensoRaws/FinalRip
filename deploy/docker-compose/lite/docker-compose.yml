@@ -1,0 +1,134 @@
+version: "3.8"
+
+name: finalrip
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  server:
+    image: lychee0/finalrip-server:latest
+    container_name: finalrip-server
+    restart: always
+    ports:
+      - "8848:8848"
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
+    networks:
+      - backend
+
+  dashboard:
+    image: lychee0/finalrip-dashboard:latest
+    container_name: finalrip-dashboard
+    restart: always
+    ports:
+      - "8989:80"
+    networks:
+      - backend
+
+  worker-encode:
+    image: lychee0/finalrip-worker-encode-pytorch:dev
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=oss:9000
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids:
+                - "0"
+              capabilities: [gpu]
+    networks:
+      - backend
+  #  worker-encode:
+  #    image: lychee0/finalrip-worker-encode:latest
+  #    container_name: finalrip-worker-encode
+  #    restart: always
+  #    environment:
+  #      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
+  #    networks:
+  #      - backend
+
+  worker-cut:
+    image: lychee0/finalrip-worker-cut:latest
+    container_name: finalrip-worker-cut
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=oss:9000
+    networks:
+      - backend
+
+  worker-merge:
+    image: lychee0/finalrip-worker-merge:latest
+    container_name: finalrip-worker-merge
+    restart: always
+    environment:
+      - FINALRIP_DB_HOST=mongodb
+      - FINALRIP_REDIS_HOST=redis
+      - FINALRIP_OSS_ENDPOINT=oss:9000
+    networks:
+      - backend
+
+  mongodb:
+    image: mongo:8.0.0-rc13-jammy
+    container_name: finalrip-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=finalrip
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.2.5
+    container_name: finalrip-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: >
+      --requirepass 123456
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - backend
+
+  asynqmon:
+    image: hibiken/asynqmon:latest
+    container_name: finalrip-asynqmon
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      REDIS_ADDR: redis:6379
+      REDIS_PASSWORD: 123456
+    networks:
+      - backend
+
+  oss:
+    image: bitnami/minio:2024.7.13
+    container_name: finalrip-minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: homo
+      MINIO_ROOT_PASSWORD: homo114514
+      MINIO_DEFAULT_BUCKETS: finalrip:public
+    networks:
+      - backend
