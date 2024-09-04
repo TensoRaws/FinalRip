@@ -10,6 +10,7 @@ import (
 
 	"github.com/TensoRaws/FinalRip/module/config"
 	"github.com/TensoRaws/FinalRip/module/log"
+	"github.com/TensoRaws/FinalRip/module/util"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
@@ -87,6 +88,16 @@ func Exist(key string) bool {
 		return false
 	}
 	return exist.Size > 0
+}
+
+// Size returns the size of the file pointed to by key.
+func Size(key string) (string, error) {
+	stat, err := oss.StatObject(context.Background(), config.OSSConfig.Bucket, key, minio.StatObjectOptions{})
+	if err != nil {
+		log.Logger.Error("Failed to get object size: " + err.Error())
+		return "", err
+	}
+	return util.ByteCountBinary(uint64(stat.Size)), nil
 }
 
 // Delete deletes the file pointed to by key.
