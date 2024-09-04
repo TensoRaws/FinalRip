@@ -228,8 +228,10 @@ GET /api/v1/task/progress
     ],
     "key": "string",
     "url": "string",
+    "size": "string",
     "encode_key": "string",
     "encode_url": "string",
+    "encode_size": "string",
     "encode_param": "string",
     "script": "string",
     "status": "string",
@@ -263,8 +265,10 @@ HTTP Status Code **200**
 | »»» encode_url  | string   | true     | none         |       | none                        |
 | »» key          | string   | true     | none         |       | none                        |
 | »» url          | string   | true     | none         |       | none                        |
+| »» size         | string   | true     | none         |       | none                        |
 | »» encode_key   | string   | true     | none         |       | none                        |
 | »» encode_url   | string   | true     | none         |       | none                        |
+| »» encode_size  | string   | true     | none         |       | none                        |
 | »» encode_param | string   | true     | none         |       | none                        |
 | »» script       | string   | true     | none         |       | none                        |
 | »» status       | string   | true     | none         |       | pending, running, completed |
