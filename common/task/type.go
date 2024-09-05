@@ -1,7 +1,10 @@
 package task
 
-import "github.com/TensoRaws/FinalRip/common/db"
+import (
+	"github.com/TensoRaws/FinalRip/common/db"
+)
 
+// task types, note that video: can get video:xxx:xxx format task type
 const (
 	VIDEO_CUT    = "video:cut"
 	VIDEO_ENCODE = "video:encode"

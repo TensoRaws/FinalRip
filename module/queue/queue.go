@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/TensoRaws/FinalRip/common/version"
 	"github.com/TensoRaws/FinalRip/module/config"
 	"github.com/hibiken/asynq"
 )
@@ -16,9 +17,9 @@ var (
 )
 
 const (
-	CUT_QUEUE    = "cut_queue"
-	ENCODE_QUEUE = "encode_queue"
-	MERGE_QUEUE  = "merge_queue"
+	CUT_QUEUE    = "cut_" + version.FINALRUP_VERSION
+	ENCODE_QUEUE = "encode_" + version.FINALRUP_VERSION
+	MERGE_QUEUE  = "merge_" + version.FINALRUP_VERSION
 )
 
 func getRedisClientOpt() asynq.RedisClientOpt {
