@@ -12,9 +12,9 @@ import (
 func main() {
 	app := cmd.NewApp()
 	app.Name = "FinalRip"
-	app.Usage = "FinalRip Aip Sever"
+	app.Usage = "FinalRip API Sever"
 	app.Description = "a distributed video processing tool"
-	app.Version = version.FINALRUP_VERSION
+	app.Version = version.FINALRIP_VERSION
 
 	err := app.Run(os.Args)
 	if err != nil {

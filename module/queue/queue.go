@@ -17,9 +17,9 @@ var (
 )
 
 const (
-	CUT_QUEUE    = "cut_" + version.FINALRUP_VERSION
-	ENCODE_QUEUE = "encode_" + version.FINALRUP_VERSION
-	MERGE_QUEUE  = "merge_" + version.FINALRUP_VERSION
+	CUT_QUEUE    = "cut_" + version.FINALRIP_VERSION
+	ENCODE_QUEUE = "encode_" + version.FINALRIP_VERSION
+	MERGE_QUEUE  = "merge_" + version.FINALRIP_VERSION
 )
 
 func getRedisClientOpt() asynq.RedisClientOpt {
