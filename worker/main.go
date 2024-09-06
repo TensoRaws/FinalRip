@@ -10,10 +10,10 @@ import (
 
 func main() {
 	app := cmd.NewApp()
-	app.Name = "FinalRip Enocde Worker"
-	app.Usage = "FinalRip Enocde Worker is a worker that encode video files"
-	app.Description = "FinalRjson Enocde Worker is a worker that encode video files"
-	app.Version = version.FINALRUP_VERSION
+	app.Name = "FinalRip Worker"
+	app.Usage = "Cut, Encode, and Merge videos"
+	app.Description = "FinalRip Worker is a tool to cut, encode, and merge videos"
+	app.Version = version.FINALRIP_VERSION
 
 	err := app.Run(os.Args)
 	if err != nil {

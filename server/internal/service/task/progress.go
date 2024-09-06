@@ -17,7 +17,7 @@ type ProgressRequest struct {
 }
 
 type ProgressResponse struct {
-	CreateAt    string                 `json:"create_at"`
+	CreateAt    int64                  `json:"create_at"`
 	EncodeKey   string                 `json:"encode_key"`
 	EncodeParam string                 `json:"encode_param"`
 	EncodeSize  string                 `json:"encode_size"`
@@ -156,6 +156,6 @@ func Progress(c *gin.Context) {
 		Script:      t.Script,
 		Size:        size,
 		Status:      status,
-		CreateAt:    t.CreatedAt.Format("2006-01-02 15:04:05"),
+		CreateAt:    t.CreatedAt.Unix(),
 	})
 }
