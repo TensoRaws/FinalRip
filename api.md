@@ -235,7 +235,7 @@ GET /api/v1/task/progress
     "encode_param": "string",
     "script": "string",
     "status": "string",
-    "create_at": "string"
+    "create_at": 0
   }
 }
 ```
@@ -272,7 +272,7 @@ HTTP Status Code **200**
 | »» encode_param | string   | true     | none         |       | none                        |
 | »» script       | string   | true     | none         |       | none                        |
 | »» status       | string   | true     | none         |       | pending, running, completed |
-| »» create_at    | string   | true     | none         |       | none                        |
+| »» create_at    | integer  | true     | none         |       | unix time, int64            |
 
 ## GET OSSPresigned
 
@@ -455,7 +455,7 @@ GET /api/v1/task/list
       "encode_param": "string",
       "script": "string",
       "status": "string",
-      "create_at": "string"
+      "create_at": 0
     }
   ]
 }
@@ -484,6 +484,6 @@ HTTP Status Code **200**
 | »» encode_param | string   | true     | none         |       | none                        |
 | »» script       | string   | true     | none         |       | none                        |
 | »» status       | string   | true     | none         |       | pending, running, completed |
-| »» create_at    | string   | true     | none         |       | none                        |
+| »» create_at    | integer  | true     | none         |       | unix time, int64            |
 
 # Data Schema
