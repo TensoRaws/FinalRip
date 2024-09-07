@@ -44,14 +44,14 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		_ = util.ClaerTempFile(p...)
 	}(tempSourceVideo, tempEncodedVideo)
 
+	// 等待下载完成
+	log.Logger.Infof("Waiting for downloading video clip %s", p.Clip.ClipKey)
+
 	err := oss.GetWithPath(p.Clip.ClipKey, tempSourceVideo)
 	if err != nil {
 		log.Logger.Errorf("Failed to download video %s: %v", util.StructToString(p.Clip), err)
 		return err
 	}
-
-	// 等待下载完成
-	log.Logger.Infof("Wait for downloading video clip %s", p.Clip.ClipKey)
 	for {
 		if _, err := os.Stat(tempSourceVideo); err == nil {
 			break
@@ -76,7 +76,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 检查文件大小
-	if util.GetFileSize(tempEncodedVideo) < 1024 {
+	if util.GetFileSize(tempEncodedVideo) < 8192 {
 		log.Logger.Errorf("Failed to encode video %s: file size is too small", util.StructToString(p.Clip))
 		return errors.New("file size is too small")
 	}

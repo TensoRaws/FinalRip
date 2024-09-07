@@ -47,14 +47,14 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 	_ = os.Mkdir(tempPath, os.ModePerm)
 
+	// 等待下载完成
+	log.Logger.Infof("Waiting for downloading video %s", p.VideoKey)
+
 	err := oss.GetWithPath(p.VideoKey, tempVideo)
 	if err != nil {
 		log.Logger.Errorf("Failed to download video %s: %v", p.VideoKey, err)
 		return err
 	}
-
-	// 等待下载完成
-	log.Logger.Infof("Waiting for video %s to download", p.VideoKey)
 	for {
 		if _, err := os.Stat(tempVideo); err == nil {
 			break

@@ -54,13 +54,14 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	go func() {
 		defer wg.Done()
 
+		// 等待下载完成
+		log.Logger.Infof("Waiting for downloading source video %s", p.Clips[0].Key)
+
 		err := oss.GetWithPath(p.Clips[0].Key, tempOriginFile)
 		if err != nil {
 			log.Logger.Errorf("Failed to download video %s: %v", p.Clips[0].Key, err)
 			return
 		}
-		// 等待下载完成
-		log.Logger.Infof("Downloading source video %s", p.Clips[0].Key)
 		for {
 			if _, err := os.Stat(tempOriginFile); err == nil {
 				break
@@ -78,14 +79,14 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 			dlPath := tempFolder + "/" + strconv.Itoa(clip.Index) + ".mkv"
 
+			// 等待下载完成
+			log.Logger.Infof("Waiting for downloading encode video clip %s", clip.EncodeKey)
+
 			err := oss.GetWithPath(clip.EncodeKey, dlPath)
 			if err != nil {
 				log.Logger.Errorf("Failed to download video clip %s: %v", clip.EncodeKey, err)
 				return
 			}
-
-			// 等待下载完成
-			log.Logger.Infof("Downloading encode video clip %s", clip.EncodeKey)
 			for {
 				if _, err := os.Stat(dlPath); err == nil {
 					break
