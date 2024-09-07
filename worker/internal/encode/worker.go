@@ -45,7 +45,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}(tempSourceVideo, tempEncodedVideo)
 
 	// 等待下载完成
-	log.Logger.Infof("Wait for downloading video clip %s", p.Clip.ClipKey)
+	log.Logger.Infof("Waiting for downloading video clip %s", p.Clip.ClipKey)
 
 	err := oss.GetWithPath(p.Clip.ClipKey, tempSourceVideo)
 	if err != nil {
