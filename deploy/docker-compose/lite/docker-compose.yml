@@ -30,7 +30,7 @@ services:
       - backend
 
   worker-encode:
-    image: lychee0/finalrip-worker-encode-pytorch:dev
+    image: lychee0/finalrip-worker-encode:cuda
     restart: always
     environment:
       - FINALRIP_DB_HOST=mongodb
@@ -47,14 +47,6 @@ services:
               capabilities: [gpu]
     networks:
       - backend
-  #  worker-encode:
-  #    image: lychee0/finalrip-worker-encode:latest
-  #    container_name: finalrip-worker-encode
-  #    restart: always
-  #    environment:
-  #      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
-  #    networks:
-  #      - backend
 
   worker-cut:
     image: lychee0/finalrip-worker-cut:latest

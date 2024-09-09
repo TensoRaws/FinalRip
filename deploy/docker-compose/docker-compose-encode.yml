@@ -6,19 +6,9 @@ networks:
   backend:
     driver: bridge
 
-#  services:
-#  worker-encode:
-#    image: lychee0/finalrip-worker-encode:latest
-#    container_name: finalrip-worker-encode
-#    restart: always
-#    environment:
-#      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
-#    networks:
-#      - backend
-
 services:
   worker-encode:
-    image: lychee0/finalrip-worker-encode-pytorch:dev
+    image: lychee0/finalrip-worker-encode:cuda
     restart: always
     environment:
       #      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
@@ -44,7 +34,7 @@ services:
 #      - TZ=Asia/Shanghai
 #    privileged: true
 #    network_mode: host
-#    command: -d --network-name finalrip --network-secret finalrip1145141919810 -e tcp://easytier.public.kkrainbow.top:11010
+#    command: -d --network-name finalrip --network-secret finalrip -e tcp://easytier.public.kkrainbow.top:11010
 
 # use script to create network
-# export EASYTIER_COMMAND="-d --network-name finalrip --network-secret finalrip1145141919810 -e tcp://easytier.public.kkrainbow.top:11010" && curl -fsSL "https://raw.githubusercontent.com/TensoRaws/FinalRip/main/deploy/easytier/easytier.sh" | bash
+# export EASYTIER_COMMAND="-d --network-name finalrip --network-secret finalrip -e tcp://easytier.public.kkrainbow.top:11010" && curl -fsSL "https://raw.githubusercontent.com/TensoRaws/FinalRip/main/deploy/easytier/easytier.sh" | bash
