@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  build:
+  build-cuda:
     docker:
       - image: cimg/go:1.17
     resource_class: small
@@ -11,4 +11,25 @@ jobs:
           docker_layer_caching: true
       - run: |
           echo $DOCKERHUB_PASSWORD | docker login -u lychee0 --password-stdin
-          make pt-dev
+          make pt
+          make pt-release
+
+  build-rocm:
+    docker:
+      - image: cimg/go:1.17
+    resource_class: small
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run: |
+          echo $DOCKERHUB_PASSWORD | docker login -u lychee0 --password-stdin
+          make pt-rocm
+          make pt-rocm-release
+
+workflows:
+  version: 2
+  build_all:
+    jobs:
+      - build-cuda
+      - build-rocm
