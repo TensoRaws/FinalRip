@@ -10,7 +10,7 @@ jobs:
   docker:
     strategy:
       matrix:
-        dockerfile: ["server", "worker-cut", "worker-encode", "worker-merge"]
+        dockerfile: ["server", "worker-cut", "worker-merge"]
 
     runs-on: ubuntu-latest
     steps:
@@ -26,18 +26,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push - Encode
-        if: matrix.dockerfile == 'worker-encode'
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./deploy/${{ matrix.dockerfile }}.dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: lychee0/finalrip-${{ matrix.dockerfile }}:dev
-
       - name: Build and push
-        if: matrix.dockerfile != 'worker-encode'
         uses: docker/build-push-action@v4
         with:
           context: .

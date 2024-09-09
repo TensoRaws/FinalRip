@@ -31,15 +31,25 @@ all:
 	docker buildx build -f ./deploy/server.dockerfile -t lychee0/finalrip-server .
 	docker buildx build -f ./deploy/worker-cut.dockerfile -t lychee0/finalrip-worker-cut .
 	docker buildx build -f ./deploy/worker-merge.dockerfile -t lychee0/finalrip-worker-merge .
-	docker buildx build -f ./deploy/worker-encode.dockerfile -t lychee0/finalrip-worker-encode .
 
 .PHONY: pt
 pt:
-	docker buildx build -f ./deploy/worker-encode-pytorch.dockerfile -t lychee0/finalrip-worker-encode-pytorch .
+	docker buildx build -f ./deploy/worker-encode.dockerfile -t lychee0/finalrip-worker-encode --build-arg BASE_CONTAINER_TAG=cuda .
+	docker tag lychee0/finalrip-worker-encode lychee0/finalrip-worker-encode:dev
+	docker tag lychee0/finalrip-worker-encode lychee0/finalrip-worker-encode:cuda
 
-.PHONY: pt-dev
-pt-dev:
-	docker buildx build -f ./deploy/worker-encode-pytorch.dockerfile -t lychee0/finalrip-worker-encode-pytorch .
-	docker tag lychee0/finalrip-worker-encode-pytorch lychee0/finalrip-worker-encode-pytorch:dev
+.PHONY: pt-release
+pt-release:
 	docker login
-	docker push lychee0/finalrip-worker-encode-pytorch:dev
+	docker push lychee0/finalrip-worker-encode:dev
+	docker push lychee0/finalrip-worker-encode:cuda
+
+.PHONY: pt-rocm
+pt-rocm:
+	docker buildx build -f ./deploy/worker-encode.dockerfile -t lychee0/finalrip-worker-encode --build-arg BASE_CONTAINER_TAG=rocm .
+	docker tag lychee0/finalrip-worker-encode lychee0/finalrip-worker-encode:rocm
+
+.PHONY: pt-rocm-release
+pt-rocm-release:
+	docker login
+	docker push lychee0/finalrip-worker-encode:rocm
