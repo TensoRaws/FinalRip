@@ -1,3 +1,5 @@
+ARG BASE_CONTAINER_TAG=cuda
+
 FROM golang:1.22-bookworm AS builder
 
 ENV GO111MODULE=on \
@@ -10,9 +12,6 @@ COPY . .
 RUN go mod download
 
 RUN make worker
-
-
-ARG BASE_CONTAINER_TAG=cuda
 
 FROM lychee0/vs-pytorch:${BASE_CONTAINER_TAG} AS app
 
