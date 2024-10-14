@@ -31,6 +31,14 @@ docker-compose -f deploy/docker-compose/lite/docker-compose.yml up -d
 
 It will run all containers in a single host, then open `http://localhost:8989` in your browser to access the dashboard, open `http://localhost:8080` to access the Asynq monitor.
 
+### Start
+
+![Dashboard](https://raw.githubusercontent.com/TensoRaws/.github/refs/heads/main/finalrip.gif)
+
+We use [this container](https://github.com/TensoRaws/vs-playground) as the base image, which contains FFmpeg, VapourSynth, PyTorch...
+
+So in the dashboard, we can select a compatible script to process the video!
+
 ### Distributed Deployment
 
 Deploy the system in a distributed way, you can refer to the [docker-compose](./deploy/docker-compose) directory for more details.
@@ -53,14 +61,6 @@ Special Env Variables:
 
 - `FINALRIP_REMOTE_CONFIG_HOST` consul host, default is None, that means load config from local file. When set, it will load the config from the consul K/V store. When set to `EASYTIER` / `easytier`, will try load config from `FINALRIP_EASYTIER_HOST:8500` (`10.126.126.251:8500` by default).
 - `FINALRIP_REMOTE_CONFIG_KEY` consul key, default is `finalrip.yml`
-
-### Start
-
-We use [this container](https://github.com/TensoRaws/vs-playground) as the base image, which contains FFmpeg, VapourSynth, PyTorch...
-
-So in the dashboard, we can select a compatible script to process the video!
-
-![Dashboard](https://raw.githubusercontent.com/TensoRaws/.github/refs/heads/main/finalrip.gif)
 
 ### A new script?
 
