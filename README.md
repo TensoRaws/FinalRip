@@ -68,7 +68,8 @@ In [vs-playground](https://github.com/TensoRaws/vs-playground), we provide the s
 
 ### For Advanced User
 
-Build your own `encode` image refer to the [vs-playground](https://github.com/TensoRaws/vs-playground), and set the `Template Repo` name in dashboard if you wanna select a script from the repo's `templates` folder.
+- API document: [here](https://apifox.com/apidoc/shared-0b6425d8-0140-4822-9f59-f1d6d7784b03)
+- Build your own `encode` image: refer to the [vs-playground](https://github.com/TensoRaws/vs-playground), and set the `Template Repo` name in dashboard if you wanna select a script from the repo's `templates` folder.
 
 ### Build
 

@@ -33,7 +33,7 @@ Base URLs:
 
 POST /api/v1/task/start
 
-> Body Parameters
+> Body 请求参数
 
 ```yaml
 script: "import os\r
@@ -42,35 +42,25 @@ script: "import os\r
 
   from vapoursynth import core\r
 
-  from vsrealesrgan import realesrgan, RealESRGANModel\r
-
   \r
 
   clip = core.bs.VideoSource(source=os.getenv('FINALRIP_SOURCE'))\r
-
-  clip = core.resize.Bicubic(clip=clip, format=vs.RGBH)\r
-
-  clip = realesrgan(clip=clip,
-  model=RealESRGANModel.AnimeJaNai_HD_V3_Compact_2x)\r
-
-  clip = core.resize.Bicubic(clip=clip, matrix_s=\"709\",
-  format=vs.YUV420P16)\r
 
   clip.set_output()"
 encode_param: ffmpeg -i - -vcodec libx265 -crf 16
 video_key: Roshidere-08.mkv
 ```
 
-### Params
+### 请求参数
 
-| Name           | Location | Type   | Required | Description        |
-| -------------- | -------- | ------ | -------- | ------------------ |
-| body           | body     | object | no       | none               |
-| » script       | body     | string | yes      | vapoursynth script |
-| » encode_param | body     | string | yes      | encoder param      |
-| » video_key    | body     | string | yes      | video oss key      |
+| 名称           | 位置 | 类型   | 必选 | 说明               |
+| -------------- | ---- | ------ | ---- | ------------------ |
+| body           | body | object | 否   | none               |
+| » script       | body | string | 是   | vapoursynth script |
+| » encode_param | body | string | 是   | encoder param      |
+| » video_key    | body | string | 是   | video oss key      |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -83,21 +73,21 @@ video_key: Roshidere-08.mkv
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name       | Type    | Required | Restrictions | Title | description |
-| ---------- | ------- | -------- | ------------ | ----- | ----------- |
-| » success  | boolean | true     | none         |       | none        |
-| » error    | object  | false    | none         |       | none        |
-| »» message | string  | true     | none         |       | none        |
+| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | ------- | ----- | ---- | ------ | ---- |
+| » success  | boolean | true  | none |        | none |
+| » error    | object  | false | none |        | none |
+| »» message | string  | true  | none |        | none |
 
 ## POST New
 
@@ -105,20 +95,20 @@ POST /api/v1/task/new
 
 new a task after upload oss
 
-> Body Parameters
+> Body 请求参数
 
 ```yaml
 video_key: Roshidere-08.mkv
 ```
 
-### Params
+### 请求参数
 
-| Name        | Location | Type   | Required | Description   |
-| ----------- | -------- | ------ | -------- | ------------- |
-| body        | body     | object | no       | none          |
-| » video_key | body     | string | yes      | video oss key |
+| 名称        | 位置 | 类型   | 必选 | 说明          |
+| ----------- | ---- | ------ | ---- | ------------- |
+| body        | body | object | 否   | none          |
+| » video_key | body | string | 是   | video oss key |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -131,21 +121,21 @@ video_key: Roshidere-08.mkv
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name       | Type    | Required | Restrictions | Title | description |
-| ---------- | ------- | -------- | ------------ | ----- | ----------- |
-| » success  | boolean | true     | none         |       | none        |
-| » error    | object  | false    | none         |       | none        |
-| »» message | string  | true     | none         |       | none        |
+| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | ------- | ----- | ---- | ------ | ---- |
+| » success  | boolean | true  | none |        | none |
+| » error    | object  | false | none |        | none |
+| »» message | string  | true  | none |        | none |
 
 ## POST Clear
 
@@ -153,20 +143,20 @@ POST /api/v1/task/clear
 
 new a task after upload oss
 
-> Body Parameters
+> Body 请求参数
 
 ```yaml
 video_key: Roshidere-06.mkv
 ```
 
-### Params
+### 请求参数
 
-| Name        | Location | Type   | Required | Description   |
-| ----------- | -------- | ------ | -------- | ------------- |
-| body        | body     | object | no       | none          |
-| » video_key | body     | string | yes      | video oss key |
+| 名称        | 位置 | 类型   | 必选 | 说明          |
+| ----------- | ---- | ------ | ---- | ------------- |
+| body        | body | object | 否   | none          |
+| » video_key | body | string | 是   | video oss key |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -179,33 +169,33 @@ video_key: Roshidere-06.mkv
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name       | Type    | Required | Restrictions | Title | description |
-| ---------- | ------- | -------- | ------------ | ----- | ----------- |
-| » success  | boolean | true     | none         |       | none        |
-| » error    | object  | false    | none         |       | none        |
-| »» message | string  | true     | none         |       | none        |
+| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | ------- | ----- | ---- | ------ | ---- |
+| » success  | boolean | true  | none |        | none |
+| » error    | object  | false | none |        | none |
+| »» message | string  | true  | none |        | none |
 
 ## GET Progress
 
 GET /api/v1/task/progress
 
-### Params
+### 请求参数
 
-| Name      | Location | Type   | Required | Description |
-| --------- | -------- | ------ | -------- | ----------- |
-| video_key | query    | string | yes      | none        |
+| 名称      | 位置  | 类型   | 必选 | 说明 |
+| --------- | ----- | ------ | ---- | ---- |
+| video_key | query | string | 是   | none |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -240,51 +230,51 @@ GET /api/v1/task/progress
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name            | Type     | Required | Restrictions | Title | description                 |
-| --------------- | -------- | -------- | ------------ | ----- | --------------------------- |
-| » success       | boolean  | true     | none         |       | none                        |
-| » error         | object   | false    | none         |       | none                        |
-| »» message      | string   | true     | none         |       | none                        |
-| » data          | object   | false    | none         |       | none                        |
-| »» progress     | [object] | true     | none         |       | none                        |
-| »»» completed   | boolean  | true     | none         |       | none                        |
-| »»» index       | number   | true     | none         |       | none                        |
-| »»» clip_key    | string   | true     | none         |       | none                        |
-| »»» clip_url    | string   | true     | none         |       | none                        |
-| »»» encode_key  | string   | true     | none         |       | none                        |
-| »»» encode_url  | string   | true     | none         |       | none                        |
-| »» key          | string   | true     | none         |       | none                        |
-| »» url          | string   | true     | none         |       | none                        |
-| »» size         | string   | true     | none         |       | none                        |
-| »» encode_key   | string   | true     | none         |       | none                        |
-| »» encode_url   | string   | true     | none         |       | none                        |
-| »» encode_size  | string   | true     | none         |       | none                        |
-| »» encode_param | string   | true     | none         |       | none                        |
-| »» script       | string   | true     | none         |       | none                        |
-| »» status       | string   | true     | none         |       | pending, running, completed |
-| »» create_at    | integer  | true     | none         |       | unix time, int64            |
+| 名称            | 类型     | 必选  | 约束 | 中文名 | 说明                        |
+| --------------- | -------- | ----- | ---- | ------ | --------------------------- |
+| » success       | boolean  | true  | none |        | none                        |
+| » error         | object   | false | none |        | none                        |
+| »» message      | string   | true  | none |        | none                        |
+| » data          | object   | false | none |        | none                        |
+| »» progress     | [object] | true  | none |        | none                        |
+| »»» completed   | boolean  | true  | none |        | none                        |
+| »»» index       | number   | true  | none |        | none                        |
+| »»» clip_key    | string   | true  | none |        | none                        |
+| »»» clip_url    | string   | true  | none |        | none                        |
+| »»» encode_key  | string   | true  | none |        | none                        |
+| »»» encode_url  | string   | true  | none |        | none                        |
+| »» key          | string   | true  | none |        | none                        |
+| »» url          | string   | true  | none |        | none                        |
+| »» size         | string   | true  | none |        | none                        |
+| »» encode_key   | string   | true  | none |        | none                        |
+| »» encode_url   | string   | true  | none |        | none                        |
+| »» encode_size  | string   | true  | none |        | none                        |
+| »» encode_param | string   | true  | none |        | none                        |
+| »» script       | string   | true  | none |        | none                        |
+| »» status       | string   | true  | none |        | pending, running, completed |
+| »» create_at    | integer  | true  | none |        | unix time, int64            |
 
 ## GET OSSPresigned
 
 GET /api/v1/task/oss/presigned
 
-### Params
+### 请求参数
 
-| Name      | Location | Type   | Required | Description |
-| --------- | -------- | ------ | -------- | ----------- |
-| video_key | query    | string | yes      | none        |
+| 名称      | 位置  | 类型   | 必选 | 说明 |
+| --------- | ----- | ------ | ---- | ---- |
+| video_key | query | string | 是   | none |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -301,30 +291,30 @@ GET /api/v1/task/oss/presigned
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name       | Type    | Required | Restrictions | Title | description |
-| ---------- | ------- | -------- | ------------ | ----- | ----------- |
-| » success  | boolean | true     | none         |       | none        |
-| » error    | object  | false    | none         |       | none        |
-| »» message | string  | true     | none         |       | none        |
-| » data     | object  | false    | none         |       | none        |
-| »» url     | string  | true     | none         |       | upload url  |
-| »» exist   | boolean | true     | none         |       | none        |
+| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明       |
+| ---------- | ------- | ----- | ---- | ------ | ---------- |
+| » success  | boolean | true  | none |        | none       |
+| » error    | object  | false | none |        | none       |
+| »» message | string  | true  | none |        | none       |
+| » data     | object  | false | none |        | none       |
+| »» url     | string  | true  | none |        | upload url |
+| »» exist   | boolean | true  | none |        | none       |
 
 ## POST RetryEncode
 
 POST /api/v1/task/retry/encode
 
-> Body Parameters
+> Body 请求参数
 
 ```yaml
 script: |
@@ -339,17 +329,17 @@ video_key: Roshidere-06.mkv
 index: 2
 ```
 
-### Params
+### 请求参数
 
-| Name           | Location | Type    | Required | Description        |
-| -------------- | -------- | ------- | -------- | ------------------ |
-| body           | body     | object  | no       | none               |
-| » script       | body     | string  | yes      | vapoursynth script |
-| » encode_param | body     | string  | yes      | encoder param      |
-| » video_key    | body     | string  | yes      | video oss key      |
-| » index        | body     | integer | yes      | video clip index   |
+| 名称           | 位置 | 类型    | 必选 | 说明               |
+| -------------- | ---- | ------- | ---- | ------------------ |
+| body           | body | object  | 否   | none               |
+| » script       | body | string  | 是   | vapoursynth script |
+| » encode_param | body | string  | 是   | encoder param      |
+| » video_key    | body | string  | 是   | video oss key      |
+| » index        | body | integer | 是   | video clip index   |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -362,40 +352,40 @@ index: 2
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name       | Type    | Required | Restrictions | Title | description |
-| ---------- | ------- | -------- | ------------ | ----- | ----------- |
-| » success  | boolean | true     | none         |       | none        |
-| » error    | object  | false    | none         |       | none        |
-| »» message | string  | true     | none         |       | none        |
+| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | ------- | ----- | ---- | ------ | ---- |
+| » success  | boolean | true  | none |        | none |
+| » error    | object  | false | none |        | none |
+| »» message | string  | true  | none |        | none |
 
 ## POST RetryMerge
 
 POST /api/v1/task/retry/merge
 
-> Body Parameters
+> Body 请求参数
 
 ```yaml
 video_key: Roshidere-06.mkv
 ```
 
-### Params
+### 请求参数
 
-| Name        | Location | Type   | Required | Description   |
-| ----------- | -------- | ------ | -------- | ------------- |
-| body        | body     | object | no       | none          |
-| » video_key | body     | string | yes      | video oss key |
+| 名称        | 位置 | 类型   | 必选 | 说明          |
+| ----------- | ---- | ------ | ---- | ------------- |
+| body        | body | object | 否   | none          |
+| » video_key | body | string | 是   | video oss key |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -408,35 +398,35 @@ video_key: Roshidere-06.mkv
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name       | Type    | Required | Restrictions | Title | description |
-| ---------- | ------- | -------- | ------------ | ----- | ----------- |
-| » success  | boolean | true     | none         |       | none        |
-| » error    | object  | false    | none         |       | none        |
-| »» message | string  | true     | none         |       | none        |
+| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
+| ---------- | ------- | ----- | ---- | ------ | ---- |
+| » success  | boolean | true  | none |        | none |
+| » error    | object  | false | none |        | none |
+| »» message | string  | true  | none |        | none |
 
 ## GET List
 
 GET /api/v1/task/list
 
-### Params
+### 请求参数
 
-| Name      | Location | Type    | Required | Description |
-| --------- | -------- | ------- | -------- | ----------- |
-| pending   | query    | boolean | yes      | none        |
-| running   | query    | boolean | yes      | none        |
-| completed | query    | boolean | yes      | none        |
+| 名称      | 位置  | 类型    | 必选 | 说明 |
+| --------- | ----- | ------- | ---- | ---- |
+| pending   | query | boolean | 是   | none |
+| running   | query | boolean | 是   | none |
+| completed | query | boolean | 是   | none |
 
-> Response Examples
+> 返回示例
 
 > 200 Response
 
@@ -461,29 +451,29 @@ GET /api/v1/task/list
 }
 ```
 
-### Responses
+### 返回结果
 
-| HTTP Status Code | Meaning                                                 | Description | Data schema |
-| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
-| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
+| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
+| ------ | ------------------------------------------------------- | ---- | -------- |
+| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
 
-### Responses Data Schema
+### 返回数据结构
 
-HTTP Status Code **200**
+状态码 **200**
 
-| Name            | Type     | Required | Restrictions | Title | description                 |
-| --------------- | -------- | -------- | ------------ | ----- | --------------------------- |
-| » success       | boolean  | true     | none         |       | none                        |
-| » error         | object   | false    | none         |       | none                        |
-| »» message      | string   | true     | none         |       | none                        |
-| » data          | [object] | false    | none         |       | none                        |
-| »» key          | string   | true     | none         |       | none                        |
-| »» url          | string   | true     | none         |       | none                        |
-| »» encode_key   | string   | true     | none         |       | none                        |
-| »» encode_url   | string   | true     | none         |       | none                        |
-| »» encode_param | string   | true     | none         |       | none                        |
-| »» script       | string   | true     | none         |       | none                        |
-| »» status       | string   | true     | none         |       | pending, running, completed |
-| »» create_at    | integer  | true     | none         |       | unix time, int64            |
+| 名称            | 类型     | 必选  | 约束 | 中文名 | 说明                        |
+| --------------- | -------- | ----- | ---- | ------ | --------------------------- |
+| » success       | boolean  | true  | none |        | none                        |
+| » error         | object   | false | none |        | none                        |
+| »» message      | string   | true  | none |        | none                        |
+| » data          | [object] | false | none |        | none                        |
+| »» key          | string   | true  | none |        | none                        |
+| »» url          | string   | true  | none |        | none                        |
+| »» encode_key   | string   | true  | none |        | none                        |
+| »» encode_url   | string   | true  | none |        | none                        |
+| »» encode_param | string   | true  | none |        | none                        |
+| »» script       | string   | true  | none |        | none                        |
+| »» status       | string   | true  | none |        | pending, running, completed |
+| »» create_at    | integer  | true  | none |        | unix time, int64            |
 
-# Data Schema
+# 数据模型
