@@ -58,9 +58,15 @@ Special Env Variables:
 
 We use [this container](https://github.com/TensoRaws/vs-playground) as the base image, which contains FFmpeg, VapourSynth, PyTorch...
 
-So In the dashboard, we can select a complicated script to process the video!
+So In the dashboard, we can select a compatible script to process the video!
 
-For the advanced user, you should build your own `enocde` image, and set the `Template Repo` name in dashboard if you wanna select a script from the repo's `templates` folder.
+### A new script?
+
+In [vs-playground](https://github.com/TensoRaws/vs-playground), we provide the same environment as the encode worker, so you can develop and test your script in the playground.
+
+### For Advanced User
+
+Build your own `encode` image refer to the [vs-playground](https://github.com/TensoRaws/vs-playground), and set the `Template Repo` name in dashboard if you wanna select a script from the repo's `templates` folder.
 
 ### Build
 
