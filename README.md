@@ -21,7 +21,7 @@ _We cut the original video into multiple clips, and then process each clip in pa
 - GPU container runtime (optional)
 - make (optional)
 
-### Quick Start
+### Quick Deployment
 
 edit [Line 19](https://github.com/TensoRaws/FinalRip/blob/main/deploy/docker-compose/lite/docker-compose.yml#L19) to your LAN IP address
 
@@ -53,6 +53,14 @@ Special Env Variables:
 
 - `FINALRIP_REMOTE_CONFIG_HOST` consul host, will load the config from the consul K/V store. When set to `EASYTIER` / `easytier`, will try load config from `FINALRIP_EASYTIER_HOST:8500` (`10.126.126.251:8500` by default)
 - `FINALRIP_REMOTE_CONFIG_KEY` consul key, default is `finalrip.yml`
+
+### Start
+
+We use [this container](https://github.com/TensoRaws/vs-playground) as the base image, which contains FFmpeg, VapourSynth, PyTorch...
+
+So In the dashboard, we can select a complicated script to process the video!
+
+For the advanced user, you should build your own `enocde` image, and set the `Template Repo` name in dashboard if you wanna select a script from the repo's `templates` folder.
 
 ### Build
 
