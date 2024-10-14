@@ -16,7 +16,7 @@ services:
     environment:
       - FINALRIP_DB_HOST=mongodb
       - FINALRIP_REDIS_HOST=redis
-      - FINALRIP_OSS_ENDPOINT=10.132.217.11:9000
+      - FINALRIP_OSS_ENDPOINT=192.168.0.109:9000
     networks:
       - backend
 
