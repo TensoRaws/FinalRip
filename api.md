@@ -33,7 +33,7 @@ Base URLs:
 
 POST /api/v1/task/start
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 script: "import os\r
@@ -51,16 +51,16 @@ encode_param: ffmpeg -i - -vcodec libx265 -crf 16
 video_key: Roshidere-08.mkv
 ```
 
-### 请求参数
+### Params
 
-| 名称           | 位置 | 类型   | 必选 | 说明               |
-| -------------- | ---- | ------ | ---- | ------------------ |
-| body           | body | object | 否   | none               |
-| » script       | body | string | 是   | vapoursynth script |
-| » encode_param | body | string | 是   | encoder param      |
-| » video_key    | body | string | 是   | video oss key      |
+| Name           | Location | Type   | Required | Description        |
+| -------------- | -------- | ------ | -------- | ------------------ |
+| body           | body     | object | no       | none               |
+| » script       | body     | string | yes      | vapoursynth script |
+| » encode_param | body     | string | yes      | encoder param      |
+| » video_key    | body     | string | yes      | video oss key      |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -73,21 +73,21 @@ video_key: Roshidere-08.mkv
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
-| ---------- | ------- | ----- | ---- | ------ | ---- |
-| » success  | boolean | true  | none |        | none |
-| » error    | object  | false | none |        | none |
-| »» message | string  | true  | none |        | none |
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## POST New
 
@@ -95,20 +95,20 @@ POST /api/v1/task/new
 
 new a task after upload oss
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 video_key: Roshidere-08.mkv
 ```
 
-### 请求参数
+### Params
 
-| 名称        | 位置 | 类型   | 必选 | 说明          |
-| ----------- | ---- | ------ | ---- | ------------- |
-| body        | body | object | 否   | none          |
-| » video_key | body | string | 是   | video oss key |
+| Name        | Location | Type   | Required | Description   |
+| ----------- | -------- | ------ | -------- | ------------- |
+| body        | body     | object | no       | none          |
+| » video_key | body     | string | yes      | video oss key |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -121,21 +121,21 @@ video_key: Roshidere-08.mkv
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
-| ---------- | ------- | ----- | ---- | ------ | ---- |
-| » success  | boolean | true  | none |        | none |
-| » error    | object  | false | none |        | none |
-| »» message | string  | true  | none |        | none |
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## POST Clear
 
@@ -143,20 +143,20 @@ POST /api/v1/task/clear
 
 new a task after upload oss
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 video_key: Roshidere-06.mkv
 ```
 
-### 请求参数
+### Params
 
-| 名称        | 位置 | 类型   | 必选 | 说明          |
-| ----------- | ---- | ------ | ---- | ------------- |
-| body        | body | object | 否   | none          |
-| » video_key | body | string | 是   | video oss key |
+| Name        | Location | Type   | Required | Description   |
+| ----------- | -------- | ------ | -------- | ------------- |
+| body        | body     | object | no       | none          |
+| » video_key | body     | string | yes      | video oss key |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -169,33 +169,33 @@ video_key: Roshidere-06.mkv
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
-| ---------- | ------- | ----- | ---- | ------ | ---- |
-| » success  | boolean | true  | none |        | none |
-| » error    | object  | false | none |        | none |
-| »» message | string  | true  | none |        | none |
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## GET Progress
 
 GET /api/v1/task/progress
 
-### 请求参数
+### Params
 
-| 名称      | 位置  | 类型   | 必选 | 说明 |
-| --------- | ----- | ------ | ---- | ---- |
-| video_key | query | string | 是   | none |
+| Name      | Location | Type   | Required | Description |
+| --------- | -------- | ------ | -------- | ----------- |
+| video_key | query    | string | yes      | none        |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -230,51 +230,51 @@ GET /api/v1/task/progress
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称            | 类型     | 必选  | 约束 | 中文名 | 说明                        |
-| --------------- | -------- | ----- | ---- | ------ | --------------------------- |
-| » success       | boolean  | true  | none |        | none                        |
-| » error         | object   | false | none |        | none                        |
-| »» message      | string   | true  | none |        | none                        |
-| » data          | object   | false | none |        | none                        |
-| »» progress     | [object] | true  | none |        | none                        |
-| »»» completed   | boolean  | true  | none |        | none                        |
-| »»» index       | number   | true  | none |        | none                        |
-| »»» clip_key    | string   | true  | none |        | none                        |
-| »»» clip_url    | string   | true  | none |        | none                        |
-| »»» encode_key  | string   | true  | none |        | none                        |
-| »»» encode_url  | string   | true  | none |        | none                        |
-| »» key          | string   | true  | none |        | none                        |
-| »» url          | string   | true  | none |        | none                        |
-| »» size         | string   | true  | none |        | none                        |
-| »» encode_key   | string   | true  | none |        | none                        |
-| »» encode_url   | string   | true  | none |        | none                        |
-| »» encode_size  | string   | true  | none |        | none                        |
-| »» encode_param | string   | true  | none |        | none                        |
-| »» script       | string   | true  | none |        | none                        |
-| »» status       | string   | true  | none |        | pending, running, completed |
-| »» create_at    | integer  | true  | none |        | unix time, int64            |
+| Name            | Type     | Required | Restrictions | Title | description                 |
+| --------------- | -------- | -------- | ------------ | ----- | --------------------------- |
+| » success       | boolean  | true     | none         |       | none                        |
+| » error         | object   | false    | none         |       | none                        |
+| »» message      | string   | true     | none         |       | none                        |
+| » data          | object   | false    | none         |       | none                        |
+| »» progress     | [object] | true     | none         |       | none                        |
+| »»» completed   | boolean  | true     | none         |       | none                        |
+| »»» index       | number   | true     | none         |       | none                        |
+| »»» clip_key    | string   | true     | none         |       | none                        |
+| »»» clip_url    | string   | true     | none         |       | none                        |
+| »»» encode_key  | string   | true     | none         |       | none                        |
+| »»» encode_url  | string   | true     | none         |       | none                        |
+| »» key          | string   | true     | none         |       | none                        |
+| »» url          | string   | true     | none         |       | none                        |
+| »» size         | string   | true     | none         |       | none                        |
+| »» encode_key   | string   | true     | none         |       | none                        |
+| »» encode_url   | string   | true     | none         |       | none                        |
+| »» encode_size  | string   | true     | none         |       | none                        |
+| »» encode_param | string   | true     | none         |       | none                        |
+| »» script       | string   | true     | none         |       | none                        |
+| »» status       | string   | true     | none         |       | pending, running, completed |
+| »» create_at    | integer  | true     | none         |       | unix time, int64            |
 
 ## GET OSSPresigned
 
 GET /api/v1/task/oss/presigned
 
-### 请求参数
+### Params
 
-| 名称      | 位置  | 类型   | 必选 | 说明 |
-| --------- | ----- | ------ | ---- | ---- |
-| video_key | query | string | 是   | none |
+| Name      | Location | Type   | Required | Description |
+| --------- | -------- | ------ | -------- | ----------- |
+| video_key | query    | string | yes      | none        |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -291,30 +291,30 @@ GET /api/v1/task/oss/presigned
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明       |
-| ---------- | ------- | ----- | ---- | ------ | ---------- |
-| » success  | boolean | true  | none |        | none       |
-| » error    | object  | false | none |        | none       |
-| »» message | string  | true  | none |        | none       |
-| » data     | object  | false | none |        | none       |
-| »» url     | string  | true  | none |        | upload url |
-| »» exist   | boolean | true  | none |        | none       |
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
+| » data     | object  | false    | none         |       | none        |
+| »» url     | string  | true     | none         |       | upload url  |
+| »» exist   | boolean | true     | none         |       | none        |
 
 ## POST RetryEncode
 
 POST /api/v1/task/retry/encode
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 script: |
@@ -329,17 +329,17 @@ video_key: Roshidere-06.mkv
 index: 2
 ```
 
-### 请求参数
+### Params
 
-| 名称           | 位置 | 类型    | 必选 | 说明               |
-| -------------- | ---- | ------- | ---- | ------------------ |
-| body           | body | object  | 否   | none               |
-| » script       | body | string  | 是   | vapoursynth script |
-| » encode_param | body | string  | 是   | encoder param      |
-| » video_key    | body | string  | 是   | video oss key      |
-| » index        | body | integer | 是   | video clip index   |
+| Name           | Location | Type    | Required | Description        |
+| -------------- | -------- | ------- | -------- | ------------------ |
+| body           | body     | object  | no       | none               |
+| » script       | body     | string  | yes      | vapoursynth script |
+| » encode_param | body     | string  | yes      | encoder param      |
+| » video_key    | body     | string  | yes      | video oss key      |
+| » index        | body     | integer | yes      | video clip index   |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -352,40 +352,40 @@ index: 2
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
-| ---------- | ------- | ----- | ---- | ------ | ---- |
-| » success  | boolean | true  | none |        | none |
-| » error    | object  | false | none |        | none |
-| »» message | string  | true  | none |        | none |
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## POST RetryMerge
 
 POST /api/v1/task/retry/merge
 
-> Body 请求参数
+> Body Parameters
 
 ```yaml
 video_key: Roshidere-06.mkv
 ```
 
-### 请求参数
+### Params
 
-| 名称        | 位置 | 类型   | 必选 | 说明          |
-| ----------- | ---- | ------ | ---- | ------------- |
-| body        | body | object | 否   | none          |
-| » video_key | body | string | 是   | video oss key |
+| Name        | Location | Type   | Required | Description   |
+| ----------- | -------- | ------ | -------- | ------------- |
+| body        | body     | object | no       | none          |
+| » video_key | body     | string | yes      | video oss key |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -398,35 +398,35 @@ video_key: Roshidere-06.mkv
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称       | 类型    | 必选  | 约束 | 中文名 | 说明 |
-| ---------- | ------- | ----- | ---- | ------ | ---- |
-| » success  | boolean | true  | none |        | none |
-| » error    | object  | false | none |        | none |
-| »» message | string  | true  | none |        | none |
+| Name       | Type    | Required | Restrictions | Title | description |
+| ---------- | ------- | -------- | ------------ | ----- | ----------- |
+| » success  | boolean | true     | none         |       | none        |
+| » error    | object  | false    | none         |       | none        |
+| »» message | string  | true     | none         |       | none        |
 
 ## GET List
 
 GET /api/v1/task/list
 
-### 请求参数
+### Params
 
-| 名称      | 位置  | 类型    | 必选 | 说明 |
-| --------- | ----- | ------- | ---- | ---- |
-| pending   | query | boolean | 是   | none |
-| running   | query | boolean | 是   | none |
-| completed | query | boolean | 是   | none |
+| Name      | Location | Type    | Required | Description |
+| --------- | -------- | ------- | -------- | ----------- |
+| pending   | query    | boolean | yes      | none        |
+| running   | query    | boolean | yes      | none        |
+| completed | query    | boolean | yes      | none        |
 
-> 返回示例
+> Response Examples
 
 > 200 Response
 
@@ -451,29 +451,29 @@ GET /api/v1/task/list
 }
 ```
 
-### 返回结果
+### Responses
 
-| 状态码 | 状态码含义                                              | 说明 | 数据模型 |
-| ------ | ------------------------------------------------------- | ---- | -------- |
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none | Inline   |
+| HTTP Status Code | Meaning                                                 | Description | Data schema |
+| ---------------- | ------------------------------------------------------- | ----------- | ----------- |
+| 200              | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) | none        | Inline      |
 
-### 返回数据结构
+### Responses Data Schema
 
-状态码 **200**
+HTTP Status Code **200**
 
-| 名称            | 类型     | 必选  | 约束 | 中文名 | 说明                        |
-| --------------- | -------- | ----- | ---- | ------ | --------------------------- |
-| » success       | boolean  | true  | none |        | none                        |
-| » error         | object   | false | none |        | none                        |
-| »» message      | string   | true  | none |        | none                        |
-| » data          | [object] | false | none |        | none                        |
-| »» key          | string   | true  | none |        | none                        |
-| »» url          | string   | true  | none |        | none                        |
-| »» encode_key   | string   | true  | none |        | none                        |
-| »» encode_url   | string   | true  | none |        | none                        |
-| »» encode_param | string   | true  | none |        | none                        |
-| »» script       | string   | true  | none |        | none                        |
-| »» status       | string   | true  | none |        | pending, running, completed |
-| »» create_at    | integer  | true  | none |        | unix time, int64            |
+| Name            | Type     | Required | Restrictions | Title | description                 |
+| --------------- | -------- | -------- | ------------ | ----- | --------------------------- |
+| » success       | boolean  | true     | none         |       | none                        |
+| » error         | object   | false    | none         |       | none                        |
+| »» message      | string   | true     | none         |       | none                        |
+| » data          | [object] | false    | none         |       | none                        |
+| »» key          | string   | true     | none         |       | none                        |
+| »» url          | string   | true     | none         |       | none                        |
+| »» encode_key   | string   | true     | none         |       | none                        |
+| »» encode_url   | string   | true     | none         |       | none                        |
+| »» encode_param | string   | true     | none         |       | none                        |
+| »» script       | string   | true     | none         |       | none                        |
+| »» status       | string   | true     | none         |       | pending, running, completed |
+| »» create_at    | integer  | true     | none         |       | unix time, int64            |
 
-# 数据模型
+# Data Schema
