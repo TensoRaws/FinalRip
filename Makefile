@@ -20,10 +20,10 @@ worker: ## build binary file
 test: tidy ## go test
 	${GO} test ./...
 
-.PHONY: lint
+.PHONY: lint ## pip install pre-commit
 lint:
 	golangci-lint run
-	pre-commit install # pip install pre-commit
+	pre-commit install
 	pre-commit run --all-files
 
 .PHONY: all

@@ -42,19 +42,9 @@ script: "import os\r
 
   from vapoursynth import core\r
 
-  from vsrealesrgan import realesrgan, RealESRGANModel\r
-
   \r
 
   clip = core.bs.VideoSource(source=os.getenv('FINALRIP_SOURCE'))\r
-
-  clip = core.resize.Bicubic(clip=clip, format=vs.RGBH)\r
-
-  clip = realesrgan(clip=clip,
-  model=RealESRGANModel.AnimeJaNai_HD_V3_Compact_2x)\r
-
-  clip = core.resize.Bicubic(clip=clip, matrix_s=\"709\",
-  format=vs.YUV420P16)\r
 
   clip.set_output()"
 encode_param: ffmpeg -i - -vcodec libx265 -crf 16
