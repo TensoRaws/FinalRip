@@ -58,7 +58,9 @@ Special Env Variables:
 
 We use [this container](https://github.com/TensoRaws/vs-playground) as the base image, which contains FFmpeg, VapourSynth, PyTorch...
 
-So In the dashboard, we can select a compatible script to process the video!
+So in the dashboard, we can select a compatible script to process the video!
+
+![Dashboard](https://raw.githubusercontent.com/TensoRaws/.github/refs/heads/main/finalrip.gif)
 
 ### A new script?
 
