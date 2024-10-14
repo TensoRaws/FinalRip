@@ -12,7 +12,7 @@ a distributed video processing tool, based on FFmpeg and VapourSynth
 
 ![FinalRip](https://raw.githubusercontent.com/TensoRaws/.github/refs/heads/main/finalrip.png)
 
-*We cut the original video into multiple clips, and then process each clip in parallel in queue order. After all clips are processed, we merge them into the final video.*
+_We cut the original video into multiple clips, and then process each clip in parallel in queue order. After all clips are processed, we merge them into the final video._
 
 ### Preparations
 
@@ -41,14 +41,16 @@ then, run docker-compose-server.yml to start the dashboard, server, cut worker, 
 
 finally, run docker-compose-encode.yml to start the encode worker services, we can deploy multiple encode workers in different hosts to speed up the encoding process
 
-*Note: we suggest that deploy oss service, cut & merge worker in the same host*
+_Note: we suggest that deploy oss service, cut & merge worker in the same host_
 
 ### Configuration
+
 Override the default configuration by setting:
 
 #### Environment variables > Config File / Remote Config > Default Config
 
 Special Env Variables:
+
 - `FINALRIP_REMOTE_CONFIG_HOST` consul host, will load the config from the consul K/V store. When set to `EASYTIER` / `easytier`, will try load config from `FINALRIP_EASYTIER_HOST:8500` (`10.126.126.251:8500` by default)
 - `FINALRIP_REMOTE_CONFIG_KEY` consul key, default is `finalrip.yml`
 
@@ -58,7 +60,8 @@ Special Env Variables:
 make all
 make pt
 ```
-`make pt-rocm` for AMD GPU 
+
+`make pt-rocm` for AMD GPU
 
 ### Reference
 
@@ -66,7 +69,6 @@ make pt
 - [gin](https://github.com/gin-gonic/gin)
 - [FFmpeg](https://github.com/FFmpeg/FFmpeg)
 - [VapourSynth](https://github.com/vapoursynth/vapoursynth)
-
 
 ### License
 
