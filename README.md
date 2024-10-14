@@ -47,11 +47,11 @@ _Note: we suggest that deploy oss service, cut & merge worker in the same host_
 
 Override the default configuration by setting:
 
-#### Environment variables > Config File / Remote Config > Default Config
+#### Environment variables >> Config File / Remote Config
 
 Special Env Variables:
 
-- `FINALRIP_REMOTE_CONFIG_HOST` consul host, will load the config from the consul K/V store. When set to `EASYTIER` / `easytier`, will try load config from `FINALRIP_EASYTIER_HOST:8500` (`10.126.126.251:8500` by default)
+- `FINALRIP_REMOTE_CONFIG_HOST` consul host, default is None, that means load config from local file. When set, it will load the config from the consul K/V store. When set to `EASYTIER` / `easytier`, will try load config from `FINALRIP_EASYTIER_HOST:8500` (`10.126.126.251:8500` by default).
 - `FINALRIP_REMOTE_CONFIG_KEY` consul key, default is `finalrip.yml`
 
 ### Start
