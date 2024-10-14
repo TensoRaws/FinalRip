@@ -43,7 +43,7 @@ So in the dashboard, we can select a compatible script to process the video!
 
 Deploy the system in a distributed way, you can refer to the [docker-compose](./deploy/docker-compose) directory for more details.
 
-first, run docker-compose-base.yml to start the basic services, and open consul dashboard, add a K/V pair with key `finalrip.yml` and value is the content of [finalrip.yml](./conf/finalrip.yml) -- or your own configuration file
+first, run docker-compose-base.yml to start the basic services, and open Consul dashboard, add a K/V pair with key `finalrip.yml` and value is the content of [finalrip.yml](./conf/finalrip.yml) -- or your own configuration file
 
 then, run docker-compose-server.yml to start the dashboard, server, cut worker, and merge worker services
 
@@ -55,12 +55,12 @@ _Note: we suggest that deploy oss service, cut & merge worker in the same host_
 
 Override the default configuration by setting:
 
-#### Environment variables >> Config File / Remote Config
+#### Environment variables >> Config File / Remote Config File (Consul)
 
 Special Env Variables:
 
-- `FINALRIP_REMOTE_CONFIG_HOST` consul host, default is None, that means load config from local file. When set, it will load the config from the consul K/V store. When set to `EASYTIER` / `easytier`, will try load config from `FINALRIP_EASYTIER_HOST:8500` (`10.126.126.251:8500` by default).
-- `FINALRIP_REMOTE_CONFIG_KEY` consul key, default is `finalrip.yml`
+- `FINALRIP_REMOTE_CONFIG_HOST` Consul host, default is None, that means load config from local file. When set, it will load the config from the Consul K/V store. When set to `EASYTIER` / `easytier`, will try load config from `FINALRIP_EASYTIER_HOST:8500` (`10.126.126.251:8500` by default).
+- `FINALRIP_REMOTE_CONFIG_KEY` Consul key, default is `finalrip.yml`
 
 ### A new script?
 
