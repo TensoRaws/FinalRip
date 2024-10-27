@@ -57,7 +57,7 @@ pt-release:
 
 .PHONY: pt-rocm
 pt-rocm:
-	docker buildx build -f ./deploy/worker-encode.dockerfile -t lychee0/finalrip-worker-encode --build-arg BASE_CONTAINER_TAG=rocm .
+	docker buildx build -f ./deploy/worker-encode.dockerfile -t lychee0/finalrip-worker-encode --build-arg BASE_CONTAINER_TAG=rocm-${VS_PYTORCH_VERSION} .
 	docker tag lychee0/finalrip-worker-encode lychee0/finalrip-worker-encode:rocm-dev
 	docker tag lychee0/finalrip-worker-encode lychee0/finalrip-worker-encode:rocm-${version}
 	docker tag lychee0/finalrip-worker-encode lychee0/finalrip-worker-encode:rocm
