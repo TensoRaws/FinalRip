@@ -2,7 +2,7 @@ GO ?= go
 
 .DEFAULT_GOAL := default
 
-version := v0.0.2
+version := v0.0.1
 VS_PYTORCH_VERSION := v0.0.1
 
 .PHONY: tidy
