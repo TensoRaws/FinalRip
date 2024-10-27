@@ -4,8 +4,8 @@ a distributed video processing tool, based on FFmpeg and VapourSynth
 
 [![CI-test](https://github.com/TensoRaws/FinalRip/actions/workflows/CI-test.yml/badge.svg)](https://github.com/TensoRaws/FinalRip/actions/workflows/CI-test.yml)
 [![golangci-lint](https://github.com/TensoRaws/FinalRip/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/TensoRaws/FinalRip/actions/workflows/golangci-lint.yml)
-[![Docker Build CI](https://github.com/TensoRaws/FinalRip/actions/workflows/Docker-CI.yml/badge.svg)](https://github.com/TensoRaws/FinalRip/actions/workflows/Docker-CI.yml)
-[![Docker Build Release](https://github.com/TensoRaws/FinalRip/actions/workflows/Docker-Release.yml/badge.svg)](https://github.com/TensoRaws/FinalRip/actions/workflows/Docker-Release.yml)
+[![Docker Build CI](https://github.com/TensoRaws/FinalRip/actions/workflows/CI-docker.yml/badge.svg)](https://github.com/TensoRaws/FinalRip/actions/workflows/CI-docker.yml)
+[![Release](https://github.com/TensoRaws/FinalRip/actions/workflows/Release.yml/badge.svg)](https://github.com/TensoRaws/FinalRip/actions/workflows/Release.yml)
 [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/RJWBNXdmdaDACvcacXFQ3e/Ge3dVaX4GmktGiL9Jb1ADB/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/RJWBNXdmdaDACvcacXFQ3e/Ge3dVaX4GmktGiL9Jb1ADB/tree/main)
 
 ### Architecture
