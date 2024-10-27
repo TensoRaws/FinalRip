@@ -2,8 +2,11 @@ name: Docker Build CI
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+
   workflow_dispatch:
 
 jobs:
@@ -12,7 +15,7 @@ jobs:
       matrix:
         dockerfile: ["server", "worker-cut", "worker-merge"]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
