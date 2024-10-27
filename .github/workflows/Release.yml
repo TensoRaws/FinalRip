@@ -1,7 +1,11 @@
-name: Docker Build Release
+name: Release
 
 on:
   workflow_dispatch:
+
+  push:
+    tags:
+      - "v*"
 
 jobs:
   docker:
@@ -9,7 +13,7 @@ jobs:
       matrix:
         dockerfile: ["server", "worker-cut", "worker-merge"]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,6 +27,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            lychee0/finalrip-${{ matrix.dockerfile }}
+          tags: |
+            latest
+            ${{ github.ref_name }}
+
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -30,4 +44,15 @@ jobs:
           file: ./deploy/${{ matrix.dockerfile }}.dockerfile
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: lychee0/finalrip-${{ matrix.dockerfile }}:latest
+          tags: ${{ steps.meta.outputs.tags }}
+
+  github:
+    needs: [docker]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
