@@ -20,6 +20,7 @@ type StartRequest struct {
 	EncodeParam string `form:"encode_param" binding:"required"`
 	Script      string `form:"script" binding:"required"`
 	VideoKey    string `form:"video_key" binding:"required"`
+	Slice       bool   `form:"slice"`
 }
 
 // Start 开始压制 (POST /start)
@@ -67,32 +68,42 @@ func HandleStart(req StartRequest) {
 		log.Logger.Error("Failed to marshal payload: " + err.Error())
 		return
 	}
+	if req.Slice {
+		// 视频切片，上传到 OSS
+		cut := asynq.NewTask(task.VIDEO_CUT, payload)
 
-	// 视频切片，上传到 OSS
-	cut := asynq.NewTask(task.VIDEO_CUT, payload)
-
-	info, err := queue.Qc.Enqueue(cut, asynq.Queue(queue.CUT_QUEUE))
-	if err != nil {
-		log.Logger.Error("Failed to enqueue task: " + err.Error())
-		return
-	}
-
-	// 等待任务完成
-	for {
-		_, err := queue.Isp.GetTaskInfo(queue.CUT_QUEUE, info.ID)
+		info, err := queue.Qc.Enqueue(cut, asynq.Queue(queue.CUT_QUEUE))
 		if err != nil {
-			if errors.Is(err, asynq.ErrTaskNotFound) {
-				break
-			} else {
-				log.Logger.Error("Unexpected error: " + err.Error())
-				return
-			}
+			log.Logger.Error("Failed to enqueue task: " + err.Error())
+			return
 		}
 
-		time.Sleep(1 * time.Second)
-	}
+		// 等待任务完成
+		for {
+			_, err := queue.Isp.GetTaskInfo(queue.CUT_QUEUE, info.ID)
+			if err != nil {
+				if errors.Is(err, asynq.ErrTaskNotFound) {
+					break
+				} else {
+					log.Logger.Error("Unexpected error: " + err.Error())
+					return
+				}
+			}
 
-	log.Logger.Info("Cut task completed!")
+			time.Sleep(1 * time.Second)
+		}
+
+		log.Logger.Info("Cut task completed!")
+	} else {
+		err := db.InsertVideo(db.VideoClipInfo{
+			Key:     req.VideoKey,
+			Total:   1,
+			ClipKey: req.VideoKey,
+		})
+		if err != nil {
+			log.Logger.Error("Unexpected error: " + err.Error())
+		}
+	}
 
 	// 获取视频 clips
 	clips, err := db.GetVideoClips(req.VideoKey)
@@ -178,7 +189,7 @@ func HandleStart(req StartRequest) {
 
 	merge := asynq.NewTask(task.VIDEO_MERGE, payload)
 
-	info, err = queue.Qc.Enqueue(merge, asynq.Queue(queue.MERGE_QUEUE))
+	info, err := queue.Qc.Enqueue(merge, asynq.Queue(queue.MERGE_QUEUE))
 	if err != nil {
 		log.Logger.Error("Failed to enqueue task: " + err.Error())
 		return
