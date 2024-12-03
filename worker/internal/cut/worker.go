@@ -63,13 +63,20 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 	log.Logger.Infof("Video %s downloaded", p.VideoKey)
 
-	outputs, err := ffmpeg.CutVideo(tempVideo, tempPath)
-	if err != nil {
-		log.Logger.Errorf("Failed to cut video %s: %v", p.VideoKey, err)
-		return err
+	var outputs []string
+	if p.Slice {
+		// 切片
+		outputs, err = ffmpeg.CutVideo(tempVideo, tempPath)
+		if err != nil {
+			log.Logger.Errorf("Failed to cut video %s: %v", p.VideoKey, err)
+			return err
+		}
+	} else {
+		// 不切片
+		outputs = []string{tempVideo}
 	}
 
-	// 上传切片
+	// 上传
 	var wg sync.WaitGroup
 	total := len(outputs)
 	for i, output := range outputs {
