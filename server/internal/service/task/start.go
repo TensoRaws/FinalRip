@@ -118,7 +118,7 @@ func HandleStart(req StartRequest) {
 
 		encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
-		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE))
+		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips)))
 		if err != nil {
 			log.Logger.Error("Failed to enqueue task: " + err.Error())
 			return
