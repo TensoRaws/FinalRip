@@ -44,16 +44,24 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 	}
 	log.Logger.Infof("Merge video output: %s", out)
 
-	// 拼接音频
-	commandStr = fmt.Sprintf("ffmpeg -i %s -i %s -map 0:a:0 -map 1:v:0 -c copy %s", originFile, tempVideoOutputPath, outputPath) //nolint: lll
+	// audio track + subtitle track
+	commandStr = fmt.Sprintf("ffmpeg -i %s -i %s -map 0:a -map 0:s -map 1:v:0 -c copy %s", originFile, tempVideoOutputPath, outputPath) //nolint: lll
 	log.Logger.Infof("Merge audio command: %s", commandStr)
-	cmd = exec.Command("ffmpeg", "-i", originFile, "-i", tempVideoOutputPath, "-map", "0:a:0", "-map", "1:v:0", "-c", "copy", outputPath) //nolint: lll
+	cmd = exec.Command("ffmpeg", "-i", originFile, "-i", tempVideoOutputPath, "-map", "0:a", "-map", "0:s", "-map", "1:v:0", "-c", "copy", outputPath) //nolint: lll
 	out, err = cmd.CombinedOutput()
 	if err != nil {
-		log.Logger.Errorf("Merge audio failed: %v", err)
-		return err
+		log.Logger.Errorf("Merge audio with audio and subtitle failed: %v, try to merge audio only", err)
+		// audio track
+		commandStr = fmt.Sprintf("ffmpeg -i %s -i %s -map 0:a -map 1:v:0 -c copy %s", originFile, tempVideoOutputPath, outputPath) //nolint: lll
+		log.Logger.Infof("Merge audio command: %s", commandStr)
+		cmd = exec.Command("ffmpeg", "-i", originFile, "-i", tempVideoOutputPath, "-map", "0:a", "-map", "1:v:0", "-c", "copy", outputPath) //nolint: lll
+		out, err = cmd.CombinedOutput()
+		if err != nil {
+			log.Logger.Errorf("Merge audio failed: %v", err)
+			return err
+		}
 	}
-	log.Logger.Infof("Merge audio output: %s", out)
+	log.Logger.Infof("Merged output: %s", out)
 
 	return nil
 }
