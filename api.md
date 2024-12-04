@@ -49,16 +49,18 @@ script: "import os\r
   clip.set_output()"
 encode_param: ffmpeg -i - -vcodec libx265 -crf 16
 video_key: Roshidere-08.mkv
+slice: ""
 ```
 
 ### Params
 
-| Name           | Location | Type   | Required | Description        |
-| -------------- | -------- | ------ | -------- | ------------------ |
-| body           | body     | object | no       | none               |
-| » script       | body     | string | yes      | vapoursynth script |
-| » encode_param | body     | string | yes      | encoder param      |
-| » video_key    | body     | string | yes      | video oss key      |
+| Name           | Location | Type    | Required | Description                 |
+| -------------- | -------- | ------- | -------- | --------------------------- |
+| body           | body     | object  | no       | none                        |
+| » script       | body     | string  | yes      | vapoursynth script          |
+| » encode_param | body     | string  | yes      | encoder param               |
+| » video_key    | body     | string  | yes      | video oss key               |
+| » slice        | body     | boolean | no       | cut video into clips or not |
 
 > Response Examples
 

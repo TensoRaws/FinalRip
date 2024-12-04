@@ -20,6 +20,7 @@ type StartRequest struct {
 	EncodeParam string `form:"encode_param" binding:"required"`
 	Script      string `form:"script" binding:"required"`
 	VideoKey    string `form:"video_key" binding:"required"`
+	Slice       *bool  `form:"slice"`
 }
 
 // Start 开始压制 (POST /start)
@@ -62,6 +63,7 @@ func Start(c *gin.Context) {
 func HandleStart(req StartRequest) {
 	payload, err := sonic.Marshal(task.CutTaskPayload{
 		VideoKey: req.VideoKey,
+		Slice:    (req.Slice == nil) || *req.Slice, // 默认为 true
 	})
 	if err != nil {
 		log.Logger.Error("Failed to marshal payload: " + err.Error())
@@ -116,7 +118,7 @@ func HandleStart(req StartRequest) {
 
 		encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
-		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE))
+		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips)))
 		if err != nil {
 			log.Logger.Error("Failed to enqueue task: " + err.Error())
 			return

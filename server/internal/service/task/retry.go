@@ -73,9 +73,16 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) error {
 		return err
 	}
 
+	// 获取视频 clips
+	clips, err := db.GetVideoClips(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to get video clips: " + err.Error())
+		return err
+	}
+
 	encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
-	info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE))
+	info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips)))
 	if err != nil {
 		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
 		return err
