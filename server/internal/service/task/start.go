@@ -21,7 +21,7 @@ type StartRequest struct {
 	Script      string `form:"script" binding:"required"`
 	VideoKey    string `form:"video_key" binding:"required"`
 	Slice       *bool  `form:"slice"`
-	Deadline    *int   `form:"deadline"`
+	Timeout     *int   `form:"timeout"`
 }
 
 // Start 开始压制 (POST /start)
@@ -119,7 +119,7 @@ func HandleStart(req StartRequest) {
 
 		encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
-		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips), req.Deadline))
+		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips), req.Timeout))
 		if err != nil {
 			log.Logger.Error("Failed to enqueue task: " + err.Error())
 			return
