@@ -20,7 +20,7 @@ func KillProcessByName(processName string) error {
 		if err != nil {
 			continue
 		}
-		fmt.Println(name)
+
 		// 如果进程名匹配，则杀死进程
 		if name == processName || name == processName+".exe" {
 			err := p.Kill()
