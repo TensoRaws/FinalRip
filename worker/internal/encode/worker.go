@@ -34,6 +34,12 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 	log.Logger.Infof("Processing task ENCODE with payload %v", util.StructToString(p.Clip))
 
+	// kill vspipe process if it's running
+	err := util.KillProcessByName("vspipe")
+	if err != nil {
+		log.Logger.Errorf("Failed to kill vspipe process: %v", err)
+	}
+
 	tempSourceVideo := "source.mkv"
 	tempEncodedVideo := "encoded.mkv"
 
@@ -47,7 +53,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	// 等待下载完成
 	log.Logger.Infof("Waiting for downloading video clip %s", p.Clip.ClipKey)
 
-	err := oss.GetWithPath(p.Clip.ClipKey, tempSourceVideo)
+	err = oss.GetWithPath(p.Clip.ClipKey, tempSourceVideo)
 	if err != nil {
 		log.Logger.Errorf("Failed to download video %s: %v", util.StructToString(p.Clip), err)
 		return err

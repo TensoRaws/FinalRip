@@ -3,7 +3,7 @@ GO ?= go
 .DEFAULT_GOAL := default
 
 version := v0.1.0
-VS_PYTORCH_VERSION := v0.1.0
+VS_PYTORCH_VERSION := v0.1.1
 
 .PHONY: tidy
 tidy: ## go mod tidy
