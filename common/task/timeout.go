@@ -6,11 +6,14 @@ import (
 	"github.com/hibiken/asynq"
 )
 
-// GetTaskTimeout 获取任务超时时间，当不切割时为 48 小时，切割时每一个clip为 1 小时
-func GetTaskTimeout(num int) asynq.Option {
+// GetTaskTimeout 获取任务超时时间，当不切割时为 48 小时，切割时默认为 20 分钟，可自定义
+func GetTaskTimeout(num int, deadline *int) asynq.Option {
 	if num <= 1 {
 		return asynq.Timeout(48 * time.Hour)
 	} else {
-		return asynq.Timeout(1 * time.Hour)
+		if deadline == nil {
+			return asynq.Timeout(20 * time.Minute)
+		}
+		return asynq.Timeout(time.Duration(*deadline) * time.Minute)
 	}
 }

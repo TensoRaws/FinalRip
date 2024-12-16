@@ -19,6 +19,7 @@ type RetryEncodeRequest struct {
 	EncodeParam string `form:"encode_param" binding:"required"`
 	Index       *int   `form:"index" binding:"required"`
 	Script      string `form:"script" binding:"required"`
+	Deadline    *int   `form:"deadline"`
 }
 
 // RetryEncode 重试压制任务 (POST /retry/encode)
@@ -82,7 +83,7 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) error {
 
 	encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
-	info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips)))
+	info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips), req.Deadline))
 	if err != nil {
 		log.Logger.Error("Failed to Re-enqueue task: " + err.Error())
 		return err
