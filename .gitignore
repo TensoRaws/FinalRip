@@ -127,3 +127,6 @@ tmp
 *.flv
 *.wmv
 *.mpg
+
+temp_clips
+temp_list.txt
