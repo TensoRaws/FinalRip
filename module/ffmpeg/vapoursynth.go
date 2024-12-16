@@ -1,13 +1,9 @@
 package ffmpeg
 
 import (
-	"bufio"
-	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"runtime"
-	"sync"
 
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/util"
@@ -59,42 +55,12 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 		cmd = exec.Command("sh", scriptPath)
 	}
 
-	stdout, err := cmd.StdoutPipe()
+	_, err = cmd.CombinedOutput()
 	if err != nil {
-		log.Logger.Error("error: " + err.Error())
-	}
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		log.Logger.Error("error: " + err.Error())
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		log.Logger.Error("cmd start error: " + err.Error())
+		log.Logger.Error("vs error: " + err.Error())
 		return err
 	}
-
-	var wg sync.WaitGroup
-	readerFunc := func(pipe io.Reader) {
-		defer wg.Done()
-		scanner := bufio.NewScanner(pipe)
-		for scanner.Scan() {
-			fmt.Printf("%s\n", scanner.Text())
-		}
-		if err := scanner.Err(); err != nil {
-			log.Logger.Error("error reading pipe: " + err.Error())
-		}
-	}
-	wg.Add(2)
-	go readerFunc(stdout)
-	go readerFunc(stderr)
-
-	err = cmd.Wait()
-	if err != nil {
-		log.Logger.Error("cmd wait error: " + err.Error())
-		return err
-	}
-	wg.Wait()
+	log.Logger.Info("clip encoded, output: encoded.mkv")
 
 	return nil
 }
