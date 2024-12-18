@@ -48,7 +48,9 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 	_ = os.Mkdir(tempFolder, os.ModePerm)
 
+	var ossErr error
 	var wg sync.WaitGroup
+
 	wg.Add(1)
 	// 下载原始视频
 	go func() {
@@ -60,6 +62,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		err := oss.GetWithPath(p.Clips[0].Key, tempOriginFile)
 		if err != nil {
 			log.Logger.Errorf("Failed to download video %s: %v", p.Clips[0].Key, err)
+			ossErr = err
 			return
 		}
 		for {
@@ -85,6 +88,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 			err := oss.GetWithPath(clip.EncodeKey, dlPath)
 			if err != nil {
 				log.Logger.Errorf("Failed to download video clip %s: %v", clip.EncodeKey, err)
+				ossErr = err
 				return
 			}
 			for {
@@ -99,6 +103,9 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 	// 等待下载完成
 	wg.Wait()
+	if ossErr != nil {
+		return ossErr
+	}
 
 	// 合并视频
 	inputFiles := make([]string, len(p.Clips))
