@@ -89,7 +89,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 			key := util.GenerateClipKey(p.VideoKey, index)
 
-			// 正常情况
+			// 在上一次 err 中可能已经上传过部分 clip
 			if db.CheckVideoExist(db.VideoClipInfo{
 				Key:     p.VideoKey,
 				ClipKey: key,
@@ -102,6 +102,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 			if err != nil {
 				log.Logger.Errorf("Failed to upload video %s: %s", key, file)
 				ossErr = err
+				return
 			}
 
 			err = db.InsertVideo(db.VideoClipInfo{
