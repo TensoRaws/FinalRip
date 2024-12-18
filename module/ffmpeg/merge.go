@@ -62,11 +62,16 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		"-map", "0:a",
 		"-map", "0:s",
 		"-disposition:v:0", "default",
-		"-c", "copy",
+		"-c:v", "copy",
+		"-c:a", "flac",
+		"-c:s", "copy",
 		tempVideoMergedOutputPath,
 	)
 	out, err = cmd.CombinedOutput()
+	log.Logger.Infof("Merged output: %s", out)
 	if err != nil {
+		// 清理可能存在的临时文件
+		_ = util.ClaerTempFile(tempVideoMergedOutputPath)
 		log.Logger.Errorf("Merge audio with audio and subtitle failed: %v, try to merge audio only", err)
 		// audio track
 		cmd = exec.Command(
@@ -76,16 +81,17 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 			"-map", "1:v:0",
 			"-map", "0:a",
 			"-disposition:v:0", "default",
-			"-c", "copy",
+			"-c:v", "copy",
+			"-c:a", "flac",
 			tempVideoMergedOutputPath,
 		)
 		out, err = cmd.CombinedOutput()
+		log.Logger.Infof("Merged output: %s", out)
 		if err != nil {
 			log.Logger.Errorf("Merge audio failed: %v", err)
 			return err
 		}
 	}
-	log.Logger.Infof("Merged output: %s", out)
 
 	// 使用 mkvtoolnix 删除多余的 tags，重新混流
 	log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
