@@ -1,3 +1,3 @@
 package version
 
-const FINALRIP_VERSION = "v0.1.1"
+const FINALRIP_VERSION = "v0.1.2"
