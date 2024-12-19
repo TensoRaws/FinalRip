@@ -84,3 +84,8 @@ release-rocm-dev: pt-rocm pt-rocm-release-dev
 
 .PHONY: release-rocm
 release-rocm: pt-rocm pt-rocm-release
+
+.PHONY: dev
+dev:
+	docker compose -f ./deploy/docker-compose/lite/docker-compose.yml down
+	docker compose -f ./deploy/docker-compose/lite/docker-compose.yml up -d
