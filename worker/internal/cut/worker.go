@@ -77,7 +77,9 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 上传
+	var ossErr error
 	var wg sync.WaitGroup
+
 	total := len(outputs)
 	for i, output := range outputs {
 		wg.Add(1)
@@ -87,7 +89,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 			key := util.GenerateClipKey(p.VideoKey, index)
 
-			// 正常情况
+			// 在上一次 err 中可能已经上传过部分 clip
 			if db.CheckVideoExist(db.VideoClipInfo{
 				Key:     p.VideoKey,
 				ClipKey: key,
@@ -98,7 +100,9 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 			err := oss.PutByPath(key, file)
 			if err != nil {
-				log.Logger.Errorf("Failed to upload video %s: %s", key, file)
+				log.Logger.Errorf("Failed to upload video %s: %v", key, err)
+				ossErr = err
+				return
 			}
 
 			err = db.InsertVideo(db.VideoClipInfo{
@@ -112,7 +116,11 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 			}
 		}(i, output)
 	}
+
 	wg.Wait()
+	if ossErr != nil {
+		return ossErr
+	}
 
 	return nil
 }
