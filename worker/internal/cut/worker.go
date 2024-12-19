@@ -100,7 +100,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 			err := oss.PutByPath(key, file)
 			if err != nil {
-				log.Logger.Errorf("Failed to upload video %s: %s", key, file)
+				log.Logger.Errorf("Failed to upload video %s: %v", key, err)
 				ossErr = err
 				return
 			}
