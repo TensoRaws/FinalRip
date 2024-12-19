@@ -33,7 +33,13 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	if err := sonic.Unmarshal(t.Payload(), &p); err != nil {
 		return err
 	}
-	log.Logger.Infof("Processing task Merge with payload %v", p.Clips[0].Key)
+	log.Logger.Infof("Processing task Merge with payload: %v", p.VideoKey)
+
+	clips, err := db.GetVideoClips(p.VideoKey)
+	if err != nil {
+		log.Logger.Error("Failed to get video clips: " + err.Error())
+		return err
+	}
 
 	tempFolder := "temp_clips"
 	tempOriginFile := "temp_source.mkv"
@@ -57,11 +63,11 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		defer wg.Done()
 
 		// 等待下载完成
-		log.Logger.Infof("Waiting for downloading source video %s", p.Clips[0].Key)
+		log.Logger.Infof("Waiting for downloading source video %s", p.VideoKey)
 
-		err := oss.GetWithPath(p.Clips[0].Key, tempOriginFile)
+		err := oss.GetWithPath(p.VideoKey, tempOriginFile)
 		if err != nil {
-			log.Logger.Errorf("Failed to download video %s: %v", p.Clips[0].Key, err)
+			log.Logger.Errorf("Failed to download video %s: %v", p.VideoKey, err)
 			ossErr = err
 			return
 		}
@@ -71,11 +77,11 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 			}
 			time.Sleep(1 * time.Second)
 		}
-		log.Logger.Infof("Downloaded source video %s", p.Clips[0].Key)
+		log.Logger.Infof("Downloaded source video %s", p.VideoKey)
 	}()
 
-	// 下载 Encode 后的视频 Clips
-	for _, clip := range p.Clips {
+	// 下载 Encode 后的视频 clips
+	for _, clip := range clips {
 		wg.Add(1)
 		go func(clip db.VideoClipInfo) {
 			defer wg.Done()
@@ -108,18 +114,18 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 合并视频
-	inputFiles := make([]string, len(p.Clips))
-	for i := range p.Clips {
+	inputFiles := make([]string, len(clips))
+	for i := range clips {
 		inputFiles[i] = tempFolder + "/" + strconv.Itoa(i) + ".mkv"
 	}
 
-	err := ffmpeg.MergeVideo(tempOriginFile, inputFiles, tempMergedFile)
+	err = ffmpeg.MergeVideo(tempOriginFile, inputFiles, tempMergedFile)
 	if err != nil {
 		log.Logger.Errorf("Failed to merge video: %v", err)
 		return err
 	}
 
-	mergedKey := util.GenerateMergedKey(p.Clips[0].Key)
+	mergedKey := util.GenerateMergedKey(p.VideoKey)
 	// 上传合并后的视频
 	err = oss.PutByPath(mergedKey, tempMergedFile)
 	if err != nil {
@@ -128,7 +134,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	}
 
 	// 保存合并后的视频信息
-	err = db.UpdateTask(db.Task{Key: p.Clips[0].Key}, db.Task{EncodeKey: mergedKey})
+	err = db.UpdateTask(db.Task{Key: p.VideoKey}, db.Task{EncodeKey: mergedKey})
 	if err != nil {
 		log.Logger.Errorf("Failed to update completed task: %v", err)
 		return err

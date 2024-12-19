@@ -172,7 +172,7 @@ func HandleStart(req StartRequest) {
 	}
 
 	payload, err = sonic.Marshal(task.MergeTaskPayload{
-		Clips: clips,
+		VideoKey: req.VideoKey,
 	})
 	if err != nil {
 		log.Logger.Error("Failed to marshal payload: " + err.Error())
