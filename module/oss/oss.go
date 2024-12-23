@@ -84,7 +84,7 @@ func Get(key string) (*minio.Object, error) {
 func Exist(key string) bool {
 	exist, err := oss.StatObject(context.Background(), config.OSSConfig.Bucket, key, minio.StatObjectOptions{})
 	if err != nil {
-		log.Logger.Error("Failed to check if object exists: " + err.Error())
+		// log.Logger.Error("Failed to check if object exists: " + err.Error())
 		return false
 	}
 	return exist.Size > 0
@@ -102,7 +102,10 @@ func Size(key string) (string, error) {
 
 // Delete deletes the file pointed to by key.
 func Delete(key string) error {
-	return oss.RemoveObject(context.Background(), config.OSSConfig.Bucket, key, minio.RemoveObjectOptions{})
+	if Exist(key) {
+		return oss.RemoveObject(context.Background(), config.OSSConfig.Bucket, key, minio.RemoveObjectOptions{})
+	}
+	return nil
 }
 
 // GetPresignedURL gets the presigned URL for the file pointed to by key.
