@@ -112,8 +112,12 @@ func CancelTask(taskID string) {
 	if err != nil {
 		log.Logger.Warnf("Failed to cancel processing task: %s", err)
 	}
-	err = queue.Isp.DeleteTask(queue.ENCODE_QUEUE, taskID)
+	err = queue.Isp.DeleteTask(queue.ENCODE_QUEUE_DEFAULT, taskID)
 	if err != nil {
-		log.Logger.Warnf("Failed to delete task from encode queue: %s", err)
+		log.Logger.Warnf("Failed to delete task in default encode queue: %s", err)
+	}
+	err = queue.Isp.DeleteTask(queue.ENCODE_QUEUE_PRIORITY, taskID)
+	if err != nil {
+		log.Logger.Warnf("Failed to delete task in priority encode queue: %s", err)
 	}
 }

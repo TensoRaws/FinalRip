@@ -17,11 +17,12 @@ import (
 )
 
 type StartRequest struct {
-	EncodeParam string `form:"encode_param" binding:"required"`
-	Script      string `form:"script" binding:"required"`
-	VideoKey    string `form:"video_key" binding:"required"`
-	Slice       *bool  `form:"slice"`
-	Timeout     *int   `form:"timeout"`
+	EncodeParam string  `form:"encode_param" binding:"required"`
+	Script      string  `form:"script" binding:"required"`
+	VideoKey    string  `form:"video_key" binding:"required"`
+	Slice       *bool   `form:"slice"`
+	Timeout     *int    `form:"timeout"`
+	Queue       *string `form:"queue"`
 }
 
 // Start 开始压制 (POST /start)
@@ -104,6 +105,8 @@ func HandleStart(req StartRequest) {
 		return
 	}
 
+	encodeQueue := task.GetEncodeQueueName(req.Queue)
+
 	var wg sync.WaitGroup
 	// 开始压制任务
 	for _, clip := range clips {
@@ -119,7 +122,7 @@ func HandleStart(req StartRequest) {
 
 		encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
-		info, err := queue.Qc.Enqueue(encode, asynq.Queue(queue.ENCODE_QUEUE), task.GetTaskTimeout(len(clips), req.Timeout))
+		info, err := queue.Qc.Enqueue(encode, asynq.Queue(encodeQueue), task.GetTaskTimeout(len(clips), req.Timeout))
 		if err != nil {
 			log.Logger.Error("Failed to enqueue task: " + err.Error())
 			return
@@ -139,7 +142,7 @@ func HandleStart(req StartRequest) {
 			defer wg.Done()
 			// 等待任务完成
 			for {
-				_, err := queue.Isp.GetTaskInfo(queue.ENCODE_QUEUE, i.ID)
+				_, err := queue.Isp.GetTaskInfo(encodeQueue, i.ID)
 				if err != nil {
 					if errors.Is(err, asynq.ErrTaskNotFound) {
 						break

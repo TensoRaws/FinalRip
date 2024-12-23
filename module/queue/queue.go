@@ -17,9 +17,10 @@ var (
 )
 
 const (
-	CUT_QUEUE    = "cut_" + version.FINALRIP_VERSION
-	ENCODE_QUEUE = "encode_" + version.FINALRIP_VERSION
-	MERGE_QUEUE  = "merge_" + version.FINALRIP_VERSION
+	CUT_QUEUE             = "cut_" + version.FINALRIP_VERSION
+	ENCODE_QUEUE_DEFAULT  = "encode_default_" + version.FINALRIP_VERSION
+	ENCODE_QUEUE_PRIORITY = "encode_priority_" + version.FINALRIP_VERSION
+	MERGE_QUEUE           = "merge_" + version.FINALRIP_VERSION
 )
 
 func getRedisClientOpt() asynq.RedisClientOpt {
@@ -60,7 +61,8 @@ func InitEncodeWorker() {
 			asynq.Config{
 				Concurrency: 1,
 				Queues: map[string]int{
-					ENCODE_QUEUE: 1,
+					ENCODE_QUEUE_DEFAULT:  1,
+					ENCODE_QUEUE_PRIORITY: 9,
 				},
 			},
 		)

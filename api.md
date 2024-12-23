@@ -51,18 +51,20 @@ encode_param: ffmpeg -i - -vcodec libx265 -crf 16
 video_key: Roshidere-08.mkv
 slice: "true"
 timeout: 20
+queue: default
 ```
 
 ### Params
 
-| Name           | Location | Type    | Required | Description                 |
-| -------------- | -------- | ------- | -------- | --------------------------- |
-| body           | body     | object  | no       | none                        |
-| » script       | body     | string  | yes      | vapoursynth script          |
-| » encode_param | body     | string  | yes      | encoder param               |
-| » video_key    | body     | string  | yes      | video oss key               |
-| » slice        | body     | boolean | no       | cut video into clips or not |
-| » timeout      | body     | integer | no       | clip timeout, minute        |
+| Name           | Location | Type    | Required | Description                     |
+| -------------- | -------- | ------- | -------- | ------------------------------- |
+| body           | body     | object  | no       | none                            |
+| » script       | body     | string  | yes      | vapoursynth script              |
+| » encode_param | body     | string  | yes      | encoder param                   |
+| » video_key    | body     | string  | yes      | video oss key                   |
+| » slice        | body     | boolean | no       | cut video into clips or not     |
+| » timeout      | body     | integer | no       | clip timeout, minute            |
+| » queue        | body     | string  | no       | queue name, default or priority |
 
 > Response Examples
 
@@ -144,8 +146,6 @@ HTTP Status Code **200**
 ## POST Clear
 
 POST /api/v1/task/clear
-
-new a task after upload oss
 
 > Body Parameters
 
@@ -332,18 +332,20 @@ encode_param: ffmpeg -i - -vcodec libx265 -crf 16
 video_key: Roshidere-06.mkv
 index: 2
 timeout: 20
+queue: default
 ```
 
 ### Params
 
-| Name           | Location | Type    | Required | Description          |
-| -------------- | -------- | ------- | -------- | -------------------- |
-| body           | body     | object  | no       | none                 |
-| » script       | body     | string  | yes      | vapoursynth script   |
-| » encode_param | body     | string  | yes      | encoder param        |
-| » video_key    | body     | string  | yes      | video oss key        |
-| » index        | body     | integer | yes      | video clip index     |
-| » timeout      | body     | integer | no       | clip timeout, minute |
+| Name           | Location | Type    | Required | Description                     |
+| -------------- | -------- | ------- | -------- | ------------------------------- |
+| body           | body     | object  | no       | none                            |
+| » script       | body     | string  | yes      | vapoursynth script              |
+| » encode_param | body     | string  | yes      | encoder param                   |
+| » video_key    | body     | string  | yes      | video oss key                   |
+| » index        | body     | integer | yes      | video clip index                |
+| » timeout      | body     | integer | no       | clip timeout, minute            |
+| » queue        | body     | string  | no       | queue name, default or priority |
 
 > Response Examples
 
