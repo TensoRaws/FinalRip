@@ -56,15 +56,15 @@ queue: default
 
 ### Params
 
-| Name           | Location | Type    | Required | Description                 |
-| -------------- | -------- | ------- | -------- | --------------------------- | -------- |
-| body           | body     | object  | no       | none                        |
-| » script       | body     | string  | yes      | vapoursynth script          |
-| » encode_param | body     | string  | yes      | encoder param               |
-| » video_key    | body     | string  | yes      | video oss key               |
-| » slice        | body     | boolean | no       | cut video into clips or not |
-| » timeout      | body     | integer | no       | clip timeout, minute        |
-| » queue        | body     | string  | no       | queue name, default         | priority |
+| Name           | Location | Type    | Required | Description                     |
+| -------------- | -------- | ------- | -------- | ------------------------------- |
+| body           | body     | object  | no       | none                            |
+| » script       | body     | string  | yes      | vapoursynth script              |
+| » encode_param | body     | string  | yes      | encoder param                   |
+| » video_key    | body     | string  | yes      | video oss key                   |
+| » slice        | body     | boolean | no       | cut video into clips or not     |
+| » timeout      | body     | integer | no       | clip timeout, minute            |
+| » queue        | body     | string  | no       | queue name, default or priority |
 
 > Response Examples
 
@@ -337,15 +337,15 @@ queue: default
 
 ### Params
 
-| Name           | Location | Type    | Required | Description          |
-| -------------- | -------- | ------- | -------- | -------------------- | -------- |
-| body           | body     | object  | no       | none                 |
-| » script       | body     | string  | yes      | vapoursynth script   |
-| » encode_param | body     | string  | yes      | encoder param        |
-| » video_key    | body     | string  | yes      | video oss key        |
-| » index        | body     | integer | yes      | video clip index     |
-| » timeout      | body     | integer | no       | clip timeout, minute |
-| » queue        | body     | string  | no       | queue name, default  | priority |
+| Name           | Location | Type    | Required | Description                     |
+| -------------- | -------- | ------- | -------- | ------------------------------- |
+| body           | body     | object  | no       | none                            |
+| » script       | body     | string  | yes      | vapoursynth script              |
+| » encode_param | body     | string  | yes      | encoder param                   |
+| » video_key    | body     | string  | yes      | video oss key                   |
+| » index        | body     | integer | yes      | video clip index                |
+| » timeout      | body     | integer | no       | clip timeout, minute            |
+| » queue        | body     | string  | no       | queue name, default or priority |
 
 > Response Examples
 
