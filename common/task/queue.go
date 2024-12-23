@@ -2,8 +2,8 @@ package task
 
 import "github.com/TensoRaws/FinalRip/module/queue"
 
-// GetQueueName 获取队列名称，如果没有则返回默认队列（低优先级）
-func GetQueueName(name *string) string {
+// GetEncodeQueueName 获取队列名称，如果没有则返回默认队列（低优先级）
+func GetEncodeQueueName(name *string) string {
 	if name == nil {
 		return queue.ENCODE_QUEUE_DEFAULT
 	}

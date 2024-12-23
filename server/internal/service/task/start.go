@@ -105,7 +105,7 @@ func HandleStart(req StartRequest) {
 		return
 	}
 
-	encodeQueue := task.GetQueueName(req.Queue)
+	encodeQueue := task.GetEncodeQueueName(req.Queue)
 
 	var wg sync.WaitGroup
 	// 开始压制任务

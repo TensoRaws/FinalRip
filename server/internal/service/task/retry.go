@@ -82,7 +82,7 @@ func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) error {
 		return err
 	}
 
-	encodeQueue := task.GetQueueName(req.Queue)
+	encodeQueue := task.GetEncodeQueueName(req.Queue)
 
 	encode := asynq.NewTask(task.VIDEO_ENCODE, payload)
 
