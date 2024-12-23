@@ -64,6 +64,7 @@ func InitEncodeWorker() {
 					ENCODE_QUEUE_DEFAULT:  1,
 					ENCODE_QUEUE_PRIORITY: 9,
 				},
+				StrictPriority: true, // enable strict priority, higher priority queues are always processed first
 			},
 		)
 	})
