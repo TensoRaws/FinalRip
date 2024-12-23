@@ -51,7 +51,11 @@ func Clear(c *gin.Context) {
 		}
 	}
 
-	ossDelMulti(ossDelObjKeys)
+	err = ossDelMulti(ossDelObjKeys)
+	if err != nil {
+		resp.AbortWithMsg(c, err.Error())
+		return
+	}
 	log.Logger.Infof("Deleted files from OSS: %v", ossDelObjKeys)
 
 	// 清理数据库
@@ -84,7 +88,8 @@ func Clear(c *gin.Context) {
 }
 
 // ossDelMulti 批量删除 OSS 对象，使用协程并发删除
-func ossDelMulti(keys []string) {
+func ossDelMulti(keys []string) error {
+	var ossErr error
 	var wg sync.WaitGroup
 	for _, key := range keys {
 		wg.Add(1)
@@ -92,21 +97,23 @@ func ossDelMulti(keys []string) {
 			err := oss.Delete(k)
 			if err != nil {
 				log.Logger.Errorf("Failed to delete file from OSS: %s", err)
+				ossErr = err
 			}
 			wg.Done()
 		}(key)
 	}
 	wg.Wait()
+	return ossErr
 }
 
 // CancelTask 取消任务队列中的任务
 func CancelTask(taskID string) {
 	err := queue.Isp.CancelProcessing(taskID)
 	if err != nil {
-		log.Logger.Errorf("Failed to cancel processing task: %s", err)
+		log.Logger.Warnf("Failed to cancel processing task: %s", err)
 	}
 	err = queue.Isp.DeleteTask(queue.ENCODE_QUEUE, taskID)
 	if err != nil {
-		log.Logger.Errorf("Failed to delete task from encode queue: %s", err)
+		log.Logger.Warnf("Failed to delete task from encode queue: %s", err)
 	}
 }

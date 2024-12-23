@@ -99,7 +99,7 @@ func Progress(c *gin.Context) {
 	go func() {
 		defer wg.Done()
 		if t.EncodeKey == "" {
-			log.Logger.Warnf("encode t not completed, key: %s", req.VideoKey)
+			log.Logger.Warnf("encode task not completed, key: %s", req.VideoKey)
 			encodeUrl = ""
 		} else {
 			encodeUrl, err = oss.GetPresignedURL(t.EncodeKey, t.EncodeKey, 48*time.Hour)
