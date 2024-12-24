@@ -130,3 +130,5 @@ tmp
 
 temp_clips
 temp_list.txt
+
+/deploy/docker-compose/allinone/

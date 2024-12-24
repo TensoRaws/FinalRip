@@ -13,8 +13,6 @@ services:
     environment:
       #      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
       - FINALRIP_REMOTE_CONFIG_HOST=consul:8500
-      - FINALRIP_DB_HOST=mongodb
-      - FINALRIP_REDIS_HOST=redis
     deploy:
       replicas: 1
       resources:
