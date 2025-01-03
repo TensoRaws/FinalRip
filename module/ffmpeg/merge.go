@@ -9,19 +9,18 @@ import (
 	"github.com/TensoRaws/FinalRip/module/util"
 )
 
-// MergeVideo 使用 ffmpeg 进行视频合并
+// MergeVideo 使用 ffmpeg 进行视频合并，使用 mkvpropedit 清除 tags
 func MergeVideo(originFile string, inputFiles []string, outputPath string) error {
 	// 写入文件列表
 	listPath := "temp_list.txt"
 	tempVideoConcatOutputPath := "temp_video_concat_output.mkv"
-	tempVideoMergedOutputPath := "temp_video_merged_output.mkv"
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(listPath, tempVideoConcatOutputPath, tempVideoMergedOutputPath)
+	_ = util.ClaerTempFile(listPath, tempVideoConcatOutputPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)
-	}(listPath, tempVideoConcatOutputPath, tempVideoMergedOutputPath)
+	}(listPath, tempVideoConcatOutputPath)
 
 	var listStr string
 	for _, file := range inputFiles {
@@ -66,13 +65,13 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		"-c:a", "flac",
 		"-c:s", "copy",
 		"-max_interleave_delta", "0",
-		tempVideoMergedOutputPath,
+		outputPath,
 	)
 	out, err = cmd.CombinedOutput()
 	log.Logger.Infof("Merged output: %s", out)
 	if err != nil {
 		// 清理可能存在的临时文件
-		_ = util.ClaerTempFile(tempVideoMergedOutputPath)
+		_ = util.ClaerTempFile(outputPath)
 		log.Logger.Errorf("Merge audio with audio and subtitle failed: %v, try to merge audio only", err)
 		// audio track
 		cmd = exec.Command(
@@ -85,7 +84,7 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 			"-c:v", "copy",
 			"-c:a", "flac",
 			"-max_interleave_delta", "0",
-			tempVideoMergedOutputPath,
+			outputPath,
 		)
 		out, err = cmd.CombinedOutput()
 		log.Logger.Infof("Merged output: %s", out)
@@ -93,12 +92,6 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 			log.Logger.Errorf("Merge audio failed: %v", err)
 			return err
 		}
-	}
-
-	err = os.Rename(tempVideoMergedOutputPath, outputPath)
-	if err != nil {
-		log.Logger.Errorf("Rename temp video failed: %v", err)
-		return err
 	}
 
 	// Remove tags with mkvpropedit
