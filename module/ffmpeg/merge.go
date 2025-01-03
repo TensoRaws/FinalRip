@@ -11,13 +11,14 @@ import (
 func MergeVideo(originFile string, inputFiles []string, outputPath string) error {
 	tempVideoConcatOutputPath := "temp_video_concat_output.mkv"
 	tempVideoMergedOutputPath := "temp_video_merged_output.mkv"
+	tempVideoOutputPath := "temp_video_output.mkv"
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(tempVideoConcatOutputPath, tempVideoMergedOutputPath)
+	_ = util.ClaerTempFile(tempVideoConcatOutputPath, tempVideoMergedOutputPath, tempVideoOutputPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)
-	}(tempVideoConcatOutputPath, tempVideoMergedOutputPath)
+	}(tempVideoConcatOutputPath, tempVideoMergedOutputPath, tempVideoOutputPath)
 
 	// Concat video
 	log.Logger.Infof("Concat video with encoded clips: %s", inputFiles)
@@ -81,21 +82,37 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		}
 	}
 
-	// 使用 mkvtoolnix 删除多余的 tags，重新混流
+	// use mkvmerge to re-mux
 	log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
 	// !mkvmerge -o output.mkv temp_merged.mkv
 	// !mkvpropedit output.mkv --tags all:
 	cmd = exec.Command(
 		"mkvmerge",
-		"-o", outputPath,
+		"-o", tempVideoOutputPath,
 		tempVideoMergedOutputPath,
 	)
 	out, err = cmd.CombinedOutput()
 	if err != nil {
-		log.Logger.Errorf("Re-mux video failed: %v", err)
+		log.Logger.Errorf("mkvmerge Re-mux video failed: %v", err)
 		return err
 	}
-	log.Logger.Infof("Re-mux output: %s", out)
+	log.Logger.Infof("mkvmerge Re-mux output: %s", out)
+
+	// use ffmpeg to re-mux
+	cmd = exec.Command(
+		"ffmpeg",
+		"-i", tempVideoMergedOutputPath,
+		"-c", "copy",
+		outputPath,
+	)
+	out, err = cmd.CombinedOutput()
+	if err != nil {
+		log.Logger.Errorf("ffmpeg Re-mux video failed: %v", err)
+		return err
+	}
+	log.Logger.Infof("ffmpeg Re-mux output: %s", out)
+
+	// use mkvpropedit to remove tags
 	cmd = exec.Command(
 		"mkvpropedit",
 		outputPath,
@@ -103,9 +120,9 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 	)
 	out, err = cmd.CombinedOutput()
 	if err != nil {
-		log.Logger.Errorf("Remove tags failed: %v", err)
+		log.Logger.Errorf("mkvmerge remove tags failed: %v", err)
 		return err
 	}
-	log.Logger.Infof("Remove tags output: %s", out)
+	log.Logger.Infof("mkvmerge remove tags output: %s", out)
 	return nil
 }
