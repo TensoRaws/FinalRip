@@ -65,6 +65,7 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		"-c:v", "copy",
 		"-c:a", "flac",
 		"-c:s", "copy",
+		"max_interleave_delta", "0",
 		tempVideoMergedOutputPath,
 	)
 	out, err = cmd.CombinedOutput()
@@ -83,6 +84,7 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 			"-disposition:v:0", "default",
 			"-c:v", "copy",
 			"-c:a", "flac",
+			"-max_interleave_delta", "0",
 			tempVideoMergedOutputPath,
 		)
 		out, err = cmd.CombinedOutput()
@@ -93,23 +95,14 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		}
 	}
 
-	//// 使用 mkvtoolnix 删除多余的 tags，重新混流
-	//log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
-	//// !mkvmerge -o output.mkv temp_merged.mkv
-	//// !mkvpropedit output.mkv --tags all:
-	//cmd = exec.Command(
-	//	"mkvmerge",
-	//	"-o", outputPath,
-	//	tempVideoMergedOutputPath,
-	//)
-	//out, err = cmd.CombinedOutput()
-	//if err != nil {
-	//	log.Logger.Errorf("Re-mux video failed: %v", err)
-	//	return err
-	//}
-	//log.Logger.Infof("Re-mux output: %s", out)
+	err = os.Rename(tempVideoMergedOutputPath, outputPath)
+	if err != nil {
+		log.Logger.Errorf("Rename temp video failed: %v", err)
+		return err
+	}
 
-	_ = os.Rename(tempVideoMergedOutputPath, outputPath)
+	// Remove tags with mkvpropedit
+	log.Logger.Infof("Remove tags with mkvpropedit...")
 	cmd = exec.Command(
 		"mkvpropedit",
 		outputPath,
