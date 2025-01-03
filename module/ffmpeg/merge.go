@@ -9,19 +9,17 @@ import (
 	"github.com/TensoRaws/FinalRip/module/util"
 )
 
-// MergeVideo 使用 ffmpeg 进行视频合并
+// MergeVideo 使用 ffmpeg 进行视频合并，使用 mkvpropedit 清除 tags
 func MergeVideo(originFile string, inputFiles []string, outputPath string) error {
-	// 写入文件列表
-	listPath := "temp_list.txt"
+	listPath := "temp_list.txt" // 写入文件列表
 	tempVideoConcatOutputPath := "temp_video_concat_output.mkv"
-	tempVideoMergedOutputPath := "temp_video_merged_output.mkv"
 
-	// 清理临时文件
-	_ = util.ClaerTempFile(listPath, tempVideoConcatOutputPath, tempVideoMergedOutputPath)
+	// clear temp file
+	_ = util.ClaerTempFile(listPath, tempVideoConcatOutputPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)
-	}(listPath, tempVideoConcatOutputPath, tempVideoMergedOutputPath)
+	}(listPath, tempVideoConcatOutputPath)
 
 	var listStr string
 	for _, file := range inputFiles {
@@ -65,13 +63,14 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		"-c:v", "copy",
 		"-c:a", "flac",
 		"-c:s", "copy",
-		tempVideoMergedOutputPath,
+		"-max_interleave_delta", "0",
+		outputPath,
 	)
 	out, err = cmd.CombinedOutput()
 	log.Logger.Infof("Merged output: %s", out)
 	if err != nil {
-		// 清理可能存在的临时文件
-		_ = util.ClaerTempFile(tempVideoMergedOutputPath)
+		// clean maybe failed output
+		_ = util.ClaerTempFile(outputPath)
 		log.Logger.Errorf("Merge audio with audio and subtitle failed: %v, try to merge audio only", err)
 		// audio track
 		cmd = exec.Command(
@@ -83,7 +82,8 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 			"-disposition:v:0", "default",
 			"-c:v", "copy",
 			"-c:a", "flac",
-			tempVideoMergedOutputPath,
+			"-max_interleave_delta", "0",
+			outputPath,
 		)
 		out, err = cmd.CombinedOutput()
 		log.Logger.Infof("Merged output: %s", out)
@@ -93,21 +93,8 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		}
 	}
 
-	// 使用 mkvtoolnix 删除多余的 tags，重新混流
-	log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
-	// !mkvmerge -o output.mkv temp_merged.mkv
-	// !mkvpropedit output.mkv --tags all:
-	cmd = exec.Command(
-		"mkvmerge",
-		"-o", outputPath,
-		tempVideoMergedOutputPath,
-	)
-	out, err = cmd.CombinedOutput()
-	if err != nil {
-		log.Logger.Errorf("Re-mux video failed: %v", err)
-		return err
-	}
-	log.Logger.Infof("Re-mux output: %s", out)
+	// Remove tags with mkvpropedit
+	log.Logger.Infof("Remove tags with mkvpropedit...")
 	cmd = exec.Command(
 		"mkvpropedit",
 		outputPath,
