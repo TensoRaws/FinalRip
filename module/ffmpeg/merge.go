@@ -65,7 +65,7 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		"-c:v", "copy",
 		"-c:a", "flac",
 		"-c:s", "copy",
-		"max_interleave_delta", "0",
+		"-max_interleave_delta", "0",
 		tempVideoMergedOutputPath,
 	)
 	out, err = cmd.CombinedOutput()
