@@ -11,11 +11,10 @@ import (
 
 // MergeVideo 使用 ffmpeg 进行视频合并，使用 mkvpropedit 清除 tags
 func MergeVideo(originFile string, inputFiles []string, outputPath string) error {
-	// 写入文件列表
-	listPath := "temp_list.txt"
+	listPath := "temp_list.txt" // 写入文件列表
 	tempVideoConcatOutputPath := "temp_video_concat_output.mkv"
 
-	// 清理临时文件
+	// clear temp file
 	_ = util.ClaerTempFile(listPath, tempVideoConcatOutputPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
@@ -70,7 +69,7 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 	out, err = cmd.CombinedOutput()
 	log.Logger.Infof("Merged output: %s", out)
 	if err != nil {
-		// 清理可能存在的临时文件
+		// clean maybe failed output
 		_ = util.ClaerTempFile(outputPath)
 		log.Logger.Errorf("Merge audio with audio and subtitle failed: %v, try to merge audio only", err)
 		// audio track
