@@ -93,21 +93,23 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		}
 	}
 
-	// 使用 mkvtoolnix 删除多余的 tags，重新混流
-	log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
-	// !mkvmerge -o output.mkv temp_merged.mkv
-	// !mkvpropedit output.mkv --tags all:
-	cmd = exec.Command(
-		"mkvmerge",
-		"-o", outputPath,
-		tempVideoMergedOutputPath,
-	)
-	out, err = cmd.CombinedOutput()
-	if err != nil {
-		log.Logger.Errorf("Re-mux video failed: %v", err)
-		return err
-	}
-	log.Logger.Infof("Re-mux output: %s", out)
+	//// 使用 mkvtoolnix 删除多余的 tags，重新混流
+	//log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
+	//// !mkvmerge -o output.mkv temp_merged.mkv
+	//// !mkvpropedit output.mkv --tags all:
+	//cmd = exec.Command(
+	//	"mkvmerge",
+	//	"-o", outputPath,
+	//	tempVideoMergedOutputPath,
+	//)
+	//out, err = cmd.CombinedOutput()
+	//if err != nil {
+	//	log.Logger.Errorf("Re-mux video failed: %v", err)
+	//	return err
+	//}
+	//log.Logger.Infof("Re-mux output: %s", out)
+
+	_ = os.Rename(tempVideoMergedOutputPath, outputPath)
 	cmd = exec.Command(
 		"mkvpropedit",
 		outputPath,
