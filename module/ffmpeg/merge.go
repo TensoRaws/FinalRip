@@ -117,19 +117,19 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 	//}
 	//log.Logger.Infof("ffmpeg Re-mux output: %s", out)
 
-	// use mkvpropedit to remove tags
-	// !mkvpropedit output.mkv --tags all:
-	cmd = exec.Command(
-		"mkvpropedit",
-		tempVideoMergedOutputPath,
-		"--tags", "all:",
-	)
-	out, err = cmd.CombinedOutput()
-	if err != nil {
-		log.Logger.Errorf("mkvmerge remove tags failed: %v", err)
-		return err
-	}
-	log.Logger.Infof("mkvmerge remove tags output: %s", out)
+	//// use mkvpropedit to remove tags
+	//// !mkvpropedit output.mkv --tags all:
+	//cmd = exec.Command(
+	//	"mkvpropedit",
+	//	tempVideoMergedOutputPath,
+	//	"--tags", "all:",
+	//)
+	//out, err = cmd.CombinedOutput()
+	//if err != nil {
+	//	log.Logger.Errorf("mkvmerge remove tags failed: %v", err)
+	//	return err
+	//}
+	//log.Logger.Infof("mkvmerge remove tags output: %s", out)
 
 	// use mkvmerge to re-mux
 	// !mkvmerge -o output.mkv temp_merged.mkv
