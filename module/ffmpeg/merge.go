@@ -82,13 +82,61 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 		}
 	}
 
-	// use mkvmerge to re-mux
-	log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
-	// !mkvmerge -o output.mkv temp_merged.mkv
+	//err = os.Rename(tempVideoMergedOutputPath, outputPath)
+	//if err != nil {
+	//	log.Logger.Errorf("Rename video failed: %v", err)
+	//	return err
+	//}
+	//// use mkvmerge to re-mux
+	//log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
+	//// !mkvmerge -o output.mkv temp_merged.mkv
+	//// !mkvpropedit output.mkv --tags all:
+	//cmd = exec.Command(
+	//	"mkvmerge",
+	//	"-o", tempVideoOutputPath,
+	//	tempVideoMergedOutputPath,
+	//)
+	//out, err = cmd.CombinedOutput()
+	//if err != nil {
+	//	log.Logger.Errorf("mkvmerge Re-mux video failed: %v", err)
+	//	return err
+	//}
+	//log.Logger.Infof("mkvmerge Re-mux output: %s", out)
+	//
+	//// use ffmpeg to re-mux
+	//cmd = exec.Command(
+	//	"ffmpeg",
+	//	"-i", tempVideoMergedOutputPath,
+	//	"-c", "copy",
+	//	outputPath,
+	//)
+	//out, err = cmd.CombinedOutput()
+	//if err != nil {
+	//	log.Logger.Errorf("ffmpeg Re-mux video failed: %v", err)
+	//	return err
+	//}
+	//log.Logger.Infof("ffmpeg Re-mux output: %s", out)
+
+	// use mkvpropedit to remove tags
 	// !mkvpropedit output.mkv --tags all:
 	cmd = exec.Command(
+		"mkvpropedit",
+		tempVideoMergedOutputPath,
+		"--tags", "all:",
+	)
+	out, err = cmd.CombinedOutput()
+	if err != nil {
+		log.Logger.Errorf("mkvmerge remove tags failed: %v", err)
+		return err
+	}
+	log.Logger.Infof("mkvmerge remove tags output: %s", out)
+
+	// use mkvmerge to re-mux
+	// !mkvmerge -o output.mkv temp_merged.mkv
+	log.Logger.Infof("Re-mux video with mkvmerge and remove tags with mkvpropedit")
+	cmd = exec.Command(
 		"mkvmerge",
-		"-o", tempVideoOutputPath,
+		"-o", outputPath,
 		tempVideoMergedOutputPath,
 	)
 	out, err = cmd.CombinedOutput()
@@ -98,31 +146,5 @@ func MergeVideo(originFile string, inputFiles []string, outputPath string) error
 	}
 	log.Logger.Infof("mkvmerge Re-mux output: %s", out)
 
-	// use ffmpeg to re-mux
-	cmd = exec.Command(
-		"ffmpeg",
-		"-i", tempVideoMergedOutputPath,
-		"-c", "copy",
-		outputPath,
-	)
-	out, err = cmd.CombinedOutput()
-	if err != nil {
-		log.Logger.Errorf("ffmpeg Re-mux video failed: %v", err)
-		return err
-	}
-	log.Logger.Infof("ffmpeg Re-mux output: %s", out)
-
-	// use mkvpropedit to remove tags
-	cmd = exec.Command(
-		"mkvpropedit",
-		outputPath,
-		"--tags", "all:",
-	)
-	out, err = cmd.CombinedOutput()
-	if err != nil {
-		log.Logger.Errorf("mkvmerge remove tags failed: %v", err)
-		return err
-	}
-	log.Logger.Infof("mkvmerge remove tags output: %s", out)
 	return nil
 }
