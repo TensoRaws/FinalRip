@@ -1,49 +1,37 @@
 package ffmpeg
 
 import (
-	"fmt"
-	"os"
 	"os/exec"
 
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/util"
 )
 
-// MergeVideo 使用 ffmpeg 进行视频合并
+// MergeVideo 使用 mkvmerge 合并视频，ffmpeg 合并音频和字幕
 func MergeVideo(originFile string, inputFiles []string, outputPath string) error {
-	// 写入文件列表
-	listPath := "temp_list.txt"
 	tempVideoConcatOutputPath := "temp_video_concat_output.mkv"
 	tempVideoMergedOutputPath := "temp_video_merged_output.mkv"
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(listPath, tempVideoConcatOutputPath, tempVideoMergedOutputPath)
+	_ = util.ClaerTempFile(tempVideoConcatOutputPath, tempVideoMergedOutputPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
 		_ = util.ClaerTempFile(p...)
-	}(listPath, tempVideoConcatOutputPath, tempVideoMergedOutputPath)
-
-	var listStr string
-	for _, file := range inputFiles {
-		listStr += fmt.Sprintf("file '%s'\n", file)
-	}
-
-	err := os.WriteFile(listPath, []byte(listStr), 0755)
-	if err != nil {
-		log.Logger.Errorf("write list file failed: %v", err)
-		return err
-	}
+	}(tempVideoConcatOutputPath, tempVideoMergedOutputPath)
 
 	// Concat video
-	log.Logger.Infof("Concat video with list: %s", listPath)
-	cmd := exec.Command(
-		"ffmpeg",
-		"-safe", "0",
-		"-f", "concat",
-		"-i", listPath,
-		"-c", "copy",
-		tempVideoConcatOutputPath,
-	)
+	log.Logger.Infof("Concat video with encoded clips: %s", inputFiles)
+
+	mkvmergeArgs := []string{"-o", tempVideoConcatOutputPath}
+	for i, file := range inputFiles {
+		if i > 0 {
+			mkvmergeArgs = append(mkvmergeArgs, "+")
+		}
+		mkvmergeArgs = append(mkvmergeArgs, file)
+	}
+
+	cmd := exec.Command("mkvmerge", mkvmergeArgs...)
+
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Logger.Errorf("Concat video failed: %v", err)
