@@ -76,6 +76,7 @@ func MergeVideo(originPath string, inputFiles []string, outputPath string) error
 func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath string) error {
 	// Define the different codec combinations to try
 	codecCombinations := [][]string{
+		// Try copying both audio and subtitles
 		{
 			"-map", "1:v:0",
 			"-map", "0:a",
@@ -85,7 +86,8 @@ func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath
 			"-c:a", "copy",
 			"-c:s", "copy",
 			"-max_interleave_delta", "0",
-		}, // Try copying both audio and subtitles
+		},
+		// Try FLAC for audio and copy subtitles
 		{
 			"-map", "1:v:0",
 			"-map", "0:a",
@@ -95,7 +97,8 @@ func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath
 			"-c:a", "flac",
 			"-c:s", "copy",
 			"-max_interleave_delta", "0",
-		}, // Try FLAC for audio and copy subtitles
+		},
+		// Try copying only audio
 		{
 			"-map", "1:v:0",
 			"-map", "0:a",
@@ -103,7 +106,8 @@ func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath
 			"-c:v", "copy",
 			"-c:a", "copy",
 			"-max_interleave_delta", "0",
-		}, // Try copying only audio
+		},
+		// Try FLAC for audio only
 		{
 			"-map", "1:v:0",
 			"-map", "0:a",
@@ -111,7 +115,7 @@ func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath
 			"-c:v", "copy",
 			"-c:a", "flac",
 			"-max_interleave_delta", "0",
-		}, // Try FLAC for audio only
+		},
 	}
 
 	// Iterate over each codec combination
