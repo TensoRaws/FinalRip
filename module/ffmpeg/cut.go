@@ -35,10 +35,10 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 	}
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(scriptPath)
+	_ = util.ClearTempFile(scriptPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
-		_ = util.ClaerTempFile(p...)
+		_ = util.ClearTempFile(p...)
 	}(scriptPath)
 
 	// 写入脚本文件

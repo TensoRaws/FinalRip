@@ -44,10 +44,10 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	tempEncodedVideo := "encoded.mkv"
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(tempSourceVideo, tempEncodedVideo)
+	_ = util.ClearTempFile(tempSourceVideo, tempEncodedVideo)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
-		_ = util.ClaerTempFile(p...)
+		_ = util.ClearTempFile(p...)
 	}(tempSourceVideo, tempEncodedVideo)
 
 	// 等待下载完成
