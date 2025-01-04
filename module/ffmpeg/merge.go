@@ -126,7 +126,7 @@ func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath
 
 		cmd := exec.Command("ffmpeg", args...)
 		out, err := cmd.CombinedOutput()
-		log.Logger.Infof("Merged output: %s", out)
+		log.Logger.Infof("ffmpeg remux output with codec combination %v: %s", codecArgs, out)
 
 		if err == nil {
 			// Success, return nil
@@ -134,10 +134,10 @@ func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath
 		}
 
 		// Log the error and try the next combination
-		log.Logger.Errorf("Merge failed with codec combination %v: %v", codecArgs, err)
+		log.Logger.Errorf("ffmpeg remux failed with codec combination %v: %v", codecArgs, err)
 		// If failed, clean up temp files which may have been created
 		_ = util.ClearTempFile(outputPath)
 	}
 
-	return fmt.Errorf("all codec combinations failed")
+	return fmt.Errorf("ffmpeg remux: all codec combinations failed")
 }
