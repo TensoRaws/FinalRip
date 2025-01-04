@@ -14,8 +14,8 @@ func ByteCountBinary(b uint64) string {
 	return humanize.BigIBytes(bigInt)
 }
 
-// ClaerTempFile 清理临时文件
-func ClaerTempFile(tempPath ...string) error {
+// ClearTempFile 清理临时文件
+func ClearTempFile(tempPath ...string) error {
 	for _, p := range tempPath {
 		err := os.RemoveAll(p)
 		if err != nil {

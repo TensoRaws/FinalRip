@@ -15,10 +15,10 @@ func MergeVideo(originPath string, inputFiles []string, outputPath string) error
 	tempVideoConcatOutputPath := "temp_video_concat_output.mkv"
 
 	// clear temp file
-	_ = util.ClaerTempFile(listPath, tempVideoConcatOutputPath)
+	_ = util.ClearTempFile(listPath, tempVideoConcatOutputPath)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
-		_ = util.ClaerTempFile(p...)
+		_ = util.ClearTempFile(p...)
 	}(listPath, tempVideoConcatOutputPath)
 
 	var listStr string
@@ -136,7 +136,7 @@ func ReMuxWithSourceVideo(originPath string, outputPath string, concatOutputPath
 		// Log the error and try the next combination
 		log.Logger.Errorf("Merge failed with codec combination %v: %v", codecArgs, err)
 		// If failed, clean up temp files which may have been created
-		_ = util.ClaerTempFile(outputPath)
+		_ = util.ClearTempFile(outputPath)
 	}
 
 	return fmt.Errorf("all codec combinations failed")

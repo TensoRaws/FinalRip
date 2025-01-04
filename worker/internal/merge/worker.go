@@ -46,10 +46,10 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	tempMergedFile := "temp_merged.mkv"
 
 	// 清理临时文件
-	_ = util.ClaerTempFile(tempFolder, tempOriginFile, tempMergedFile)
+	_ = util.ClearTempFile(tempFolder, tempOriginFile, tempMergedFile)
 	defer func(p ...string) {
 		log.Logger.Infof("Clear temp file %v", p)
-		_ = util.ClaerTempFile(p...)
+		_ = util.ClearTempFile(p...)
 	}(tempFolder, tempOriginFile, tempMergedFile)
 
 	_ = os.Mkdir(tempFolder, os.ModePerm)
