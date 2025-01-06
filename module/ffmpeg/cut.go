@@ -25,11 +25,11 @@ func CutVideo(inputPath string, outputFolder string) ([]string, error) {
 	var scriptPath string
 	switch runtime.GOOS {
 	case OS_WINDOWS:
-		commandStr = fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -c copy -map 0:v:0 -segment_list \"%s/out.list\" \"%s/%%%%003d.mkv\"", inputPath, outputFolder, outputFolder) //nolint: lll
+		commandStr = fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -reset_timestamps 1 -c copy -map 0:v:0 -segment_list \"%s/out.list\" \"%s/%%%%003d.mkv\"", inputPath, outputFolder, outputFolder) //nolint: lll
 		scriptPath = "temp_script.bat"
 		commandStr = fmt.Sprintf("@echo off%s%s", "\r\n", commandStr)
 	default:
-		commandStr = fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -c copy -map 0:v:0 -segment_list \"%s/out.list\" \"%s/%%003d.mkv\"", inputPath, outputFolder, outputFolder) //nolint: lll
+		commandStr = fmt.Sprintf("ffmpeg -i \"%s\" -f segment -segment_format mkv -segment_time 60 -reset_timestamps 1 -c copy -map 0:v:0 -segment_list \"%s/out.list\" \"%s/%%003d.mkv\"", inputPath, outputFolder, outputFolder) //nolint: lll
 		scriptPath = "temp_script.sh"
 		commandStr = fmt.Sprintf("#!/bin/bash%s%s", "\n", commandStr)
 	}
