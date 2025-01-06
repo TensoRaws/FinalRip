@@ -15,12 +15,10 @@ import (
 )
 
 type RetryEncodeRequest struct {
-	VideoKey    string  `form:"video_key" binding:"required"`
-	EncodeParam string  `form:"encode_param" binding:"required"`
-	Index       *int    `form:"index" binding:"required"`
-	Script      string  `form:"script" binding:"required"`
-	Timeout     *int    `form:"timeout"`
-	Queue       *string `form:"queue"`
+	VideoKey string  `form:"video_key" binding:"required"`
+	Index    *int    `form:"index" binding:"required"`
+	Timeout  *int    `form:"timeout"`
+	Queue    *string `form:"queue"`
 }
 
 // RetryEncode 重试压制任务 (POST /retry/encode)
@@ -64,9 +62,15 @@ func RetryEncode(c *gin.Context) {
 }
 
 func HandleRetryEncode(req RetryEncodeRequest, clip db.VideoClipInfo) error {
+	t, err := db.GetTask(req.VideoKey)
+	if err != nil {
+		log.Logger.Error("Get task failed: " + err.Error())
+		return err
+	}
+
 	payload, err := sonic.Marshal(task.EncodeTaskPayload{
-		EncodeParam: req.EncodeParam,
-		Script:      req.Script,
+		EncodeParam: t.EncodeParam,
+		Script:      t.Script,
 		Clip:        clip,
 		Retry:       true,
 	})
