@@ -84,7 +84,11 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 
 	// 检查文件大小
 	if util.GetFileSize(tempEncodedVideo) < 8192 {
-		log.Logger.Errorf("Failed to encode video %s: file size is too small", util.StructToString(p.Clip))
+		log.Logger.Errorf("Failed to encode video %s: file size is too small, maybe GPU is offline, auto restart...", util.StructToString(p.Clip)) //nolint:lll
+		go func() {
+			time.Sleep(1 * time.Second)
+			os.Exit(114514)
+		}()
 		return errors.New("file size is too small")
 	}
 
