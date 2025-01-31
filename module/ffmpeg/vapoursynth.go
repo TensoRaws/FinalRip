@@ -24,7 +24,7 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 		condaInitScript = "@echo off\r\n" + "call \"%USERPROFILE%\\miniconda3\\condabin\\activate.bat\"\r\n"
 	default:
 		scriptPath = "temp_script.sh"
-		condaInitScript = "#!/bin/bash\n" // linux 下默认激活 conda 环境
+		condaInitScript = "#!/bin/bash\n" // Linux 下默认激活 Conda 环境（v0.3后已经移除 Conda 环境
 	}
 	commandStr = condaInitScript + "vspipe -c y4m " + encodeScriptPath + " - | " + encodeParam
 	log.Logger.Info("Encode Command: " + commandStr)
