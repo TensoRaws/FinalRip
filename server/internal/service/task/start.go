@@ -2,8 +2,10 @@ package task
 
 import (
 	"errors"
+	"strings"
 	"sync"
 	"time"
+	"unicode"
 
 	"github.com/TensoRaws/FinalRip/common/constant"
 	"github.com/TensoRaws/FinalRip/common/db"
@@ -35,6 +37,8 @@ func Start(c *gin.Context) {
 		return
 	}
 
+	// 去除末尾空格，换行符等
+	req.EncodeParam = strings.TrimRightFunc(req.EncodeParam, unicode.IsSpace)
 	// 检查传入的 Script 和 EncodeParam 是否合法
 	err := constant.CheckVSScriptAndEncodeParam(req.Script, req.EncodeParam)
 	if err != nil {
