@@ -15,7 +15,7 @@ search: true
 code_clipboard: true
 highlight_theme: darkula
 headingLevel: 2
-generator: "@tarslib/widdershins v4.0.23"
+generator: "@tarslib/widdershins v4.0.27"
 ---
 
 # FinalRip
@@ -47,7 +47,7 @@ script: "import os\r
   clip = core.bs.VideoSource(source=os.getenv('FINALRIP_SOURCE'))\r
 
   clip.set_output()"
-encode_param: ffmpeg -i - -vcodec libx265 -crf 16
+encode_param: ffmpeg -i - -vcodec libx265 -crf 16 FINALRIP_ENCODED_CLIP.mkv
 video_key: Roshidere-08.mkv
 slice: "true"
 timeout: 20
