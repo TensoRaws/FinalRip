@@ -1,6 +1,10 @@
 package constant
 
-import "strings"
+import (
+	"errors"
+	"strings"
+	"unicode"
+)
 
 type FinalRipConstant string
 
@@ -12,7 +16,17 @@ const (
 	FINALRIP_ENCODED_CLIP_MKV = FINALRIP + FinalRipConstant("_ENCODED_CLIP.mkv")
 )
 
-// ContainsFinalRipInString 检查字符串中是否包含 FinalRip 常量
-func ContainsFinalRipInString(s string, constant FinalRipConstant) bool {
-	return strings.Contains(s, string(constant))
+// CheckVSScriptAndEncodeParam 检查传入的 Script 和 EncodeParam 是否合法
+func CheckVSScriptAndEncodeParam(script string, encodeParam string) error {
+	if !strings.Contains(script, string(ENV_FINALRIP_SOURCE)) {
+		return errors.New("the VapourSynth Script code must contain " + string(ENV_FINALRIP_SOURCE) + " environment variable to specify the source video") //nolint:lll
+	}
+	if !strings.Contains(encodeParam, string(FINALRIP_ENCODED_CLIP_MKV)) {
+		return errors.New("the Encode Param must contain " + string(FINALRIP_ENCODED_CLIP_MKV) + " to specify the output video clip") //nolint:lll
+	}
+	encodeParam = strings.TrimRightFunc(encodeParam, unicode.IsSpace) // 去除末尾空格，换行符等
+	if strings.Contains(encodeParam, "\n") || strings.Contains(encodeParam, "\r") {
+		return errors.New("the Encode Param cannot contain line break")
+	}
+	return nil
 }

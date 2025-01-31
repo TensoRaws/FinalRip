@@ -2,7 +2,6 @@ package task
 
 import (
 	"errors"
-	"strings"
 	"sync"
 	"time"
 
@@ -37,16 +36,9 @@ func Start(c *gin.Context) {
 	}
 
 	// 检查传入的 Script 和 EncodeParam 是否合法
-	if !constant.ContainsFinalRipInString(req.Script, constant.ENV_FINALRIP_SOURCE) {
-		resp.AbortWithMsg(c, "VapourSynth Script code must contain "+string(constant.ENV_FINALRIP_SOURCE)+" environment variable to specify the source video.") //nolint:lll
-		return
-	}
-	if !constant.ContainsFinalRipInString(req.EncodeParam, constant.FINALRIP_ENCODED_CLIP_MKV) {
-		resp.AbortWithMsg(c, "Encode Param must contain "+string(constant.FINALRIP_ENCODED_CLIP_MKV)+" to specify the output video clip.") //nolint:lll
-		return
-	}
-	if strings.Contains(req.EncodeParam, "\n") || strings.Contains(req.EncodeParam, "\r") {
-		resp.AbortWithMsg(c, "Encode Param cannot contain line break!!!")
+	err := constant.CheckVSScriptAndEncodeParam(req.Script, req.EncodeParam)
+	if err != nil {
+		resp.AbortWithMsg(c, err.Error())
 		return
 	}
 
@@ -63,7 +55,7 @@ func Start(c *gin.Context) {
 	}
 
 	// 更新任务
-	err := db.UpdateTask(db.Task{Key: req.VideoKey}, db.Task{
+	err = db.UpdateTask(db.Task{Key: req.VideoKey}, db.Task{
 		EncodeParam: req.EncodeParam,
 		Script:      req.Script,
 	})
