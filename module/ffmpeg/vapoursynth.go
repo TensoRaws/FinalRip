@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"runtime"
 
+	"github.com/TensoRaws/FinalRip/common/constant"
 	"github.com/TensoRaws/FinalRip/module/log"
 	"github.com/TensoRaws/FinalRip/module/util"
 )
@@ -12,7 +13,7 @@ import (
 // EncodeVideo 压制视频，压制后的视频文件名为 encoded.mkv，压制参数由 encodeParam 指定，压制视频从环境变量 FINALRIP_SOURCE 读取
 func EncodeVideo(encodeScript string, encodeParam string) error {
 	encodeScriptPath := "encode.py"
-	// encodedVideo := "encoded.mkv"
+
 	// 根据操作系统创建脚本文件
 	var commandStr string
 	var scriptPath string
@@ -25,8 +26,8 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 		scriptPath = "temp_script.sh"
 		condaInitScript = "#!/bin/bash\n" // linux 下默认激活 conda 环境
 	}
-	commandStr = condaInitScript + "vspipe -c y4m encode.py - | " + encodeParam + " encoded.mkv"
-	log.Logger.Info("commandStr: " + commandStr)
+	commandStr = condaInitScript + "vspipe -c y4m " + encodeScriptPath + " - | " + encodeParam
+	log.Logger.Info("Encode Command: " + commandStr)
 
 	// 清理临时文件
 	_ = util.ClearTempFile(encodeScriptPath, scriptPath)
@@ -60,7 +61,7 @@ func EncodeVideo(encodeScript string, encodeParam string) error {
 		log.Logger.Error("vs error: " + err.Error())
 		return err
 	}
-	log.Logger.Info("clip encoded, output: encoded.mkv")
+	log.Logger.Info("clip encoded, output: " + constant.FINALRIP_ENCODED_CLIP_MKV)
 
 	return nil
 }

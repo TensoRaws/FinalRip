@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/TensoRaws/FinalRip/common/constant"
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/log"
@@ -31,6 +32,16 @@ func Start(c *gin.Context) {
 	var req StartRequest
 	if err := c.ShouldBind(&req); err != nil {
 		resp.AbortWithMsg(c, err.Error())
+		return
+	}
+
+	// 检查传入的 Script 和 EncodeParam 是否合法
+	if !constant.ContainsFinalRipInString(req.Script, constant.ENV_FINALRIP_SOURCE) {
+		resp.AbortWithMsg(c, "VS script code must contain "+string(constant.ENV_FINALRIP_SOURCE)+" environment variable to specify the source video.") //nolint:lll
+		return
+	}
+	if !constant.ContainsFinalRipInString(req.EncodeParam, constant.FINALRIP_ENCODED_CLIP_MKV) {
+		resp.AbortWithMsg(c, "Encode param must contain "+string(constant.FINALRIP_ENCODED_CLIP_MKV)+" to specify the output video clip.") //nolint:lll
 		return
 	}
 
