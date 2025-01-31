@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/TensoRaws/FinalRip/common/constant"
 	"github.com/TensoRaws/FinalRip/common/db"
 	"github.com/TensoRaws/FinalRip/common/task"
 	"github.com/TensoRaws/FinalRip/module/ffmpeg"
@@ -40,8 +41,8 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 		log.Logger.Errorf("Failed to kill vspipe process: %v", err)
 	}
 
-	tempSourceVideo := "source.mkv"
-	tempEncodedVideo := "encoded.mkv"
+	tempSourceVideo := constant.FINALRIP_SOURCE_MKV
+	tempEncodedVideo := constant.FINALRIP_ENCODED_CLIP_MKV
 
 	// 清理临时文件
 	_ = util.ClearTempFile(tempSourceVideo, tempEncodedVideo)
@@ -67,7 +68,7 @@ func Handler(ctx context.Context, t *asynq.Task) error {
 	log.Logger.Infof("Downloaded video clip %s", p.Clip.ClipKey)
 
 	// 设置临时视频的环境变量
-	err = os.Setenv("FINALRIP_SOURCE", tempSourceVideo)
+	err = os.Setenv(constant.ENV_FINALRIP_SOURCE, tempSourceVideo)
 	if err != nil {
 		log.Logger.Errorf("Failed to set env FINALRIP_SOURCE: %v", err)
 		return err
