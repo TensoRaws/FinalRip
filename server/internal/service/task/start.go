@@ -45,7 +45,7 @@ func Start(c *gin.Context) {
 		resp.AbortWithMsg(c, "Encode Param must contain "+string(constant.FINALRIP_ENCODED_CLIP_MKV)+" to specify the output video clip.") //nolint:lll
 		return
 	}
-	if strings.Contains(req.EncodeParam, "/n") || strings.Contains(req.EncodeParam, "/r") {
+	if strings.Contains(req.EncodeParam, "\n") || strings.Contains(req.EncodeParam, "\r") {
 		resp.AbortWithMsg(c, "Encode Param cannot contain line break!!!")
 		return
 	}
