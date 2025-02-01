@@ -10,7 +10,7 @@ import (
 	"github.com/TensoRaws/FinalRip/module/util"
 )
 
-// EncodeVideo 压制视频，压制后的视频文件名为 encoded.mkv，压制参数由 encodeParam 指定，压制视频从环境变量 FINALRIP_SOURCE 读取
+// EncodeVideo 压制视频，压制的 VS 脚本由 encodeScript 指定，压制参数由 encodeParam 指定
 func EncodeVideo(encodeScript string, encodeParam string) error {
 	encodeScriptPath := "encode.py"
 
