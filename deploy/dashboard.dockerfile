@@ -2,7 +2,7 @@ FROM node:latest as builder
 
 WORKDIR /build
 
-COPY . .
+COPY ./dashboard .
 
 RUN npm install -g pnpm
 RUN pnpm install && pnpm run build

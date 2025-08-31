@@ -32,6 +32,7 @@ all:
 	docker buildx build -f ./deploy/server.dockerfile -t lychee0/finalrip-server .
 	docker buildx build -f ./deploy/worker-cut.dockerfile -t lychee0/finalrip-worker-cut .
 	docker buildx build -f ./deploy/worker-merge.dockerfile -t lychee0/finalrip-worker-merge .
+	docker buildx build -f ./deploy/dashboard.dockerfile -t lychee0/finalrip-dashboard .
 
 .PHONY: pt
 pt:
