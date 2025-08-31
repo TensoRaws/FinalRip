@@ -6,22 +6,22 @@ version := v0.3.0
 VS_PYTORCH_VERSION := v0.2.0
 
 .PHONY: tidy
-tidy: ## go mod tidy
+tidy:
 	${GO} mod tidy
 
 .PHONY: server
-server: ## build binary file
+server:
 	${GO} build -o server ./server
 
 .PHONY: worker
-worker: ## build binary file
+worker:
 	${GO} build -o worker ./worker
 
 .PHONY: test
-test: tidy ## go test
+test: tidy
 	${GO} test ./...
 
-.PHONY: lint ## pip install pre-commit
+.PHONY: lint
 lint:
 	golangci-lint run
 	pre-commit install
@@ -32,6 +32,7 @@ all:
 	docker buildx build -f ./deploy/server.dockerfile -t lychee0/finalrip-server .
 	docker buildx build -f ./deploy/worker-cut.dockerfile -t lychee0/finalrip-worker-cut .
 	docker buildx build -f ./deploy/worker-merge.dockerfile -t lychee0/finalrip-worker-merge .
+	docker buildx build -f ./deploy/dashboard.dockerfile -t lychee0/finalrip-dashboard .
 
 .PHONY: pt
 pt:

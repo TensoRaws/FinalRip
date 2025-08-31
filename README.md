@@ -8,17 +8,14 @@ a distributed video processing tool, based on FFmpeg and VapourSynth
 [![Release](https://github.com/TensoRaws/FinalRip/actions/workflows/Release.yml/badge.svg)](https://github.com/TensoRaws/FinalRip/actions/workflows/Release.yml)
 [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/RJWBNXdmdaDACvcacXFQ3e/Ge3dVaX4GmktGiL9Jb1ADB/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/RJWBNXdmdaDACvcacXFQ3e/Ge3dVaX4GmktGiL9Jb1ADB/tree/main)
 
-### Architecture
-
-![FinalRip](https://raw.githubusercontent.com/TensoRaws/.github/refs/heads/main/finalrip.png)
+### Impl
 
 _We cut the original video into multiple clips, and then process each clip in parallel in queue order. After all clips are processed, we merge them into the final video._
 
 ### Preparations
 
 - docker and docker-compose
-- Nvidia GPU / AMD GPU with ROCm support [(7000 series on WSL2)](https://github.com/TensoRaws/vs-playground/blob/main/docker-compose-rocm.yml)
-- GPU container runtime (optional)
+- Nvidia GPU and GPU container runtime (optional)
 - make (optional)
 
 ### Quick Deployment
