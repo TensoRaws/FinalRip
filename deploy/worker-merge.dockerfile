@@ -26,8 +26,8 @@ ENV TZ=Asia/Shanghai
 
 ENV FINALRIP_EASYTIER_HOST 10.126.126.251
 
-COPY --from=mwader/static-ffmpeg:7.0.2 /ffmpeg /usr/local/bin/
-COPY --from=mwader/static-ffmpeg:7.0.2 /ffprobe /usr/local/bin/
+COPY --from=mwader/static-ffmpeg:8.0 /ffmpeg /usr/local/bin/
+COPY --from=mwader/static-ffmpeg:8.0 /ffprobe /usr/local/bin/
 
 COPY --from=builder /build/worker/worker /app/
 COPY --from=builder /build/conf/finalrip.yml /app/conf/
