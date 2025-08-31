@@ -6,22 +6,22 @@ version := v0.3.0
 VS_PYTORCH_VERSION := v0.2.0
 
 .PHONY: tidy
-tidy: ## go mod tidy
+tidy:
 	${GO} mod tidy
 
 .PHONY: server
-server: ## build binary file
+server:
 	${GO} build -o server ./server
 
 .PHONY: worker
-worker: ## build binary file
+worker:
 	${GO} build -o worker ./worker
 
 .PHONY: test
-test: tidy ## go test
+test: tidy
 	${GO} test ./...
 
-.PHONY: lint ## pip install pre-commit
+.PHONY: lint
 lint:
 	golangci-lint run
 	pre-commit install

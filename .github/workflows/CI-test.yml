@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit-test:
+  backend:
     strategy:
       matrix:
         os-version: ["ubuntu-latest"]
@@ -22,7 +22,9 @@ jobs:
     runs-on: ${{ matrix.os-version }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Setup Go
         uses: actions/setup-go@v4
@@ -32,3 +34,29 @@ jobs:
       - name: Test
         run: |
           make test
+
+  frontend:
+    strategy:
+      matrix:
+        os-version: ["ubuntu-latest"]
+
+    runs-on: ${{ matrix.os-version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: CI
+        run: |
+          cd dashboard
+          pnpm install
+          pnpm run lint
+          pnpm run typecheck

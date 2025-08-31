@@ -1,3 +1,5 @@
+version: "2"
+
 linters:
   enable-all: false
   fast: false
@@ -6,28 +8,28 @@ linters:
     - bodyclose
     - dogsled
     - dupl
-    - exportloopref
     - exhaustive
     - goconst
     - gocritic
     - gocyclo
-    #    - goimports
     - goprintffuncname
-    - gosimple
     - govet
     - ineffassign
     - lll
     - misspell
     - nakedret
-    - noctx
+    #    - noctx
     - nolintlint
     - staticcheck
-    - typecheck
     - unconvert
     - unparam
     - whitespace
   disable:
     - unused
+
+formatters:
+  enable:
+#    - goimports
 
 run:
   timeout: 3m
