@@ -45,6 +45,8 @@ jobs:
           tags: |
             lychee0/finalrip-${{ matrix.dockerfile }}:dev
             lychee0/finalrip-${{ matrix.dockerfile }}:cuda-dev
+          build-args: |
+            BASE_CONTAINER_TAG=cuda-dev
           no-cache: true
 
       - name: Build and push for other services

@@ -1,8 +1,6 @@
 version: "2"
 
 linters:
-  enable-all: false
-  fast: false
   enable:
     - errcheck
     - bodyclose
