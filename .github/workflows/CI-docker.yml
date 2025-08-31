@@ -2,11 +2,15 @@ name: Docker Build CI
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
     paths-ignore:
       - "**.md"
-      - "LICENSE"
-
+      - LICENSE
+  pull_request:
+    paths-ignore:
+      - "**.md"
+      - LICENSE
   workflow_dispatch:
 
 jobs:
