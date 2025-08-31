@@ -25,9 +25,5 @@ linters:
   disable:
     - unused
 
-formatters:
-  enable:
-#    - goimports
-
 run:
   timeout: 3m
