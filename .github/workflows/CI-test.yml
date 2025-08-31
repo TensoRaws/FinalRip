@@ -54,7 +54,7 @@ jobs:
         with:
           version: 10
 
-      - name: CI
+      - name: Test
         run: |
           cd dashboard
           pnpm install
