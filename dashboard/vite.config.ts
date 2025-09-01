@@ -23,14 +23,14 @@ export default defineConfig({
           'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar'],
         },
       ],
-      eslintrc: {
-        enabled: true,
-      },
+      // eslintrc: {
+      //   enabled: true,
+      // },
     }),
     Components({
       resolvers: [NaiveUiResolver()],
     }),
-    tailwindcss()
+    tailwindcss(),
   ],
   resolve: {
     alias: {
