@@ -1,8 +1,8 @@
-import { NButton, NIcon } from 'naive-ui'
 import type { Component, VNodeChild } from 'vue'
-import { h } from 'vue'
-
 import type { TaskStatus } from '@/api/type'
+import { NButton, NIcon } from 'naive-ui'
+
+import { h } from 'vue'
 import router from '@/router'
 
 export function renderIcon(icon: Component, props?: any): () => VNodeChild {
@@ -14,7 +14,7 @@ export function renderIconButton(icon: Component, onClick: () => void): VNodeChi
     NButton,
     {
       text: true,
-      onClick: onClick,
+      onClick,
     },
     {
       default: renderIcon(icon, {
@@ -28,11 +28,14 @@ export function renderStatusButton(status: TaskStatus, videoKey: string): VNodeC
   let type: 'default' | 'error' | 'primary' | 'info' | 'success' | 'warning' | undefined
   if (status === 'pending') {
     type = 'warning'
-  } else if (status === 'running') {
+  }
+  else if (status === 'running') {
     type = 'info'
-  } else if (status === 'completed') {
+  }
+  else if (status === 'completed') {
     type = 'success'
-  } else {
+  }
+  else {
     type = 'error'
   }
 
@@ -40,7 +43,7 @@ export function renderStatusButton(status: TaskStatus, videoKey: string): VNodeC
     if (status === 'pending') {
       return
     }
-    router.push('/task/' + videoKey)
+    router.push(`/task/${videoKey}`)
   }
 
   return h(
@@ -48,7 +51,7 @@ export function renderStatusButton(status: TaskStatus, videoKey: string): VNodeC
     {
       secondary: true,
       bordered: true,
-      type: type,
+      type,
       onClick: handleClick,
     },
     {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { DataTableColumns } from 'naive-ui'
+import type { TaskStatus } from '@/api/type'
 import {
   CheckmarkCircleOutline,
   CloudDownloadOutline,
@@ -6,20 +8,13 @@ import {
   ReloadOutline,
 } from '@vicons/ionicons5'
 import dayjs from 'dayjs'
-import type { DataTableColumns } from 'naive-ui'
 import { NButton, useDialog, useMessage, useNotification } from 'naive-ui'
-import { storeToRefs } from 'pinia'
 
+import { storeToRefs } from 'pinia'
+import { onActivated, ref } from 'vue'
 import { GetTaskProgress, RetryEncodeTask, RetryMergeTask } from '@/api'
-import type { TaskStatus } from '@/api/type'
 import { useSettingStore } from '@/store/setting'
 import { renderIcon, renderIconButton } from '@/util/render'
-
-const { clipTimeout, queueName } = storeToRefs(useSettingStore())
-
-const notification = useNotification()
-const dialog = useDialog()
-const message = useMessage()
 
 const props = defineProps({
   videoKey: {
@@ -27,6 +22,12 @@ const props = defineProps({
     default: '',
   },
 })
+
+const { clipTimeout, queueName } = storeToRefs(useSettingStore())
+
+const notification = useNotification()
+const dialog = useDialog()
+const message = useMessage()
 
 interface TaskInfo {
   create_at: string
@@ -144,9 +145,10 @@ function fetchTaskProgress(): void {
 
         taskProgress.value = tempProgress
         taskInfo.value = tempInfo
-      } else {
+      }
+      else {
         console.error(res)
-        notification['error']({
+        notification.error({
           content: 'Fetch task progress failed',
           meta: String(res) || 'Unknown error',
         })
@@ -154,7 +156,7 @@ function fetchTaskProgress(): void {
     })
     .catch((err) => {
       console.error(err)
-      notification['error']({
+      notification.error({
         content: 'Fetch task progress failed',
         meta: String(err) || 'Unknown error',
       })
@@ -181,14 +183,15 @@ function handleRetryMerge(): void {
       })
         .then((res) => {
           if (res.success) {
-            notification['success']({
+            notification.success({
               content: 'Merging...',
-              meta: 'Task: ' + String(taskInfo.value?.key),
+              meta: `Task: ${String(taskInfo.value?.key)}`,
               duration: 2500,
               keepAliveOnHover: true,
             })
-          } else {
-            notification['error']({
+          }
+          else {
+            notification.error({
               content: 'Start merge failed',
               meta: res.error?.message || 'Unknown error',
             })
@@ -196,7 +199,7 @@ function handleRetryMerge(): void {
         })
         .catch((err) => {
           console.error(err)
-          notification['error']({
+          notification.error({
             content: 'Start merge failed',
             meta: String(err) || 'Unknown error',
           })
@@ -221,20 +224,21 @@ function handleRetryEncode(index: number): void {
     onPositiveClick: () => {
       RetryEncodeTask({
         video_key: String(taskInfo.value?.key),
-        index: index,
+        index,
         timeout: clipTimeout.value,
         queue: queueName.value,
       })
         .then((res) => {
           if (res.success) {
-            notification['success']({
+            notification.success({
               content: 'Retry encoding...',
-              meta: 'Clip: ' + String(index),
+              meta: `Clip: ${String(index)}`,
               duration: 2500,
               keepAliveOnHover: true,
             })
-          } else {
-            notification['error']({
+          }
+          else {
+            notification.error({
               content: 'Start re-encode failed',
               meta: res.error?.message || 'Unknown error',
             })
@@ -242,7 +246,7 @@ function handleRetryEncode(index: number): void {
         })
         .catch((err) => {
           console.error(err)
-          notification['error']({
+          notification.error({
             content: 'Start re-encode failed',
             meta: String(err) || 'Unknown error',
           })
@@ -291,7 +295,9 @@ function handleRetryEncode(index: number): void {
           <NGradientText size="18" gradient="linear-gradient(90deg, red 0%, green 50%, blue 100%)">
             Clips
           </NGradientText>
-          <NButton type="warning" @click="handleRetryMerge"> Retry Merge </NButton>
+          <NButton type="warning" @click="handleRetryMerge">
+            Retry Merge
+          </NButton>
         </NSpace>
         <NDataTable
           :columns="columns"

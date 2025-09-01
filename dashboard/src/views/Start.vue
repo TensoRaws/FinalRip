@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { DownloadOutline, PlayCircleOutline } from '@vicons/ionicons5'
 import dayjs from 'dayjs'
-import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, useDialog, useMessage, useNotification } from 'naive-ui'
 import { storeToRefs } from 'pinia'
 
+import { onActivated, ref } from 'vue'
 import { ClearTask, GetTaskList, StartTask } from '@/api'
 import { useSettingStore } from '@/store/setting'
 import { renderIconButton } from '@/util/render'
@@ -69,9 +70,10 @@ function fetchPendingTasks(): void {
           })
         })
         tasks.value = temp
-      } else {
+      }
+      else {
         console.error(res)
-        notification['error']({
+        notification.error({
           content: 'Fetch task list failed',
           meta: String(res) || 'Unknown error',
         })
@@ -79,7 +81,7 @@ function fetchPendingTasks(): void {
     })
     .catch((err) => {
       console.error(err)
-      notification['error']({
+      notification.error({
         content: 'Fetch task list failed',
         meta: String(err) || 'Unknown error',
       })
@@ -119,24 +121,25 @@ function submitTasks(taskKeys: DataTableRowKey[]): void {
         })
           .then((res) => {
             if (res.success) {
-              notification['success']({
+              notification.success({
                 content: 'Task started successfully',
-                meta: 'Task: ' + key,
+                meta: `Task: ${key}`,
                 duration: 2500,
                 keepAliveOnHover: true,
               })
-            } else {
-              notification['error']({
+            }
+            else {
+              notification.error({
                 content: 'Task start failed',
                 meta: res.error?.message || 'Unknown error',
               })
             }
 
-            updateCheckedRowKeys(checkedRowKeys.value.filter((k) => k !== key))
+            updateCheckedRowKeys(checkedRowKeys.value.filter((k: any) => k !== key))
           })
           .catch((err) => {
             console.error(err)
-            notification['error']({
+            notification.error({
               content: 'Task start failed',
               meta: String(err) || 'Unknown error',
             })
@@ -170,24 +173,25 @@ function deleteTasks(taskKeys: DataTableRowKey[]): void {
         })
           .then((res) => {
             if (res.success) {
-              notification['success']({
+              notification.success({
                 content: 'Task deleted successfully',
-                meta: 'Task: ' + key,
+                meta: `Task: ${key}`,
                 duration: 2500,
                 keepAliveOnHover: true,
               })
-            } else {
-              notification['error']({
+            }
+            else {
+              notification.error({
                 content: 'Delete task failed',
                 meta: res.error?.message || 'Unknown error',
               })
             }
 
-            updateCheckedRowKeys(checkedRowKeys.value.filter((k) => k !== key))
+            updateCheckedRowKeys(checkedRowKeys.value.filter((k: any) => k !== key))
           })
           .catch((err) => {
             console.error(err)
-            notification['error']({
+            notification.error({
               content: 'Delete task failed',
               meta: String(err) || 'Unknown error',
             })
@@ -205,10 +209,16 @@ function deleteTasks(taskKeys: DataTableRowKey[]): void {
   <NCard>
     <NSpace vertical>
       <NSpace justify="space-between">
-        <NGradientText size="18" type="warning"> Pending </NGradientText>
+        <NGradientText size="18" type="warning">
+          Pending
+        </NGradientText>
         <NSpace>
-          <NButton type="error" @click="deleteTasks(checkedRowKeys)"> Delete </NButton>
-          <NButton type="primary" @click="submitTasks(checkedRowKeys)"> RUN </NButton>
+          <NButton type="error" @click="deleteTasks(checkedRowKeys)">
+            Delete
+          </NButton>
+          <NButton type="primary" @click="submitTasks(checkedRowKeys)">
+            RUN
+          </NButton>
         </NSpace>
       </NSpace>
       <NDataTable

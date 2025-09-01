@@ -24,9 +24,11 @@ class openWebsite {
 function handleDarkMode(): void {
   if (darkMode.value === 'system') {
     darkMode.value = 'light'
-  } else if (darkMode.value === 'light') {
+  }
+  else if (darkMode.value === 'light') {
     darkMode.value = 'dark'
-  } else {
+  }
+  else {
     darkMode.value = 'system'
   }
 }

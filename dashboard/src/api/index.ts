@@ -1,7 +1,4 @@
 import type { AxiosInstance } from 'axios'
-import axios from 'axios'
-import { storeToRefs } from 'pinia'
-
 import type {
   ClearTaskRequest,
   ClearTaskResponse,
@@ -21,6 +18,9 @@ import type {
   TaskListResponse,
   TaskListResquest,
 } from '@/api/type'
+import axios from 'axios'
+
+import { storeToRefs } from 'pinia'
 import { useSettingStore } from '@/store/setting'
 
 function api(isJson: boolean = false): AxiosInstance {
@@ -32,7 +32,7 @@ function api(isJson: boolean = false): AxiosInstance {
     baseURL: apiURL.value,
     headers: {
       'Content-Type': ContentType,
-      token: apiToken.value,
+      'token': apiToken.value,
     },
   })
 }
@@ -42,7 +42,8 @@ export async function Ping(): Promise<PingResponse> {
   try {
     const response = await api().get('/')
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error ping:', error)
     throw error
   }
@@ -53,7 +54,8 @@ export async function NewTask(data: NewTaskRequest): Promise<NewTaskResponse> {
   try {
     const response = await api().post('/api/v1/task/new', data)
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error creating task:', error)
     throw error
   }
@@ -64,7 +66,8 @@ export async function StartTask(data: StartTaskRequest): Promise<StartTaskRespon
   try {
     const response = await api().post('/api/v1/task/start', data)
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error starting task:', error)
     throw error
   }
@@ -77,7 +80,8 @@ export async function GetTaskProgress(
   try {
     const response = await api().get('/api/v1/task/progress', { params: data })
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error getting task progress:', error)
     throw error
   }
@@ -90,7 +94,8 @@ export async function GetOSSPresignedURL(
   try {
     const response = await api().get('/api/v1/task/oss/presigned', { params: data })
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error getting presigned URL:', error)
     throw error
   }
@@ -101,7 +106,8 @@ export async function ClearTask(data: ClearTaskRequest): Promise<ClearTaskRespon
   try {
     const response = await api().post('/api/v1/task/clear', data)
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error clearing task:', error)
     throw error
   }
@@ -114,7 +120,8 @@ export async function RetryEncodeTask(
   try {
     const response = await api().post('/api/v1/task/retry/encode', data)
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error retrying encode task:', error)
     throw error
   }
@@ -125,7 +132,8 @@ export async function RetryMergeTask(data: RetryMergeTaskRequest): Promise<Retry
   try {
     const response = await api().post('/api/v1/task/retry/merge', data)
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error retrying merge task:', error)
     throw error
   }
@@ -136,7 +144,8 @@ export async function GetTaskList(data: TaskListResquest): Promise<TaskListRespo
   try {
     const response = await api().get('/api/v1/task/list', { params: data })
     return response.data
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error getting task list:', error)
     throw error
   }

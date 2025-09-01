@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import type { NotificationType, UploadCustomRequestOptions } from 'naive-ui'
 import { FilmOutline } from '@vicons/ionicons5'
 import axios from 'axios'
-import type { NotificationType, UploadCustomRequestOptions } from 'naive-ui'
 import { useNotification } from 'naive-ui'
 
+import { ref } from 'vue'
 import { GetOSSPresignedURL, NewTask } from '@/api'
 import { videoExtensions } from '@/util/video'
 
@@ -19,7 +20,8 @@ async function newTask(key: string): Promise<void> {
 
   if (!key) {
     meta = 'Please input the key of the video'
-  } else {
+  }
+  else {
     try {
       const res = await NewTask({
         video_key: key,
@@ -28,18 +30,20 @@ async function newTask(key: string): Promise<void> {
       if (res.success) {
         notifyType = 'success'
         content = 'Upload success'
-        meta = 'Task: ' + key
-      } else {
+        meta = `Task: ${key}`
+      }
+      else {
         meta = res.error?.message || 'Unknown error'
       }
-    } catch (error) {
+    }
+    catch (error) {
       meta = String(error) || 'Unknown error'
     }
   }
 
   notification[notifyType]({
-    content: content,
-    meta: meta,
+    content,
+    meta,
     duration: 2500,
     keepAliveOnHover: true,
   })
@@ -49,9 +53,9 @@ async function newTask(key: string): Promise<void> {
 function uploadVideo(options: UploadCustomRequestOptions): void {
   // check file extension
   const ext = options.file.name.split('.').pop() || ''
-  if (!videoExtensions.includes('.' + ext.toLowerCase())) {
+  if (!videoExtensions.includes(`.${ext.toLowerCase()}`)) {
     options.onError()
-    notification['error']({
+    notification.error({
       content: 'Invalid video file',
       meta: 'Please upload the valid video file',
       duration: 2500,
@@ -68,7 +72,7 @@ function uploadVideo(options: UploadCustomRequestOptions): void {
       if (res.success) {
         uploadURL = String(res.data?.url)
         if (res.data?.exist) {
-          notification['warning']({
+          notification.warning({
             content: 'Video already exists',
             meta: 'Please upload the new video file',
             duration: 5000,
@@ -77,10 +81,11 @@ function uploadVideo(options: UploadCustomRequestOptions): void {
           options.onError()
           return
         }
-      } else {
+      }
+      else {
         console.error(res.error?.message || 'Unknown error: Get presigned URL failed')
         options.onError()
-        notification['error']({
+        notification.error({
           content: 'Get presigned URL failed',
           meta: res.error?.message || 'Unknown error',
         })
@@ -109,7 +114,7 @@ function uploadVideo(options: UploadCustomRequestOptions): void {
     .catch((error) => {
       console.error(error)
       options.onError()
-      notification['error']({
+      notification.error({
         content: 'Upload failed',
         meta: String(error) || 'Unknown error',
       })
@@ -128,7 +133,9 @@ function uploadVideo(options: UploadCustomRequestOptions): void {
           autosize
           style="min-width: 100vh"
         />
-        <NButton type="warning" @click="newTask(manualUploadKey)">Manual Init</NButton>
+        <NButton type="warning" @click="newTask(manualUploadKey)">
+          Manual Init
+        </NButton>
       </NSpace>
     </NCard>
     <NCard hoverable>
@@ -144,8 +151,12 @@ function uploadVideo(options: UploadCustomRequestOptions): void {
               <FilmOutline />
             </NIcon>
           </div>
-          <NText style="font-size: 16px"> Click or drag files to this area to upload </NText>
-          <NP depth="3" style="margin: 8px 0 0 0"> Please upload the valid video file </NP>
+          <NText style="font-size: 16px">
+            Click or drag files to this area to upload
+          </NText>
+          <NP depth="3" style="margin: 8px 0 0 0">
+            Please upload the valid video file
+          </NP>
         </NUploadDragger>
       </NUpload>
     </NCard>
