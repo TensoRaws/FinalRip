@@ -82,7 +82,7 @@ export const useSettingStore = defineStore(
   {
     persist: {
       storage: localStorage,
-      paths: [
+      pick: [
         'darkMode',
         'systemDarkMode',
         'collapsed',
