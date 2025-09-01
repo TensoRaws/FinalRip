@@ -1,6 +1,6 @@
 ARG BASE_CONTAINER_TAG=cuda
 
-FROM golang:1.22-bookworm AS builder
+FROM golang:1.24-bookworm AS builder
 
 ENV GO111MODULE=on \
     CGO_ENABLED=0
