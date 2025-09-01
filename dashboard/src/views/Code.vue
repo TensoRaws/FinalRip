@@ -5,7 +5,6 @@ import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 import { useNotification } from 'naive-ui'
 import { storeToRefs } from 'pinia'
 import { computed, shallowRef } from 'vue'
-
 import { getGitHubTemplateContent } from '@/api/github'
 import { useSettingStore } from '@/store/setting'
 

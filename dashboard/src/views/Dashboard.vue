@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useNotification } from 'naive-ui'
 import { storeToRefs } from 'pinia'
-
 import { onMounted } from 'vue'
 import { Ping } from '@/api'
 import { getGitHubTemplates } from '@/api/github'

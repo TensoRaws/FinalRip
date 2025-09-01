@@ -7,7 +7,6 @@ import {
   SunnyOutline,
 } from '@vicons/ionicons5'
 import { storeToRefs } from 'pinia'
-
 import router from '@/router'
 import { useSettingStore } from '@/store/setting'
 

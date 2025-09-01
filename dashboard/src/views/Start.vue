@@ -4,7 +4,6 @@ import { DownloadOutline, PlayCircleOutline } from '@vicons/ionicons5'
 import dayjs from 'dayjs'
 import { NButton, useDialog, useMessage, useNotification } from 'naive-ui'
 import { storeToRefs } from 'pinia'
-
 import { onActivated, ref } from 'vue'
 import { ClearTask, GetTaskList, StartTask } from '@/api'
 import { useSettingStore } from '@/store/setting'

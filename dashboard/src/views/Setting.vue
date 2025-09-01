@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-
 import { useSettingStore } from '@/store/setting'
 
 const {

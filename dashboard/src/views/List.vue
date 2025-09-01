@@ -4,7 +4,6 @@ import type { TaskStatus } from '@/api/type'
 import { CloudDownloadOutline, SearchOutline } from '@vicons/ionicons5'
 import dayjs from 'dayjs'
 import { NButton, useDialog, useMessage, useNotification } from 'naive-ui'
-
 import { storeToRefs } from 'pinia'
 import { onActivated, ref, watch } from 'vue'
 import { ClearTask, GetTaskList } from '@/api'

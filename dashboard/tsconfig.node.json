@@ -1,7 +1,6 @@
 {
   "extends": "@tsconfig/node22/tsconfig.json",
   "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": ["node"],
