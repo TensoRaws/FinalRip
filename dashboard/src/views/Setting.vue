@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import type { SelectOption } from 'naive-ui'
+import type { Ref } from 'vue'
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 import { useSettingStore } from '@/store/setting'
 
 const {
@@ -10,8 +13,18 @@ const {
   sliceMode,
   clipTimeout,
   queueName,
-  queueList,
 } = storeToRefs(useSettingStore())
+
+const queueList: Ref<SelectOption[]> = ref([
+  {
+    label: 'default',
+    value: 'default',
+  },
+  {
+    label: 'priority',
+    value: 'priority',
+  },
+])
 </script>
 
 <template>

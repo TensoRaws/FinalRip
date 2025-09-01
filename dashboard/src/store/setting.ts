@@ -43,16 +43,6 @@ export const useSettingStore = defineStore(
 
     // queue setting
     const queueName = ref('default')
-    const queueList: Ref<SelectOption[]> = ref([
-      {
-        label: 'default',
-        value: 'default',
-      },
-      {
-        label: 'priority',
-        value: 'priority',
-      },
-    ])
 
     // list setting
     const checkedPendingBox = ref(false)
@@ -74,7 +64,6 @@ export const useSettingStore = defineStore(
       sliceMode,
       clipTimeout,
       queueName,
-      queueList,
       checkedPendingBox,
       checkedRunningBox,
       checkedCompletedBox,
