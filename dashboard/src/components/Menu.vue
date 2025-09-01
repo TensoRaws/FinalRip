@@ -1,10 +1,9 @@
 <script setup lang="ts">
+import type { MenuOption } from 'naive-ui'
 import { DashboardOutlined } from '@vicons/antd'
 import { CloudUploadOutline, Code, PlayCircleOutline } from '@vicons/ionicons5'
-import type { MenuOption } from 'naive-ui'
 import { h, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-
 import logo from '@/assets/logo.svg'
 import { renderIcon } from '@/util/render'
 
@@ -80,7 +79,9 @@ const menuOptions: MenuOption[] = [
   <div class="h-screen">
     <div class="pt-[2vh] h-[6vh]">
       <div v-if="!props.collapsed" class="ml-14">
-        <NGradientText size="18"> FinalRip </NGradientText>
+        <NGradientText size="18">
+          FinalRip
+        </NGradientText>
       </div>
       <div v-else class="ml-5 mt-[-5px]">
         <NImage :src="logo" width="28" preview-disabled />

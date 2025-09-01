@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-
+import Header from '@/components/Header.vue'
+import Menu from '@/components/Menu.vue'
 import { useSettingStore } from '@/store/setting'
 
 const { collapsed } = storeToRefs(useSettingStore())

@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
-import * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api'
+import type * as monacoEditor from 'monaco-editor/esm/vs/editor/editor.api'
 import type { SelectOption } from 'naive-ui'
+import { VueMonacoEditor } from '@guolao/vue-monaco-editor'
 import { useNotification } from 'naive-ui'
 import { storeToRefs } from 'pinia'
-import { shallowRef } from 'vue'
-
+import { computed, shallowRef } from 'vue'
 import { getGitHubTemplateContent } from '@/api/github'
 import { useSettingStore } from '@/store/setting'
 
-const { darkMode, systemDarkMode, script, encodeParam, vsScriptTemplates, ffmpegParamTemplates } =
-  storeToRefs(useSettingStore())
+const { darkMode, systemDarkMode, script, encodeParam, vsScriptTemplates, ffmpegParamTemplates }
+  = storeToRefs(useSettingStore())
 
 const notification = useNotification()
 
@@ -35,14 +34,14 @@ function handleMount(editorInstance: any): any {
 }
 
 function handleUpdateVSScriptTemplate(value: string, option: SelectOption): void {
-  console.log('fetching template content: ' + value)
+  console.log(`fetching template content: ${value}`)
   getGitHubTemplateContent(option)
     .then((res) => {
       script.value = res
     })
     .catch((err) => {
       console.error(err)
-      notification['error']({
+      notification.error({
         title: 'Failed to get vs script template content',
         content: String(err),
       })
@@ -50,7 +49,7 @@ function handleUpdateVSScriptTemplate(value: string, option: SelectOption): void
 }
 
 function handleUpdateFFmpegParamTemplate(value: string, option: SelectOption): void {
-  console.log('fetching template content: ' + value)
+  console.log(`fetching template content: ${value}`)
   getGitHubTemplateContent(option)
     .then((res) => {
       // if the content ends with line break or space, remove them
@@ -58,7 +57,7 @@ function handleUpdateFFmpegParamTemplate(value: string, option: SelectOption): v
     })
     .catch((err) => {
       console.error(err)
-      notification['error']({
+      notification.error({
         title: 'Failed to get ffmpeg encode param template content',
         content: String(err),
       })
@@ -66,10 +65,10 @@ function handleUpdateFFmpegParamTemplate(value: string, option: SelectOption): v
 }
 
 function handleEncodeParamChange(value: string): void {
-  console.log('encode param changed: ' + value)
+  console.log(`encode param changed: ${value}`)
   // 如果输入的字符串里面包含了换行符，提醒用户
   if (value.includes('\n') || value.includes('\r')) {
-    notification['error']({
+    notification.error({
       title: 'Encode Param cannot contain line break!!!',
       content: 'Please remove line breaks',
     })
@@ -80,7 +79,9 @@ function handleEncodeParamChange(value: string): void {
 <template>
   <NSpace vertical>
     <NSpace justify="space-between">
-      <NGradientText size="18" type="primary"> Code </NGradientText>
+      <NGradientText size="18" type="primary">
+        Code
+      </NGradientText>
       <NSelect
         :options="vsScriptTemplates"
         style="width: 50vh"
@@ -98,7 +99,9 @@ function handleEncodeParamChange(value: string): void {
       />
     </NCard>
     <NSpace justify="space-between">
-      <NGradientText size="18" type="primary"> Encode Param </NGradientText>
+      <NGradientText size="18" type="primary">
+        Encode Param
+      </NGradientText>
       <NSelect
         :options="ffmpegParamTemplates"
         style="width: 50vh"

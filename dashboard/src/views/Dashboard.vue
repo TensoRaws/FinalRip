@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { useNotification } from 'naive-ui'
 import { storeToRefs } from 'pinia'
-
+import { onMounted } from 'vue'
 import { Ping } from '@/api'
 import { getGitHubTemplates } from '@/api/github'
 import router from '@/router'
 import { useSettingStore } from '@/store/setting'
 import List from '@/views/List.vue'
 
-const { templateRepo, vsScriptTemplates, ffmpegParamTemplates, githubToken } =
-  storeToRefs(useSettingStore())
+const { templateRepo, vsScriptTemplates, ffmpegParamTemplates, githubToken }
+  = storeToRefs(useSettingStore())
 
 const notification = useNotification()
 
@@ -18,7 +18,7 @@ onMounted(() => {
     .then((res) => {
       if (!res.success) {
         router.push('/setting')
-        notification['error']({
+        notification.error({
           content: 'Server is not available',
           meta: res.error?.message || 'Unknown error',
           duration: 2500,
@@ -28,7 +28,7 @@ onMounted(() => {
     })
     .catch((error) => {
       router.push('/setting')
-      notification['error']({
+      notification.error({
         content: 'Server is not available',
         meta: String(error) || 'Unknown error',
       })

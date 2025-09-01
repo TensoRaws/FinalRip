@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
+import type { TaskStatus } from '@/api/type'
 import { CloudDownloadOutline, SearchOutline } from '@vicons/ionicons5'
 import dayjs from 'dayjs'
-import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
 import { NButton, useDialog, useMessage, useNotification } from 'naive-ui'
 import { storeToRefs } from 'pinia'
-
+import { onActivated, ref, watch } from 'vue'
 import { ClearTask, GetTaskList } from '@/api'
-import type { TaskStatus } from '@/api/type'
 import { useSettingStore } from '@/store/setting'
 import { renderIconButton, renderStatusButton } from '@/util/render'
 
@@ -85,9 +85,10 @@ function fetchTasks(): void {
           })
         })
         tasks.value = temp
-      } else {
+      }
+      else {
         console.error(res)
-        notification['error']({
+        notification.error({
           content: 'Fetch task list failed',
           meta: String(res) || 'Unknown error',
         })
@@ -95,7 +96,7 @@ function fetchTasks(): void {
     })
     .catch((err) => {
       console.error(err)
-      notification['error']({
+      notification.error({
         content: 'Fetch task list failed',
         meta: String(err) || 'Unknown error',
       })
@@ -128,24 +129,25 @@ function deleteTasks(taskKeys: DataTableRowKey[]): void {
         })
           .then((res) => {
             if (res.success) {
-              notification['success']({
+              notification.success({
                 content: 'Task deleted successfully',
-                meta: 'Task: ' + key,
+                meta: `Task: ${key}`,
                 duration: 2500,
                 keepAliveOnHover: true,
               })
-            } else {
-              notification['error']({
+            }
+            else {
+              notification.error({
                 content: 'Delete task failed',
                 meta: res.error?.message || 'Unknown error',
               })
             }
 
-            updateCheckedRowKeys(checkedRowKeys.value.filter((k) => k !== key))
+            updateCheckedRowKeys(checkedRowKeys.value.filter(k => k !== key))
           })
           .catch((err) => {
             console.error(err)
-            notification['error']({
+            notification.error({
               content: 'Delete task failed',
               meta: String(err) || 'Unknown error',
             })
@@ -164,9 +166,9 @@ function downloadTasks(taskKeys: DataTableRowKey[]): void {
     return
   }
 
-  let downloadList: string[] = []
+  const downloadList: string[] = []
   taskKeys.forEach((key) => {
-    const task = tasks.value.find((t) => t.key === key)
+    const task = tasks.value.find(t => t.key === key)
     if (task?.encode_url) {
       downloadList.push(task.encode_url)
     }
@@ -198,13 +200,19 @@ watch(filter, () => {
       <NSpace justify="space-between">
         <NSpace item-style="display: flex;" align="center">
           <NCheckbox v-model:checked="checkedPendingBox" @update-checked="fetchTasks">
-            <NGradientText type="warning"> Pending</NGradientText>
+            <NGradientText type="warning">
+              Pending
+            </NGradientText>
           </NCheckbox>
           <NCheckbox v-model:checked="checkedRunningBox" @update-checked="fetchTasks">
-            <NGradientText type="info"> Running</NGradientText>
+            <NGradientText type="info">
+              Running
+            </NGradientText>
           </NCheckbox>
           <NCheckbox v-model:checked="checkedCompletedBox" @update-checked="fetchTasks">
-            <NGradientText type="success"> Completed</NGradientText>
+            <NGradientText type="success">
+              Completed
+            </NGradientText>
           </NCheckbox>
           <NInput v-model:value="filter" placeholder="Search">
             <template #prefix>
@@ -213,8 +221,12 @@ watch(filter, () => {
           </NInput>
         </NSpace>
         <NSpace>
-          <NButton type="error" @click="deleteTasks(checkedRowKeys)"> Delete </NButton>
-          <NButton type="info" @click="downloadTasks(checkedRowKeys)"> Download </NButton>
+          <NButton type="error" @click="deleteTasks(checkedRowKeys)">
+            Delete
+          </NButton>
+          <NButton type="info" @click="downloadTasks(checkedRowKeys)">
+            Download
+          </NButton>
         </NSpace>
       </NSpace>
       <NDataTable
