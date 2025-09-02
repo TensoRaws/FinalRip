@@ -21,7 +21,11 @@ services:
             - driver: nvidia
               device_ids:
                 - "0"
-              capabilities: [gpu]
+              capabilities:
+                - gpu
+                - utility
+                - compute
+                - video
     networks:
       - backend
 #  easytier:
