@@ -6,7 +6,7 @@ import { ref } from 'vue'
 export type DarkModeType = 'system' | 'light' | 'dark'
 
 export const useSettingStore = defineStore(
-  'GlobalSetting',
+  'GlobalSetting_250902',
   () => {
     // dark mode
     const darkMode: Ref<DarkModeType> = ref('system')
@@ -16,7 +16,7 @@ export const useSettingStore = defineStore(
     const collapsed = ref(false)
 
     // api
-    const apiURL = ref('http://localhost:8848')
+    const apiURL = ref('')
     const apiToken = ref('114514')
 
     // templates

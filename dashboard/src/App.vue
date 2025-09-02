@@ -19,7 +19,7 @@ import { themeOverrides } from '@/theme'
 
 hljs.registerLanguage('python', python)
 
-const { systemDarkMode, darkMode } = storeToRefs(useSettingStore())
+const { systemDarkMode, darkMode, apiURL } = storeToRefs(useSettingStore())
 
 const osThemeRef = useOsTheme()
 watchEffect(() => {
@@ -33,6 +33,15 @@ const theme = computed(() => {
   }
   return darkMode.value === 'dark' ? darkTheme : lightTheme
 })
+
+function fetchApiBaseUrl(): void {
+  const { protocol, hostname } = window.location
+  if (apiURL.value === '') {
+    apiURL.value = `${protocol}//${hostname}:8848`
+  }
+}
+
+fetchApiBaseUrl()
 </script>
 
 <template>
