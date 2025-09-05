@@ -2,6 +2,8 @@ GO ?= go
 
 .DEFAULT_GOAL := default
 
+IMAGE_NAME := lychee0/finalrip
+
 .PHONY: tidy
 tidy:
 	${GO} mod tidy
@@ -27,28 +29,28 @@ lint:
 .PHONY: all
 all:
 	docker buildx build -f ./deploy/server.dockerfile \
-		-t lychee0/finalrip-server \
-		-t lychee0/finalrip-server:dev .
+		-t ${IMAGE_NAME}:server \
+		-t ${IMAGE_NAME}:server-dev .
 
 	docker buildx build -f ./deploy/worker-cut.dockerfile \
-		-t lychee0/finalrip-worker-cut \
-		-t lychee0/finalrip-worker-cut:dev .
+		-t ${IMAGE_NAME}:worker-cut \
+		-t ${IMAGE_NAME}:worker-cut-dev .
 
 	docker buildx build -f ./deploy/worker-merge.dockerfile \
-		-t lychee0/finalrip-worker-merge \
-		-t lychee0/finalrip-worker-merge:dev .
+		-t ${IMAGE_NAME}:worker-merge \
+		-t ${IMAGE_NAME}:worker-merge-dev .
 
 	docker buildx build -f ./deploy/dashboard.dockerfile \
-		-t lychee0/finalrip-dashboard \
-		-t lychee0/finalrip-dashboard:dev .
+		-t ${IMAGE_NAME}:dashboard \
+		-t ${IMAGE_NAME}:dashboard-dev .
 
 .PHONY: pt
 pt:
 	docker buildx build -f ./deploy/worker-encode.dockerfile --build-arg BASE_CONTAINER_TAG=cuda \
-		-t lychee0/finalrip-worker-encode \
-		-t lychee0/finalrip-worker-encode:dev \
-		-t lychee0/finalrip-worker-encode:cuda-dev \
-		-t lychee0/finalrip-worker-encode:cuda .
+		-t ${IMAGE_NAME}:worker-encode \
+		-t ${IMAGE_NAME}:worker-encode-dev \
+		-t ${IMAGE_NAME}:worker-encode-cuda-dev \
+		-t ${IMAGE_NAME}:worker-encode-cuda .
 
 .PHONY: dev
 dev:
