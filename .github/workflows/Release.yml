@@ -38,9 +38,9 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            lychee0/finalrip-${{ matrix.dockerfile }}:latest
-            lychee0/finalrip-${{ matrix.dockerfile }}:cuda
-            lychee0/finalrip-${{ matrix.dockerfile }}:cuda-${{ github.ref_name }}
+            lychee0/finalrip:${{ matrix.dockerfile }}
+            lychee0/finalrip:${{ matrix.dockerfile }}-cuda
+            lychee0/finalrip:${{ matrix.dockerfile }}-cuda-${{ github.ref_name }}
           build-args: |
             BASE_CONTAINER_TAG=cuda-v0.3.2
           no-cache: true
@@ -54,8 +54,8 @@ jobs:
           platforms: linux/amd64, linux/arm64
           push: true
           tags: |
-            lychee0/finalrip-${{ matrix.dockerfile }}:latest
-            lychee0/finalrip-${{ matrix.dockerfile }}:${{ github.ref_name }}
+            lychee0/finalrip:${{ matrix.dockerfile }}
+            lychee0/finalrip:${{ matrix.dockerfile }}-${{ github.ref_name }}
           no-cache: true
 
   github:

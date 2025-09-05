@@ -8,7 +8,7 @@ networks:
 
 services:
   server:
-    image: lychee0/finalrip-server:dev
+    image: lychee0/finalrip:server-dev
     container_name: finalrip-server
     restart: always
     ports:
@@ -21,7 +21,7 @@ services:
       - backend
 
   dashboard:
-    image: lychee0/finalrip-dashboard:dev
+    image: lychee0/finalrip:dashboard-dev
     container_name: finalrip-dashboard
     restart: always
     ports:
@@ -30,7 +30,7 @@ services:
       - backend
 
   worker-encode:
-    image: lychee0/finalrip-worker-encode:dev
+    image: lychee0/finalrip:worker-encode-cuda-dev
     restart: always
     environment:
       - FINALRIP_DB_HOST=mongodb
@@ -53,7 +53,7 @@ services:
       - backend
 
   worker-cut:
-    image: lychee0/finalrip-worker-cut:dev
+    image: lychee0/finalrip:worker-cut-dev
     container_name: finalrip-worker-cut
     restart: always
     environment:
@@ -64,7 +64,7 @@ services:
       - backend
 
   worker-merge:
-    image: lychee0/finalrip-worker-merge:dev
+    image: lychee0/finalrip:worker-merge-dev
     container_name: finalrip-worker-merge
     restart: always
     environment:

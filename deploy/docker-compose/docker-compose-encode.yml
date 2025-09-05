@@ -8,7 +8,7 @@ networks:
 
 services:
   worker-encode:
-    image: lychee0/finalrip-worker-encode:cuda
+    image: lychee0/finalrip:worker-encode-cuda-dev
     restart: always
     environment:
       #      - FINALRIP_REMOTE_CONFIG_HOST=EASYTIER
